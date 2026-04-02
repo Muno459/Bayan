@@ -90,6 +90,73 @@ final class AudioPlaybackManager {
         }
     }
 
+    /// Play a single word clip by seeking to its start and pausing at its end.
+    /// Returns true if word timing was found and playback started.
+    func playWordClip(wordPosition: Int) -> Bool {
+        // Find the timing for this word position in the current verse
+        guard let currentKey = currentVerseKey,
+              let verseTs = verseTimestamps.first(where: { $0.verseKey == currentKey })
+        else {
+            // No active verse — try to find the word in any verse's timings
+            return playWordFromAllTimings(wordPosition: wordPosition)
+        }
+
+        let timings = verseTs.wordTimings
+        guard let wordTiming = timings.first(where: { $0.wordIndex == wordPosition }) else {
+            return false
+        }
+
+        return playTimingClip(wordTiming)
+    }
+
+    private func playWordFromAllTimings(wordPosition: Int) -> Bool {
+        // Search all verse timestamps for this word position
+        for ts in verseTimestamps {
+            if let timing = ts.wordTimings.first(where: { $0.wordIndex == wordPosition }) {
+                return playTimingClip(timing)
+            }
+        }
+        return false
+    }
+
+    private func playTimingClip(_ timing: WordTiming) -> Bool {
+        guard let player else { return false }
+
+        let wasPlaying = isPlaying
+        let previousTime = player.currentTime()
+
+        // Seek to word start
+        let startTime = CMTime(value: Int64(timing.startMs), timescale: 1000)
+        let endTime = CMTime(value: Int64(timing.endMs), timescale: 1000)
+
+        player.seek(to: startTime)
+        player.play()
+
+        // Schedule pause at word end
+        let endBoundary = [NSValue(time: endTime)]
+        let observer = player.addBoundaryTimeObserver(
+            forTimes: endBoundary,
+            queue: .main
+        ) { [weak player] in
+            player?.pause()
+            // Restore previous state
+            if !wasPlaying {
+                player?.seek(to: previousTime)
+            }
+        }
+
+        // Auto-cleanup after 3 seconds max
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(3))
+            player.removeTimeObserver(observer)
+            if !wasPlaying {
+                player.pause()
+            }
+        }
+
+        return true
+    }
+
     func seekToVerse(_ verseKey: String) {
         guard let timestamp = verseTimestamps.first(where: { $0.verseKey == verseKey }) else {
             return

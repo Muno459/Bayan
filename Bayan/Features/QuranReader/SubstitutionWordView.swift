@@ -1,13 +1,17 @@
+import AVFoundation
 import SwiftUI
 
 /// A single word in the substitution line. Tapping a substituted word
 /// shows a popover with its English meaning, transliteration, and Arabic script.
+/// Includes a play button to hear the word pronounced.
 struct SubstitutionWordView: View {
     let word: Word
     let display: SubstitutionDisplay
     let isHighlighted: Bool
 
+    @Environment(AudioPlaybackManager.self) private var audioManager
     @State private var showDetail = false
+    @State private var isPlayingWord = false
 
     var body: some View {
         wordContent
@@ -79,12 +83,27 @@ struct SubstitutionWordView: View {
     // MARK: - Detail Popover
 
     private var wordDetailPopover: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            // Arabic script large
-            Text(word.textUthmani ?? "")
-                .font(.system(size: 32, design: .serif))
-                .foregroundStyle(BayanColors.textPrimary)
-                .frame(maxWidth: .infinity, alignment: .center)
+        VStack(spacing: 14) {
+            // Arabic script large + play button
+            HStack(spacing: 12) {
+                Spacer()
+
+                Text(word.textUthmani ?? "")
+                    .font(.system(size: 34, design: .serif))
+                    .foregroundStyle(BayanColors.textPrimary)
+
+                // Play pronunciation
+                Button {
+                    Task { await playWordAudio() }
+                } label: {
+                    Image(systemName: isPlayingWord ? "speaker.wave.2.fill" : "play.circle.fill")
+                        .font(.system(size: 28))
+                        .foregroundStyle(BayanColors.primary)
+                        .symbolEffect(.pulse, isActive: isPlayingWord)
+                }
+
+                Spacer()
+            }
 
             Divider()
 
@@ -95,7 +114,7 @@ struct SubstitutionWordView: View {
                     .foregroundStyle(BayanColors.textSecondary)
                 Spacer()
                 Text(word.transliteration?.text ?? "—")
-                    .font(.system(size: 15, weight: .medium, design: .serif))
+                    .font(.system(size: 16, weight: .semibold, design: .serif))
                     .foregroundStyle(BayanColors.primary)
             }
 
@@ -106,11 +125,36 @@ struct SubstitutionWordView: View {
                     .foregroundStyle(BayanColors.textSecondary)
                 Spacer()
                 Text(word.translation?.text ?? "—")
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(BayanColors.textPrimary)
             }
         }
         .padding(16)
-        .frame(width: 220)
+        .frame(width: 240)
+    }
+
+    // MARK: - Word Audio
+
+    /// Play just this word by seeking the chapter audio to the word's timestamp.
+    /// Uses the AudioPlaybackManager's loaded audio if available,
+    /// otherwise uses iOS text-to-speech as fallback.
+    private func playWordAudio() async {
+        isPlayingWord = true
+
+        // Try using the already-loaded chapter audio with word timing
+        if audioManager.playWordClip(wordPosition: word.position) {
+            // Word clip will play for its duration, then we reset
+            try? await Task.sleep(for: .seconds(1.5))
+        } else {
+            // Fallback: use AVSpeechSynthesizer for the Arabic text
+            let utterance = AVSpeechUtterance(string: word.textUthmani ?? "")
+            utterance.voice = AVSpeechSynthesisVoice(language: "ar-SA")
+            utterance.rate = 0.4
+            let synthesizer = AVSpeechSynthesizer()
+            synthesizer.speak(utterance)
+            try? await Task.sleep(for: .seconds(2))
+        }
+
+        isPlayingWord = false
     }
 }
