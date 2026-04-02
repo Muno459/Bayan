@@ -282,9 +282,15 @@ struct SettingsTab: View {
                     Text("Arabic script is shown as a small reference below each verse. Transliteration is always the primary reading text.")
                 }
 
-                Section("Audio") {
+                Section {
                     Toggle("Auto-play Audio", isOn: $s.autoPlayAudio)
                         .tint(BayanColors.primary)
+                    Toggle("Auto-play Word Pronunciation", isOn: $s.autoPlayWordPronunciation)
+                        .tint(BayanColors.primary)
+                } header: {
+                    Text("Audio")
+                } footer: {
+                    Text("When enabled, tapping a word automatically plays its pronunciation.")
                 }
 
                 Section("About") {

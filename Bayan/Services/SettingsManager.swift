@@ -33,6 +33,10 @@ final class SettingsManager {
         didSet { UserDefaults.standard.set(autoPlayAudio, forKey: "autoPlayAudio") }
     }
 
+    var autoPlayWordPronunciation: Bool {
+        didSet { UserDefaults.standard.set(autoPlayWordPronunciation, forKey: "autoPlayWordPronunciation") }
+    }
+
     init() {
         let defaults = UserDefaults.standard
 
@@ -43,5 +47,6 @@ final class SettingsManager {
         self.showTransliteration = defaults.object(forKey: "showTransliteration") as? Bool ?? true
         self.showArabicScript = defaults.object(forKey: "showArabicScript") as? Bool ?? false
         self.autoPlayAudio = defaults.object(forKey: "autoPlayAudio") as? Bool ?? false
+        self.autoPlayWordPronunciation = defaults.object(forKey: "autoPlayWordPronunciation") as? Bool ?? true
     }
 }

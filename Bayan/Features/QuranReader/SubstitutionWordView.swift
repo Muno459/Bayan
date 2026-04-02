@@ -9,13 +9,13 @@ struct SubstitutionWordView: View {
     let isHighlighted: Bool
     let verseKey: String
 
+    @Environment(SettingsManager.self) private var settings
     @State private var showDetail = false
     @State private var wordPlayer = WordAudioPlayer()
 
     var body: some View {
         wordContent
             .onTapGesture {
-                // Only show detail for non-English words (substituted ones)
                 if !isEnglishDisplay {
                     showDetail = true
                 }
@@ -23,6 +23,11 @@ struct SubstitutionWordView: View {
             .popover(isPresented: $showDetail, arrowEdge: .bottom) {
                 wordDetailPopover
                     .presentationCompactAdaptation(.popover)
+            }
+            .onChange(of: showDetail) { _, isShowing in
+                if isShowing && settings.autoPlayWordPronunciation {
+                    wordPlayer.play(verseKey: verseKey, wordPosition: word.position)
+                }
             }
     }
 
