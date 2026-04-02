@@ -2,6 +2,8 @@ import SwiftUI
 
 struct ChapterListView: View {
     @Environment(QuranStore.self) private var quranStore
+    @Environment(UserStore.self) private var userStore
+    @AppStorage("hasSeenWordTip") private var hasSeenWordTip = false
     @State private var searchText = ""
 
     private var filteredChapters: [Chapter] {
@@ -49,6 +51,52 @@ struct ChapterListView: View {
                         }
                         .padding(.vertical, 12)
                         .listRowBackground(Color.clear)
+                    }
+
+                    // Continue Reading
+                    if let lastSession = userStore.sessions.last {
+                        Section {
+                            NavigationLink(value: lastSession.chapterId) {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Continue Reading")
+                                            .font(.system(size: 13, weight: .medium))
+                                            .foregroundStyle(BayanColors.textSecondary)
+                                        Text("Surah \(lastSession.chapterId), verse \(lastSession.startVerseKey)")
+                                            .font(.system(size: 15, weight: .semibold))
+                                    }
+                                    Spacer()
+                                    Image(systemName: "arrow.right.circle.fill")
+                                        .font(.system(size: 22))
+                                        .foregroundStyle(BayanColors.primary)
+                                }
+                            }
+                        }
+                    }
+
+                    // First-time tip
+                    if !hasSeenWordTip {
+                        Section {
+                            HStack(spacing: 12) {
+                                Image(systemName: "hand.tap.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundStyle(BayanColors.gold)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Tap Arabic Words to Learn")
+                                        .font(.system(size: 14, weight: .semibold))
+                                    Text("When you see green Arabic words, tap them to hear pronunciation and see meaning.")
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(BayanColors.textSecondary)
+                                }
+                                Button {
+                                    hasSeenWordTip = true
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(BayanColors.textSecondary)
+                                }
+                            }
+                        }
                     }
 
                     // Chapters

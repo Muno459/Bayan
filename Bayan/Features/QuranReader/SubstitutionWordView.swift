@@ -99,6 +99,7 @@ struct WordLearningCard: View {
     let word: Word
     let verseKey: String
     @Binding var wordPlayer: WordAudioPlayer
+    @Environment(VocabularyStore.self) private var vocabularyStore
 
     private var frequency: Int? {
         QuranicWordData.frequency(for: word.textUthmani ?? "")
@@ -191,6 +192,27 @@ struct WordLearningCard: View {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(BayanColors.primary.opacity(0.05))
                 )
+            }
+
+            // "I Know This" button
+            if let state = vocabularyStore.wordStates[word.id], state.masteryLevel < .familiar {
+                Button {
+                    Haptics.success()
+                    vocabularyStore.promote(wordId: word.id)
+                    vocabularyStore.promote(wordId: word.id) // double promote to familiar
+                } label: {
+                    Label("I Know This Word", systemImage: "checkmark.circle.fill")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(BayanColors.mastered))
+                }
+                .padding(.horizontal, 32)
+            } else if vocabularyStore.wordStates[word.id] != nil {
+                Label("You know this word!", systemImage: "checkmark.seal.fill")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(BayanColors.mastered)
             }
 
             Spacer()

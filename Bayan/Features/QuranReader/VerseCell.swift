@@ -16,13 +16,21 @@ struct VerseCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Top bar
-            HStack {
+            HStack(spacing: 8) {
                 Text(verse.verseKey)
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundStyle(BayanColors.primary)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
                     .background(Capsule().fill(BayanColors.primary.opacity(0.08)))
+
+                // Verse word progress
+                let progress = verseProgress
+                if progress.total > 0 {
+                    Text("\(progress.known)/\(progress.total)")
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .foregroundStyle(progress.known == progress.total ? BayanColors.mastered : BayanColors.textSecondary)
+                }
 
                 Spacer()
 
@@ -107,6 +115,20 @@ struct VerseCell: View {
     }
 
     // MARK: - Share
+
+    // MARK: - Verse Progress
+
+    private var verseProgress: (known: Int, total: Int) {
+        let words = verse.words?.filter { $0.isWord } ?? []
+        let total = words.count
+        let known = words.filter { word in
+            if let state = vocabularyStore.wordStates[word.id] {
+                return state.masteryLevel >= .familiar
+            }
+            return false
+        }.count
+        return (known, total)
+    }
 
     private var shareText: String {
         let arabic = verse.textUthmani ?? ""
