@@ -14,6 +14,7 @@
 		3564266BA666EBF705758BF5 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB670B091D43E8B7133206D /* TokenManager.swift */; };
 		3C707AD598F27F80551E6E83 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D538DE5486419F8657E04B7C /* APIClient.swift */; };
 		481D819BAA99970119BBD79B /* VerseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D15F1999A179436E8E4BE6C /* VerseCell.swift */; };
+		4AEAADE8F7E471FE1D42EE59 /* WrappingHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */; };
 		4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447B75B102513CD4AD8B4415 /* ContentView.swift */; };
 		51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07211B76D703781FA8C56786 /* UserModels.swift */; };
 		5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2B225323C0E98272174DA2 /* QuranStore.swift */; };
@@ -71,6 +72,7 @@
 		D538DE5486419F8657E04B7C /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		E3845CFD129FCA4B72585A67 /* BayanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanApp.swift; sourceTree = "<group>"; };
 		EFB670B091D43E8B7133206D /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappingHStack.swift; sourceTree = "<group>"; };
 		F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyModels.swift; sourceTree = "<group>"; };
 		FCD184595EC4B2E2A3C4F242 /* AudioModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -269,6 +271,7 @@
 			isa = PBXGroup;
 			children = (
 				5942E0AE9528D5335A881F18 /* FlowLayout.swift */,
+				F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */,
 				1511B52CBFCE08A9F626FE79 /* VocabularyModels.swift in Sources */,
 				95485533C43F5A0C8ACD2753 /* VocabularyStore.swift in Sources */,
+				4AEAADE8F7E471FE1D42EE59 /* WrappingHStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

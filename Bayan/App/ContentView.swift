@@ -210,29 +210,27 @@ struct SettingsTab: View {
 
         NavigationStack {
             Form {
-                Section("Arabic Text") {
+                Section("Reading") {
                     HStack {
-                        Text("Font Size")
-                        Spacer()
-                        Text("\(Int(settings.arabicFontSize))")
-                            .foregroundStyle(BayanColors.textSecondary)
-                    }
-                    Slider(value: $s.arabicFontSize, in: 20...44, step: 2)
-                        .tint(BayanColors.primary)
-                }
-
-                Section("Translation") {
-                    HStack {
-                        Text("Font Size")
+                        Text("Text Size")
                         Spacer()
                         Text("\(Int(settings.translationFontSize))")
                             .foregroundStyle(BayanColors.textSecondary)
                     }
                     Slider(value: $s.translationFontSize, in: 12...24, step: 1)
                         .tint(BayanColors.primary)
+                }
 
-                    Toggle("Show Transliteration", isOn: $s.showTransliteration)
+                Section {
+                    Toggle("Show Arabic Script", isOn: $s.showArabicScript)
                         .tint(BayanColors.primary)
+
+                    Toggle("Show Full Transliteration", isOn: $s.showTransliteration)
+                        .tint(BayanColors.primary)
+                } header: {
+                    Text("Display")
+                } footer: {
+                    Text("Arabic script is shown as a small reference below each verse. Transliteration is always the primary reading text.")
                 }
 
                 Section("Audio") {

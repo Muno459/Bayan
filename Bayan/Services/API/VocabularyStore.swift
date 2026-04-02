@@ -1,20 +1,27 @@
 import Foundation
 import SwiftUI
 
-/// Manages vocabulary learning states and the progressive substitution engine
+/// Manages vocabulary learning states and the progressive substitution engine.
+///
+/// The core idea: users start reading entirely in English. As they encounter
+/// Arabic words repeatedly (through reading + audio), English words are gradually
+/// replaced with their transliterated Arabic equivalents (phonetic spelling),
+/// NOT Arabic script. This lets non-Arabic readers build vocabulary through
+/// sound recognition.
+///
+/// Journey per word: English → English+transliteration → transliteration only
 @MainActor
 @Observable
 final class VocabularyStore {
     /// All known word learning states, keyed by word ID
     private(set) var wordStates: [Int: WordLearningState] = [:]
 
-    /// Current substitution level (0.0 = all English, 1.0 = all Arabic)
-    var substitutionLevel: Double = 0.0
+    /// Current substitution level (0.0 = all English, 1.0 = all transliteration)
+    var substitutionLevel: Double = 0.3
 
     /// Total unique words encountered
     var totalWordsEncountered: Int { wordStates.count }
 
-    /// Words at each mastery level
     var masteredCount: Int {
         wordStates.values.filter { $0.masteryLevel == .mastered }.count
     }
@@ -29,44 +36,43 @@ final class VocabularyStore {
 
     // MARK: - Progressive Substitution
 
-    /// Determine how a word should be displayed based on learning state
+    /// Determine how a word should be displayed.
+    /// Returns English, transitioning (translit + English hint), or transliteration only.
     func displayMode(for word: Word) -> SubstitutionDisplay {
         guard word.isWord else {
-            // Verse end markers — show as-is
             return .english(word.translation?.text ?? "")
         }
 
-        let arabicText = word.textUthmani ?? word.textImlaei ?? ""
         let englishText = word.translation?.text ?? ""
+        let translitText = word.transliteration?.text ?? englishText
 
-        // Check if we have a learning state for this word
+        // If we have a learning state for this word, use mastery level
         if let state = wordStates[word.id] {
             switch state.masteryLevel {
             case .mastered, .familiar:
-                return .arabic(arabicText)
+                return .transliteration(translitText)
             case .learning:
-                return .transitioning(arabic: arabicText, english: englishText)
+                return .transitioning(transliteration: translitText, english: englishText)
             case .introduced, .unseen:
                 return .english(englishText)
             }
         }
 
-        // Word not yet seen — use substitution level as threshold
-        // Common Quranic words (Allah, Rabb, etc.) are shown in Arabic earlier
-        if isCommonQuranicWord(arabicText) && substitutionLevel >= 0.1 {
-            return .arabic(arabicText)
+        // Word not yet tracked — use global substitution level + common word detection
+        if isCommonQuranicWord(translitText) && substitutionLevel >= 0.1 {
+            return .transliteration(translitText)
         }
 
-        if substitutionLevel >= 0.8 {
-            return .arabic(arabicText)
-        } else if substitutionLevel >= 0.5 {
-            return .transitioning(arabic: arabicText, english: englishText)
+        if substitutionLevel >= 0.7 {
+            return .transliteration(translitText)
+        } else if substitutionLevel >= 0.4 {
+            return .transitioning(transliteration: translitText, english: englishText)
         } else {
             return .english(englishText)
         }
     }
 
-    /// Record that the user has seen a word
+    /// Record that the user has seen/heard a word
     func recordExposure(for word: Word) {
         guard word.isWord else { return }
 
@@ -74,18 +80,17 @@ final class VocabularyStore {
             state.exposureCount += 1
             state.lastSeenDate = Date()
 
-            // Auto-promote based on exposure
-            if state.exposureCount >= 20 && state.masteryLevel < .familiar {
+            // Auto-promote based on repeated exposure
+            if state.exposureCount >= 25 && state.masteryLevel < .familiar {
                 state.masteryLevel = .familiar
-            } else if state.exposureCount >= 10 && state.masteryLevel < .learning {
+            } else if state.exposureCount >= 12 && state.masteryLevel < .learning {
                 state.masteryLevel = .learning
-            } else if state.exposureCount >= 3 && state.masteryLevel < .introduced {
+            } else if state.exposureCount >= 4 && state.masteryLevel < .introduced {
                 state.masteryLevel = .introduced
             }
 
             wordStates[word.id] = state
         } else {
-            // First time seeing this word
             wordStates[word.id] = WordLearningState(
                 wordId: word.id,
                 arabicText: word.textUthmani ?? "",
@@ -98,7 +103,6 @@ final class VocabularyStore {
         }
     }
 
-    /// Manually promote a word's mastery level
     func promote(wordId: Int) {
         guard var state = wordStates[wordId] else { return }
         if state.masteryLevel < .mastered {
@@ -108,7 +112,6 @@ final class VocabularyStore {
         }
     }
 
-    /// Manually demote a word's mastery level
     func demote(wordId: Int) {
         guard var state = wordStates[wordId] else { return }
         if state.masteryLevel > .unseen {
@@ -120,25 +123,26 @@ final class VocabularyStore {
 
     // MARK: - Common Words
 
-    /// Words that appear frequently across the Quran — teach these first
-    private func isCommonQuranicWord(_ arabic: String) -> Bool {
-        let commonWords: Set<String> = [
-            "ٱللَّهِ", "ٱللَّهُ", "ٱللَّهَ", // Allah
-            "رَبِّ", "رَبَّ", "رَبُّ", // Lord
-            "قَالَ", // said
-            "ٱلَّذِينَ", "ٱلَّذِى", // those who / the one who
-            "كَانَ", // was
-            "إِنَّ", // indeed
-            "مِنَ", "مِن", // from
-            "عَلَىٰ", // upon
-            "فِى", "فِي", // in
-            "لَا", // no/not
-            "مَا", // what/not
-            "هُوَ", // he
-            "بِسْمِ", // in the name of
-            "ٱلرَّحْمَـٰنِ", // The Most Gracious
-            "ٱلرَّحِيمِ", // The Most Merciful
+    /// High-frequency Quranic words that get substituted early.
+    /// Users hear these constantly — "Allah", "Rabb", "bismillah" etc.
+    private func isCommonQuranicWord(_ transliteration: String) -> Bool {
+        let common: Set<String> = [
+            "l-lahi", "lillahi", "l-lahu", "allahu", "allah",
+            "rabbi", "rabba", "rabbu",
+            "bis'mi", "bismi",
+            "l-rahmani", "al-rahmani",
+            "l-rahimi", "al-rahimi",
+            "qala",
+            "alladhina",
+            "kana",
+            "inna",
+            "min", "mina",
+            "ala", "'ala",
+            "fi",
+            "la",
+            "ma",
+            "huwa",
         ]
-        return commonWords.contains(arabic)
+        return common.contains(transliteration.lowercased())
     }
 }

@@ -34,10 +34,10 @@ struct WordLearningState: Codable, Sendable {
 
 enum MasteryLevel: Int, Codable, Sendable, CaseIterable, Comparable {
     case unseen = 0
-    case introduced = 1
-    case learning = 2
-    case familiar = 3
-    case mastered = 4
+    case introduced = 1   // Seen a few times, still English
+    case learning = 2     // Shows transliteration with English hint below
+    case familiar = 3     // Shows transliteration only
+    case mastered = 4     // Shows transliteration confidently, optional Arabic script
 
     static func < (lhs: MasteryLevel, rhs: MasteryLevel) -> Bool {
         lhs.rawValue < rhs.rawValue
@@ -52,16 +52,15 @@ enum MasteryLevel: Int, Codable, Sendable, CaseIterable, Comparable {
         case .mastered: "Mastered"
         }
     }
-
-    /// Minimum mastery to show Arabic instead of English in substitution
-    var showsArabic: Bool {
-        self >= .familiar
-    }
 }
 
-/// Represents how a word should be displayed in the progressive substitution view
+/// How a word appears in the reading view.
+/// The journey: English -> English+transliteration -> transliteration -> transliteration (confident)
 enum SubstitutionDisplay: Sendable {
+    /// User hasn't learned this word yet — show English translation
     case english(String)
-    case arabic(String)
-    case transitioning(arabic: String, english: String)
+    /// User is learning — show transliteration with small English hint
+    case transitioning(transliteration: String, english: String)
+    /// User knows this word — show transliteration only
+    case transliteration(String)
 }

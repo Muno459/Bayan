@@ -1,5 +1,8 @@
 import SwiftUI
 
+/// A verse displayed with transliteration as the PRIMARY reading text.
+/// Arabic script is secondary (small, optional). The progressive substitution
+/// replaces English words with transliterated Arabic as the user learns.
 struct VerseCell: View {
     let verse: Verse
     let isCurrentVerse: Bool
@@ -11,25 +14,18 @@ struct VerseCell: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: BayanSpacing.md) {
-            // Verse number + actions bar
+        VStack(alignment: .leading, spacing: 14) {
+            // Top bar: verse number + bookmark
             HStack {
-                // Verse number badge
-                HStack(spacing: 6) {
-                    Text(verse.verseKey)
-                        .font(.system(size: 12, weight: .semibold, design: .rounded))
-                        .foregroundStyle(BayanColors.primary)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(
-                    Capsule()
-                        .fill(BayanColors.primary.opacity(0.08))
-                )
+                Text(verse.verseKey)
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(BayanColors.primary)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Capsule().fill(BayanColors.primary.opacity(0.08)))
 
                 Spacer()
 
-                // Bookmark button
                 Button {
                     userStore.toggleBookmark(
                         verseKey: verse.verseKey,
@@ -38,81 +34,85 @@ struct VerseCell: View {
                     )
                 } label: {
                     Image(systemName: userStore.isBookmarked(verse.verseKey) ? "bookmark.fill" : "bookmark")
-                        .font(.system(size: 14))
+                        .font(.system(size: 15))
                         .foregroundStyle(
                             userStore.isBookmarked(verse.verseKey)
-                                ? BayanColors.gold
-                                : BayanColors.textSecondary
+                                ? BayanColors.gold : BayanColors.textSecondary
                         )
                 }
             }
 
-            // Arabic text — full width, right-aligned, generous line spacing
-            arabicTextView
-                .frame(maxWidth: .infinity, alignment: .trailing)
+            // ============================================
+            // PRIMARY: Transliteration line with word highlighting
+            // This is what the user reads along with audio
+            // ============================================
+            transliterationView
 
-            // Divider between Arabic and translation
-            Rectangle()
-                .fill(BayanColors.gold.opacity(0.2))
-                .frame(height: 0.5)
-                .padding(.horizontal, BayanSpacing.md)
-
-            // Progressive substitution translation
+            // ============================================
+            // SECONDARY: Progressive substitution line
+            // English words gradually become transliterated Arabic
+            // ============================================
             substitutionView
-                .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Transliteration
-            if settings.showTransliteration, let translitText = transliterationText, !translitText.isEmpty {
-                Text(translitText)
-                    .font(.system(size: settings.translationFontSize - 2, design: .serif))
-                    .italic()
-                    .foregroundStyle(BayanColors.textSecondary.opacity(0.7))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .lineSpacing(3)
+            // ============================================
+            // TERTIARY: Arabic script (small, optional)
+            // For reference — users can toggle this in settings
+            // ============================================
+            if settings.showArabicScript {
+                arabicScriptView
             }
         }
-        .padding(.horizontal, BayanSpacing.md)
-        .padding(.vertical, BayanSpacing.lg)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 16)
         .background(
             isCurrentVerse
                 ? BayanColors.gold.opacity(0.06)
                 : (colorScheme == .dark ? BayanColors.readerBackgroundDark : BayanColors.readerBackground)
         )
-        .overlay(
-            // Active verse indicator
-            Rectangle()
-                .fill(isCurrentVerse ? BayanColors.gold : .clear)
-                .frame(width: 3)
-                .padding(.vertical, 4),
-            alignment: .leading
-        )
+        .overlay(alignment: .leading) {
+            if isCurrentVerse {
+                Rectangle()
+                    .fill(BayanColors.gold)
+                    .frame(width: 3)
+                    .padding(.vertical, 4)
+            }
+        }
         .animation(.easeInOut(duration: 0.25), value: isCurrentVerse)
         .animation(.easeInOut(duration: 0.15), value: currentWordIndex)
 
-        // Separator
-        Divider()
-            .padding(.leading, BayanSpacing.md)
+        Divider().padding(.leading, 16)
     }
 
-    // MARK: - Arabic Text
+    // MARK: - Transliteration (PRIMARY — highlighted during audio)
 
-    private var arabicTextView: some View {
+    private var transliterationView: some View {
         let words = verse.words?.filter { $0.isWord } ?? []
-        return WrappingHStack(alignment: .trailing, spacing: 6) {
+        return WrappingHStack(alignment: .leading, spacing: 4) {
             ForEach(words) { word in
-                Text(word.textUthmani ?? "")
-                    .font(BayanFonts.arabic(settings.arabicFontSize))
-                    .foregroundStyle(wordColor(for: word))
-                    .padding(.horizontal, 3)
-                    .padding(.vertical, 2)
-                    .background(wordBackground(for: word))
+                let isHighlighted = currentWordIndex != nil && word.position == currentWordIndex
+                let translit = word.transliteration?.text ?? ""
+
+                Text(translit)
+                    .font(.system(
+                        size: isHighlighted ? 19 : 17,
+                        weight: isHighlighted ? .bold : .medium,
+                        design: .serif
+                    ))
+                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
+                    .padding(.horizontal, isHighlighted ? 4 : 1)
+                    .padding(.vertical, isHighlighted ? 3 : 0)
+                    .background(
+                        isHighlighted
+                            ? RoundedRectangle(cornerRadius: 6)
+                                .fill(BayanColors.primary.opacity(0.12))
+                            : nil
+                    )
             }
         }
-        .environment(\.layoutDirection, .rightToLeft)
-        .lineSpacing(settings.arabicFontSize * 0.6) // Generous spacing for diacritics
+        .lineSpacing(6)
     }
 
-    // MARK: - Progressive Substitution
+    // MARK: - Progressive Substitution (English → transliteration)
 
     private var substitutionView: some View {
         let words = verse.words?.filter { $0.isWord } ?? []
@@ -121,6 +121,7 @@ struct VerseCell: View {
                 substitutionWord(for: word)
             }
         }
+        .lineSpacing(4)
     }
 
     @ViewBuilder
@@ -128,30 +129,34 @@ struct VerseCell: View {
         let display = vocabularyStore.displayMode(for: word)
         switch display {
         case .english(let text):
+            // Not learned yet — plain English
             Text(text)
-                .font(.system(size: settings.translationFontSize))
-                .foregroundStyle(BayanColors.textPrimary)
+                .font(.system(size: 15))
+                .foregroundStyle(BayanColors.textSecondary)
 
-        case .arabic(let text):
+        case .transliteration(let text):
+            // Learned — show transliteration in accent color
             Text(text)
-                .font(BayanFonts.arabic(settings.translationFontSize + 4))
+                .font(.system(size: 15, weight: .semibold, design: .serif))
                 .foregroundStyle(BayanColors.primary)
-                .padding(.horizontal, 2)
+                .padding(.horizontal, 3)
+                .padding(.vertical, 1)
                 .background(
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(BayanColors.primary.opacity(0.06))
+                        .fill(BayanColors.primary.opacity(0.07))
                 )
 
-        case .transitioning(let arabic, let english):
+        case .transitioning(let transliteration, let english):
+            // Learning — transliteration with tiny English hint
             VStack(spacing: 0) {
-                Text(arabic)
-                    .font(BayanFonts.arabic(settings.translationFontSize + 2))
+                Text(transliteration)
+                    .font(.system(size: 15, weight: .medium, design: .serif))
                     .foregroundStyle(BayanColors.primary)
                 Text(english)
-                    .font(.system(size: max(settings.translationFontSize - 3, 10)))
-                    .foregroundStyle(BayanColors.textSecondary)
+                    .font(.system(size: 10))
+                    .foregroundStyle(BayanColors.textSecondary.opacity(0.7))
             }
-            .padding(.horizontal, 2)
+            .padding(.horizontal, 3)
             .background(
                 RoundedRectangle(cornerRadius: 4)
                     .fill(BayanColors.learning.opacity(0.06))
@@ -159,116 +164,14 @@ struct VerseCell: View {
         }
     }
 
-    // MARK: - Helpers
+    // MARK: - Arabic Script (TERTIARY — small, reference only)
 
-    private var transliterationText: String? {
-        verse.words?
-            .filter { $0.isWord }
-            .compactMap { $0.transliteration?.text }
-            .joined(separator: " ")
-    }
-
-    private func wordColor(for word: Word) -> Color {
-        if let current = currentWordIndex, word.position == current {
-            return BayanColors.gold
-        }
-        return BayanColors.textArabic
-    }
-
-    @ViewBuilder
-    private func wordBackground(for word: Word) -> some View {
-        if let current = currentWordIndex, word.position == current {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(BayanColors.gold.opacity(0.15))
-        }
-    }
-}
-
-// MARK: - Wrapping HStack (improved FlowLayout)
-
-struct WrappingHStack: Layout {
-    var alignment: HorizontalAlignment = .leading
-    var spacing: CGFloat = 4
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = arrange(proposal: proposal, subviews: subviews)
-        return result.size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = arrange(proposal: proposal, subviews: subviews)
-
-        for (index, position) in result.positions.enumerated() {
-            let lineWidth = result.lineWidths[result.lineIndices[index]]
-            let maxWidth = bounds.width
-
-            // Offset for alignment
-            let xOffset: CGFloat
-            switch alignment {
-            case .trailing:
-                xOffset = maxWidth - lineWidth
-            case .center:
-                xOffset = (maxWidth - lineWidth) / 2
-            default:
-                xOffset = 0
-            }
-
-            subviews[index].place(
-                at: CGPoint(
-                    x: bounds.minX + position.x + xOffset,
-                    y: bounds.minY + position.y
-                ),
-                proposal: .unspecified
-            )
-        }
-    }
-
-    private struct ArrangeResult {
-        var size: CGSize
-        var positions: [CGPoint]
-        var lineWidths: [CGFloat]
-        var lineIndices: [Int]
-    }
-
-    private func arrange(proposal: ProposedViewSize, subviews: Subviews) -> ArrangeResult {
-        let maxWidth = proposal.width ?? .infinity
-        var positions: [CGPoint] = []
-        var lineWidths: [CGFloat] = []
-        var lineIndices: [Int] = []
-        var currentX: CGFloat = 0
-        var currentY: CGFloat = 0
-        var lineHeight: CGFloat = 0
-        var currentLineWidth: CGFloat = 0
-        var currentLineIndex = 0
-        var totalWidth: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-
-            if currentX + size.width > maxWidth && currentX > 0 {
-                lineWidths.append(currentLineWidth - spacing)
-                currentX = 0
-                currentY += lineHeight + spacing
-                lineHeight = 0
-                currentLineWidth = 0
-                currentLineIndex += 1
-            }
-
-            positions.append(CGPoint(x: currentX, y: currentY))
-            lineIndices.append(currentLineIndex)
-            currentX += size.width + spacing
-            currentLineWidth = currentX
-            lineHeight = max(lineHeight, size.height)
-            totalWidth = max(totalWidth, currentX - spacing)
-        }
-
-        lineWidths.append(max(currentLineWidth - spacing, 0))
-
-        return ArrangeResult(
-            size: CGSize(width: totalWidth, height: currentY + lineHeight),
-            positions: positions,
-            lineWidths: lineWidths,
-            lineIndices: lineIndices
-        )
+    private var arabicScriptView: some View {
+        Text(verse.textUthmani ?? "")
+            .font(.system(size: 14, design: .serif))
+            .foregroundStyle(BayanColors.textSecondary.opacity(0.5))
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .environment(\.layoutDirection, .rightToLeft)
+            .lineSpacing(4)
     }
 }

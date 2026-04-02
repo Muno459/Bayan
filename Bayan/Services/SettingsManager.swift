@@ -25,6 +25,10 @@ final class SettingsManager {
         didSet { UserDefaults.standard.set(showTransliteration, forKey: "showTransliteration") }
     }
 
+    var showArabicScript: Bool {
+        didSet { UserDefaults.standard.set(showArabicScript, forKey: "showArabicScript") }
+    }
+
     var autoPlayAudio: Bool {
         didSet { UserDefaults.standard.set(autoPlayAudio, forKey: "autoPlayAudio") }
     }
@@ -37,6 +41,7 @@ final class SettingsManager {
         self.selectedReciterId = defaults.object(forKey: "selectedReciterId") as? Int ?? 7
         self.selectedTranslationId = defaults.object(forKey: "selectedTranslationId") as? Int ?? 131
         self.showTransliteration = defaults.object(forKey: "showTransliteration") as? Bool ?? true
+        self.showArabicScript = defaults.object(forKey: "showArabicScript") as? Bool ?? false
         self.autoPlayAudio = defaults.object(forKey: "autoPlayAudio") as? Bool ?? false
     }
 }
