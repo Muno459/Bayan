@@ -96,57 +96,14 @@ struct VerseCell: View {
                 let isHighlighted = currentWordIndex != nil && word.position == currentWordIndex
                 let display = vocabularyStore.displayMode(for: word)
 
-                substitutionWord(display: display, isHighlighted: isHighlighted)
+                SubstitutionWordView(
+                    word: word,
+                    display: display,
+                    isHighlighted: isHighlighted
+                )
             }
         }
         .lineSpacing(6)
-    }
-
-    @ViewBuilder
-    private func substitutionWord(display: SubstitutionDisplay, isHighlighted: Bool) -> some View {
-        switch display {
-        case .english(let text):
-            Text(text)
-                .font(.system(size: isHighlighted ? 19 : 17))
-                .fontWeight(isHighlighted ? .bold : .regular)
-                .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
-                .padding(.horizontal, isHighlighted ? 4 : 0)
-                .padding(.vertical, isHighlighted ? 2 : 0)
-                .background(
-                    isHighlighted
-                        ? AnyShape(RoundedRectangle(cornerRadius: 6)).fill(BayanColors.primary.opacity(0.1))
-                        : nil
-                )
-
-        case .transliteration(let text):
-            // Learned word — transliteration in accent color, stands out
-            Text(text)
-                .font(.system(size: isHighlighted ? 19 : 17, weight: .semibold, design: .serif))
-                .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
-                .padding(.horizontal, 5)
-                .padding(.vertical, isHighlighted ? 3 : 1)
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
-                )
-
-        case .transitioning(let transliteration, let english):
-            // Learning — show transliteration with tiny English hint below
-            VStack(spacing: 0) {
-                Text(transliteration)
-                    .font(.system(size: isHighlighted ? 18 : 16, weight: .medium, design: .serif))
-                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
-                Text(english)
-                    .font(.system(size: 9))
-                    .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
-            }
-            .padding(.horizontal, 4)
-            .padding(.vertical, isHighlighted ? 2 : 0)
-            .background(
-                RoundedRectangle(cornerRadius: 5)
-                    .fill(isHighlighted ? BayanColors.learning.opacity(0.12) : BayanColors.learning.opacity(0.05))
-            )
-        }
     }
 
     // MARK: - SECONDARY: Transliteration Guide

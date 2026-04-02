@@ -1,0 +1,116 @@
+import SwiftUI
+
+/// A single word in the substitution line. Tapping a substituted word
+/// shows a popover with its English meaning, transliteration, and Arabic script.
+struct SubstitutionWordView: View {
+    let word: Word
+    let display: SubstitutionDisplay
+    let isHighlighted: Bool
+
+    @State private var showDetail = false
+
+    var body: some View {
+        wordContent
+            .onTapGesture {
+                // Only show detail for non-English words (substituted ones)
+                if !isEnglishDisplay {
+                    showDetail = true
+                }
+            }
+            .popover(isPresented: $showDetail, arrowEdge: .bottom) {
+                wordDetailPopover
+                    .presentationCompactAdaptation(.popover)
+            }
+    }
+
+    private var isEnglishDisplay: Bool {
+        if case .english = display { return true }
+        return false
+    }
+
+    // MARK: - Word Display
+
+    @ViewBuilder
+    private var wordContent: some View {
+        switch display {
+        case .english(let text):
+            Text(text)
+                .font(.system(size: isHighlighted ? 19 : 17))
+                .fontWeight(isHighlighted ? .bold : .regular)
+                .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
+                .padding(.horizontal, isHighlighted ? 4 : 0)
+                .padding(.vertical, isHighlighted ? 2 : 0)
+                .background {
+                    if isHighlighted {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(BayanColors.primary.opacity(0.1))
+                    }
+                }
+
+        case .transliteration(let text):
+            Text(text)
+                .font(.system(size: isHighlighted ? 19 : 17, weight: .semibold, design: .serif))
+                .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
+                .padding(.horizontal, 5)
+                .padding(.vertical, isHighlighted ? 3 : 1)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
+                )
+
+        case .transitioning(let transliteration, let english):
+            VStack(spacing: 0) {
+                Text(transliteration)
+                    .font(.system(size: isHighlighted ? 18 : 16, weight: .medium, design: .serif))
+                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
+                Text(english)
+                    .font(.system(size: 9))
+                    .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
+            }
+            .padding(.horizontal, 4)
+            .padding(.vertical, isHighlighted ? 2 : 0)
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(isHighlighted ? BayanColors.learning.opacity(0.12) : BayanColors.learning.opacity(0.05))
+            )
+        }
+    }
+
+    // MARK: - Detail Popover
+
+    private var wordDetailPopover: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            // Arabic script large
+            Text(word.textUthmani ?? "")
+                .font(.system(size: 32, design: .serif))
+                .foregroundStyle(BayanColors.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .center)
+
+            Divider()
+
+            // Transliteration
+            HStack {
+                Text("Sounds like")
+                    .font(.system(size: 12))
+                    .foregroundStyle(BayanColors.textSecondary)
+                Spacer()
+                Text(word.transliteration?.text ?? "—")
+                    .font(.system(size: 15, weight: .medium, design: .serif))
+                    .foregroundStyle(BayanColors.primary)
+            }
+
+            // English meaning
+            HStack {
+                Text("Meaning")
+                    .font(.system(size: 12))
+                    .foregroundStyle(BayanColors.textSecondary)
+                Spacer()
+                Text(word.translation?.text ?? "—")
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(BayanColors.textPrimary)
+            }
+        }
+        .padding(16)
+        .frame(width: 220)
+    }
+}

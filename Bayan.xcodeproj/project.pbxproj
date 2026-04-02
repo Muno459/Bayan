@@ -29,6 +29,7 @@
 		C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */; };
 		CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */; };
 		D0ED492690D4ECB3B0FCF839 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5942E0AE9528D5335A881F18 /* FlowLayout.swift */; };
+		D90A5BC3E27D68AE494047D6 /* SubstitutionWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */; };
 		DBA78A8116990B09AF5E2EC7 /* ChapterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */; };
 		E3A40877B08348F00AAC9D89 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6447627CECC3016C7A61FF71 /* Theme.swift */; };
 		E4D64CAC6899A265B1B0CF4B /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31A05CB80635C8CE7D48599 /* APIConfig.swift */; };
@@ -64,6 +65,7 @@
 		90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseReaderView.swift; sourceTree = "<group>"; };
 		9129D60E125ABD73E2850380 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		92DC26419D0924EBF714B5B7 /* BayanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanTests.swift; sourceTree = "<group>"; };
+		A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionWordView.swift; sourceTree = "<group>"; };
 		AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStore.swift; sourceTree = "<group>"; };
 		C093DA1BBAD42A930B4FBA7F /* Verse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verse.swift; sourceTree = "<group>"; };
 		C31A05CB80635C8CE7D48599 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */,
 				469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */,
 				2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */,
+				A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */,
 				7D15F1999A179436E8E4BE6C /* VerseCell.swift */,
 				90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */,
 			);
@@ -404,6 +407,7 @@
 				5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */,
 				0ED2BB2A3B0D82407CECF6E5 /* SettingsManager.swift in Sources */,
 				CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */,
+				D90A5BC3E27D68AE494047D6 /* SubstitutionWordView.swift in Sources */,
 				E3A40877B08348F00AAC9D89 /* Theme.swift in Sources */,
 				3564266BA666EBF705758BF5 /* TokenManager.swift in Sources */,
 				51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */,
