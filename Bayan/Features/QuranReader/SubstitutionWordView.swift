@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// A single word in the substitution line. Tapping a substituted (Arabic) word
-/// shows a popover with its English meaning and play button.
+/// A single word in the substitution line. Tapping an Arabic word
+/// opens a learning card with meaning, pronunciation drill, and frequency.
 struct SubstitutionWordView: View {
     let word: Word
     let display: SubstitutionDisplay
@@ -20,9 +20,16 @@ struct SubstitutionWordView: View {
                     showDetail = true
                 }
             }
-            .popover(isPresented: $showDetail, arrowEdge: .bottom) {
-                wordDetailPopover
-                    .presentationCompactAdaptation(.popover)
+            .sheet(isPresented: $showDetail) {
+                wordPlayer.stop()
+            } content: {
+                WordLearningCard(
+                    word: word,
+                    verseKey: verseKey,
+                    wordPlayer: $wordPlayer
+                )
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
             }
             .onChange(of: showDetail) { _, isShowing in
                 if isShowing && settings.autoPlayWordPronunciation {
@@ -50,13 +57,11 @@ struct SubstitutionWordView: View {
                 .padding(.vertical, isHighlighted ? 2 : 0)
                 .background {
                     if isHighlighted {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(BayanColors.primary.opacity(0.1))
+                        RoundedRectangle(cornerRadius: 6).fill(BayanColors.primary.opacity(0.1))
                     }
                 }
 
         case .arabic(let text):
-            // Learned word — Arabic script in accent color
             Text(text)
                 .font(.system(size: isHighlighted ? 24 : 22, design: .serif))
                 .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
@@ -68,7 +73,6 @@ struct SubstitutionWordView: View {
                 )
 
         case .transitioning(let arabic, let english):
-            // Learning — Arabic script with small English hint below
             VStack(spacing: 0) {
                 Text(arabic)
                     .font(.system(size: isHighlighted ? 22 : 20, design: .serif))
@@ -85,45 +89,129 @@ struct SubstitutionWordView: View {
             )
         }
     }
+}
 
-    // MARK: - Detail Popover
+// MARK: - Word Learning Card (Sheet)
 
-    private var wordDetailPopover: some View {
-        VStack(spacing: 14) {
-            // Arabic script large + play
-            HStack(spacing: 12) {
-                Spacer()
+/// Full learning card shown as a sheet when tapping an Arabic word.
+/// Shows: Arabic large, meaning, play button, drill button, frequency.
+struct WordLearningCard: View {
+    let word: Word
+    let verseKey: String
+    @Binding var wordPlayer: WordAudioPlayer
 
-                Text(word.textUthmani ?? "")
-                    .font(.system(size: 36, design: .serif))
-                    .foregroundStyle(BayanColors.textPrimary)
+    private var frequency: Int? {
+        QuranicWordData.frequency(for: word.textUthmani ?? "")
+    }
 
+    var body: some View {
+        VStack(spacing: 24) {
+            // Arabic word — large, centered
+            Text(word.textUthmani ?? "")
+                .font(.system(size: 56, design: .serif))
+                .foregroundStyle(BayanColors.textPrimary)
+                .padding(.top, 20)
+
+            // English meaning
+            Text(word.translation?.text ?? "")
+                .font(.system(size: 20, weight: .medium))
+                .foregroundStyle(BayanColors.textSecondary)
+
+            Divider().padding(.horizontal, 32)
+
+            // Audio controls
+            HStack(spacing: 20) {
+                // Single play
                 Button {
                     wordPlayer.play(verseKey: verseKey, wordPosition: word.position)
                 } label: {
-                    Image(systemName: wordPlayer.isPlaying ? "speaker.wave.2.fill" : "play.circle.fill")
-                        .font(.system(size: 28))
-                        .foregroundStyle(BayanColors.primary)
-                        .symbolEffect(.pulse, isActive: wordPlayer.isPlaying)
+                    VStack(spacing: 4) {
+                        Image(systemName: wordPlayer.isPlaying && !wordPlayer.isDrilling
+                              ? "speaker.wave.2.fill" : "play.circle.fill")
+                            .font(.system(size: 32))
+                            .foregroundStyle(BayanColors.primary)
+                        Text("Listen")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(BayanColors.textSecondary)
+                    }
                 }
 
-                Spacer()
+                // Drill (3x: normal → slow → normal)
+                Button {
+                    wordPlayer.drill(verseKey: verseKey, wordPosition: word.position)
+                } label: {
+                    VStack(spacing: 4) {
+                        ZStack {
+                            Image(systemName: "repeat")
+                                .font(.system(size: 28))
+                                .foregroundStyle(wordPlayer.isDrilling ? BayanColors.gold : BayanColors.primary)
+
+                            if wordPlayer.isDrilling {
+                                Text(drillStepLabel)
+                                    .font(.system(size: 9, weight: .bold))
+                                    .foregroundStyle(BayanColors.gold)
+                                    .offset(y: 16)
+                            }
+                        }
+                        .frame(height: 32)
+
+                        Text("Practice")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(BayanColors.textSecondary)
+                    }
+                }
+            }
+            .padding(.vertical, 8)
+
+            // Drill explanation
+            if wordPlayer.isDrilling {
+                Text(drillStatusText)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(BayanColors.gold)
+                    .transition(.opacity)
             }
 
-            Divider()
-
-            // English meaning
-            HStack {
-                Text("Meaning")
-                    .font(.system(size: 12))
-                    .foregroundStyle(BayanColors.textSecondary)
-                Spacer()
-                Text(word.translation?.text ?? "")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(BayanColors.textPrimary)
+            // Word frequency
+            if let freq = frequency {
+                HStack(spacing: 6) {
+                    Image(systemName: "text.book.closed")
+                        .font(.system(size: 14))
+                        .foregroundStyle(BayanColors.primary)
+                    Text("Appears \(freq) time\(freq == 1 ? "" : "s") in the Quran")
+                        .font(.system(size: 14))
+                        .foregroundStyle(BayanColors.textSecondary)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(BayanColors.primary.opacity(0.05))
+                )
             }
+
+            Spacer()
         }
-        .padding(16)
-        .frame(width: 240)
+        .frame(maxWidth: .infinity)
+        .background(BayanColors.background)
+        .animation(.easeInOut(duration: 0.2), value: wordPlayer.isDrilling)
+        .animation(.easeInOut(duration: 0.2), value: wordPlayer.drillStep)
+    }
+
+    private var drillStepLabel: String {
+        switch wordPlayer.drillStep {
+        case 0: "1x"
+        case 1: "slow"
+        case 2: "1x"
+        default: ""
+        }
+    }
+
+    private var drillStatusText: String {
+        switch wordPlayer.drillStep {
+        case 0: "Listening at normal speed..."
+        case 1: "Now slower... listen carefully"
+        case 2: "One more time, normal speed"
+        default: ""
+        }
     }
 }
