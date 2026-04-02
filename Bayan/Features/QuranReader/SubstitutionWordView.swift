@@ -9,6 +9,7 @@ struct SubstitutionWordView: View {
     let verseKey: String
 
     @Environment(SettingsManager.self) private var settings
+    @Environment(VocabularyStore.self) private var vocabularyStore
     @State private var showDetail = false
     @State private var wordPlayer = WordAudioPlayer()
 
@@ -26,9 +27,10 @@ struct SubstitutionWordView: View {
                 WordLearningCard(
                     word: word,
                     verseKey: verseKey,
-                    wordPlayer: $wordPlayer
+                    wordPlayer: $wordPlayer,
+                    vocabularyStore: vocabularyStore
                 )
-                .presentationDetents([.medium])
+                .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
             }
             .onChange(of: showDetail) { _, isShowing in
@@ -99,7 +101,7 @@ struct WordLearningCard: View {
     let word: Word
     let verseKey: String
     @Binding var wordPlayer: WordAudioPlayer
-    @Environment(VocabularyStore.self) private var vocabularyStore
+    let vocabularyStore: VocabularyStore
 
     private var frequency: Int? {
         QuranicWordData.frequency(for: word.textUthmani ?? "")
