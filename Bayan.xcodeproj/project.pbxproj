@@ -33,7 +33,6 @@
 		95485533C43F5A0C8ACD2753 /* VocabularyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */; };
 		C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */; };
 		CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */; };
-		D0ED492690D4ECB3B0FCF839 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5942E0AE9528D5335A881F18 /* FlowLayout.swift */; };
 		D90A5BC3E27D68AE494047D6 /* SubstitutionWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */; };
 		D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69786BA6DF671EFC6B4EA717 /* OnboardingView.swift */; };
 		DBA78A8116990B09AF5E2EC7 /* ChapterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */; };
@@ -61,7 +60,6 @@
 		469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListView.swift; sourceTree = "<group>"; };
 		4F42879BFF4970DA7ADFC56A /* Bayan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Bayan.entitlements; sourceTree = "<group>"; };
 		569342C6252C64C5DCCF3179 /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
-		5942E0AE9528D5335A881F18 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		5B871515C5CE216F4E8F381B /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		5D2B225323C0E98272174DA2 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
 		6447627CECC3016C7A61FF71 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -298,7 +296,6 @@
 		CBAB9F7EB93011C2956E807B /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				5942E0AE9528D5335A881F18 /* FlowLayout.swift */,
 				5B871515C5CE216F4E8F381B /* Haptics.swift */,
 				F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */,
 			);
@@ -438,7 +435,6 @@
 				DBA78A8116990B09AF5E2EC7 /* ChapterListView.swift in Sources */,
 				4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */,
 				06F34D74F099B513DFB66BBF /* DailyWordView.swift in Sources */,
-				D0ED492690D4ECB3B0FCF839 /* FlowLayout.swift in Sources */,
 				38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */,
 				D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */,
 				643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */,

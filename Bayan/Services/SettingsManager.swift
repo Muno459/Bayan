@@ -21,18 +21,12 @@ final class SettingsManager {
         didSet { UserDefaults.standard.set(selectedTranslationId, forKey: "selectedTranslationId") }
     }
 
-    var showTransliteration: Bool {
-        didSet { UserDefaults.standard.set(showTransliteration, forKey: "showTransliteration") }
+    /// Whether to show the full English translation below the substitution line
+    var showFullTranslation: Bool {
+        didSet { UserDefaults.standard.set(showFullTranslation, forKey: "showFullTranslation") }
     }
 
-    var showArabicScript: Bool {
-        didSet { UserDefaults.standard.set(showArabicScript, forKey: "showArabicScript") }
-    }
-
-    var autoPlayAudio: Bool {
-        didSet { UserDefaults.standard.set(autoPlayAudio, forKey: "autoPlayAudio") }
-    }
-
+    /// Auto-play word pronunciation when tapping a substituted word
     var autoPlayWordPronunciation: Bool {
         didSet { UserDefaults.standard.set(autoPlayWordPronunciation, forKey: "autoPlayWordPronunciation") }
     }
@@ -44,9 +38,7 @@ final class SettingsManager {
         self.translationFontSize = defaults.object(forKey: "translationFontSize") as? CGFloat ?? 16
         self.selectedReciterId = defaults.object(forKey: "selectedReciterId") as? Int ?? 7
         self.selectedTranslationId = defaults.object(forKey: "selectedTranslationId") as? Int ?? 131
-        self.showTransliteration = defaults.object(forKey: "showTransliteration") as? Bool ?? true
-        self.showArabicScript = defaults.object(forKey: "showArabicScript") as? Bool ?? false
-        self.autoPlayAudio = defaults.object(forKey: "autoPlayAudio") as? Bool ?? false
+        self.showFullTranslation = defaults.object(forKey: "showFullTranslation") as? Bool ?? true
         self.autoPlayWordPronunciation = defaults.object(forKey: "autoPlayWordPronunciation") as? Bool ?? true
     }
 }

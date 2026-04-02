@@ -166,6 +166,28 @@ final class AudioPlaybackManager {
         currentVerseKey = verseKey
     }
 
+    func skipToNextVerse() {
+        guard let currentKey = currentVerseKey,
+              let currentIdx = verseTimestamps.firstIndex(where: { $0.verseKey == currentKey }),
+              currentIdx + 1 < verseTimestamps.count
+        else { return }
+        let next = verseTimestamps[currentIdx + 1]
+        seekToVerse(next.verseKey)
+    }
+
+    func skipToPreviousVerse() {
+        guard let currentKey = currentVerseKey,
+              let currentIdx = verseTimestamps.firstIndex(where: { $0.verseKey == currentKey }),
+              currentIdx > 0
+        else { return }
+        let prev = verseTimestamps[currentIdx - 1]
+        seekToVerse(prev.verseKey)
+    }
+
+    func setPlaybackSpeed(_ speed: Float) {
+        player?.rate = speed
+    }
+
     func stop() {
         player?.pause()
         player?.seek(to: .zero)

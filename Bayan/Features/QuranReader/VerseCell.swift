@@ -26,6 +26,14 @@ struct VerseCell: View {
 
                 Spacer()
 
+                // Share
+                ShareLink(item: shareText) {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.system(size: 14))
+                        .foregroundStyle(BayanColors.textSecondary)
+                }
+
+                // Bookmark
                 Button {
                     Haptics.medium()
                     userStore.toggleBookmark(
@@ -53,7 +61,7 @@ struct VerseCell: View {
             // ===========================================
             // SECONDARY: Full English translation
             // ===========================================
-            if settings.showTransliteration, let translation = verse.translations?.first {
+            if settings.showFullTranslation, let translation = verse.translations?.first {
                 Text(translation.text.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression))
                     .font(.system(size: 13))
                     .foregroundStyle(BayanColors.textSecondary.opacity(0.7))
@@ -96,5 +104,14 @@ struct VerseCell: View {
             }
         }
         .lineSpacing(8)
+    }
+
+    // MARK: - Share
+
+    private var shareText: String {
+        let arabic = verse.textUthmani ?? ""
+        let english = verse.translations?.first?.text
+            .replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression) ?? ""
+        return "\(arabic)\n\n\(english)\n\n[\(verse.verseKey)] - Quran"
     }
 }

@@ -203,7 +203,7 @@ struct SettingsTab: View {
                 }
 
                 Section {
-                    Toggle("Show Full English Translation", isOn: $s.showTransliteration)
+                    Toggle("Show Full English Translation", isOn: $s.showFullTranslation)
                         .tint(BayanColors.primary)
                 } header: {
                     Text("Display")
