@@ -14,7 +14,7 @@ struct OnboardingView: View {
                 iconColor: BayanColors.primary,
                 title: "Welcome to Bayan",
                 subtitle: "Learn Quranic Arabic naturally",
-                body: "Bayan helps you understand the Quran by gradually teaching you Arabic vocabulary as you read. No prior Arabic knowledge needed."
+                body: "Bayan helps you understand the Quran by gradually introducing Arabic words into your reading. No prior Arabic knowledge needed."
             )
             .tag(0)
 
@@ -24,11 +24,11 @@ struct OnboardingView: View {
                 iconColor: BayanColors.gold,
                 title: "Progressive Substitution",
                 subtitle: "English becomes Arabic over time",
-                body: "You start reading in English. As you encounter words repeatedly, they're replaced with their Arabic pronunciation (transliteration). Tap any green word to see its meaning."
+                body: "You start reading in English. As you encounter words repeatedly, they are replaced with their original Arabic script. Tap any Arabic word to see its meaning and hear its pronunciation."
             )
             .tag(1)
 
-            // Page 3: Set your level
+            // Page 3: Set level
             VStack(spacing: 24) {
                 Spacer()
 
@@ -40,15 +40,15 @@ struct OnboardingView: View {
                     .font(.system(size: 24, weight: .bold))
                     .foregroundStyle(BayanColors.textPrimary)
 
-                Text("How much Arabic do you already know?")
+                Text("How much Quranic Arabic do you already know?")
                     .font(.system(size: 15))
                     .foregroundStyle(BayanColors.textSecondary)
 
                 VStack(spacing: 12) {
-                    levelButton(title: "Complete Beginner", subtitle: "I don't know any Arabic", level: 0.0)
-                    levelButton(title: "Know Some Words", subtitle: "I recognize Allah, Bismillah, etc.", level: 0.3)
-                    levelButton(title: "Intermediate", subtitle: "I can follow along with recitation", level: 0.6)
-                    levelButton(title: "Advanced", subtitle: "I want mostly transliteration", level: 0.9)
+                    levelButton(title: "Complete Beginner", subtitle: "I read the Quran only in English", level: 0.0)
+                    levelButton(title: "Know Some Words", subtitle: "I recognize Allah, Bismillah, Rahman", level: 0.3)
+                    levelButton(title: "Intermediate", subtitle: "I can read some Arabic script", level: 0.6)
+                    levelButton(title: "Advanced", subtitle: "I want mostly Arabic", level: 0.9)
                 }
                 .padding(.horizontal, 24)
 
@@ -61,37 +61,28 @@ struct OnboardingView: View {
     }
 
     private func onboardingPage(
-        icon: String,
-        iconColor: Color,
-        title: String,
-        subtitle: String,
-        body: String
+        icon: String, iconColor: Color,
+        title: String, subtitle: String, body: String
     ) -> some View {
         VStack(spacing: 20) {
             Spacer()
-
             Image(systemName: icon)
                 .font(.system(size: 56))
                 .foregroundStyle(iconColor)
                 .padding(.bottom, 8)
-
             Text(title)
                 .font(.system(size: 28, weight: .bold))
                 .foregroundStyle(BayanColors.textPrimary)
-
             Text(subtitle)
                 .font(.system(size: 17, weight: .medium))
                 .foregroundStyle(BayanColors.primary)
-
             Text(body)
                 .font(.system(size: 15))
                 .foregroundStyle(BayanColors.textSecondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
                 .lineSpacing(4)
-
             Spacer()
-
             Button {
                 withAnimation { currentPage += 1 }
             } label: {
@@ -114,24 +105,14 @@ struct OnboardingView: View {
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(BayanColors.textPrimary)
-                    Text(subtitle)
-                        .font(.system(size: 13))
-                        .foregroundStyle(BayanColors.textSecondary)
+                    Text(title).font(.system(size: 16, weight: .semibold)).foregroundStyle(BayanColors.textPrimary)
+                    Text(subtitle).font(.system(size: 13)).foregroundStyle(BayanColors.textSecondary)
                 }
                 Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14))
-                    .foregroundStyle(BayanColors.textSecondary)
+                Image(systemName: "chevron.right").font(.system(size: 14)).foregroundStyle(BayanColors.textSecondary)
             }
             .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.systemBackground))
-                    .shadow(color: .black.opacity(0.05), radius: 6, y: 2)
-            )
+            .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemBackground)).shadow(color: .black.opacity(0.05), radius: 6, y: 2))
         }
     }
 }

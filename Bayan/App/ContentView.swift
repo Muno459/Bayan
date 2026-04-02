@@ -203,15 +203,12 @@ struct SettingsTab: View {
                 }
 
                 Section {
-                    Toggle("Show Arabic Script", isOn: $s.showArabicScript)
-                        .tint(BayanColors.primary)
-
-                    Toggle("Show Full Transliteration", isOn: $s.showTransliteration)
+                    Toggle("Show Full English Translation", isOn: $s.showTransliteration)
                         .tint(BayanColors.primary)
                 } header: {
                     Text("Display")
                 } footer: {
-                    Text("Arabic script is shown as a small reference below each verse. Transliteration is always the primary reading text.")
+                    Text("Shows the complete English translation below the progressive substitution line.")
                 }
 
                 Section {

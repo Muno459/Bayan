@@ -9,7 +9,6 @@ struct SubstitutionControlsSheet: View {
 
         NavigationStack {
             List {
-                // Substitution Level
                 Section {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
@@ -26,19 +25,17 @@ struct SubstitutionControlsSheet: View {
 
                         HStack {
                             Text("All English")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(.caption).foregroundStyle(.secondary)
                             Spacer()
-                            Text("All Transliteration")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                            Text("All Arabic")
+                                .font(.caption).foregroundStyle(.secondary)
                         }
                     }
                     .padding(.vertical, 8)
                 } header: {
                     Text("Substitution")
                 } footer: {
-                    Text("Controls how many English words are replaced with their phonetic Arabic (transliteration). Words you've learned through repeated reading are always shown in transliteration.")
+                    Text("Controls how many English words are replaced with their original Arabic script. Words you've learned through repeated reading are always shown in Arabic.")
                 }
 
                 // Preview
@@ -48,13 +45,13 @@ struct SubstitutionControlsSheet: View {
                             Text("In the name of")
                                 .font(.system(size: 15))
                                 .foregroundStyle(BayanColors.textSecondary)
-                            Text("l-lahi")
-                                .font(.system(size: 15, weight: .semibold, design: .serif))
+                            Text("ٱللَّهِ")
+                                .font(.system(size: 20, design: .serif))
                                 .foregroundStyle(BayanColors.primary)
                                 .padding(.horizontal, 3)
                                 .background(RoundedRectangle(cornerRadius: 4).fill(BayanColors.primary.opacity(0.07)))
-                            Text("l-rahmani")
-                                .font(.system(size: 15, weight: .semibold, design: .serif))
+                            Text("ٱلرَّحْمَـٰنِ")
+                                .font(.system(size: 20, design: .serif))
                                 .foregroundStyle(BayanColors.primary)
                                 .padding(.horizontal, 3)
                                 .background(RoundedRectangle(cornerRadius: 4).fill(BayanColors.primary.opacity(0.07)))
@@ -62,14 +59,13 @@ struct SubstitutionControlsSheet: View {
                                 .font(.system(size: 15))
                                 .foregroundStyle(BayanColors.textSecondary)
                         }
-                        Text("Green = learned words shown as transliteration")
+                        Text("Green = words you've learned, shown in Arabic script")
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                     }
                     .padding(.vertical, 4)
                 }
 
-                // Stats
                 Section("Vocabulary Progress") {
                     StatRow(label: "Words Encountered", value: "\(vocabularyStore.totalWordsEncountered)")
                     StatRow(label: "Mastered", value: "\(vocabularyStore.masteredCount)", color: BayanColors.mastered)
@@ -77,13 +73,12 @@ struct SubstitutionControlsSheet: View {
                     StatRow(label: "Learning", value: "\(vocabularyStore.learningCount)", color: BayanColors.learning)
                 }
 
-                // How it works
                 Section("How It Works") {
                     VStack(alignment: .leading, spacing: 6) {
-                        Label("Read verses — Bayan tracks every word", systemImage: "1.circle.fill")
-                        Label("Hear audio — words get reinforced", systemImage: "2.circle.fill")
-                        Label("English words become transliteration", systemImage: "3.circle.fill")
-                        Label("You naturally learn Quranic Arabic sounds", systemImage: "4.circle.fill")
+                        Label("Read verses in English with Arabic words", systemImage: "1.circle.fill")
+                        Label("Hear pronunciation by tapping Arabic words", systemImage: "2.circle.fill")
+                        Label("More words become Arabic as you read", systemImage: "3.circle.fill")
+                        Label("Eventually read the Quran in its original Arabic", systemImage: "4.circle.fill")
                     }
                     .font(.subheadline)
                     .foregroundStyle(BayanColors.textSecondary)
@@ -109,9 +104,7 @@ private struct StatRow: View {
         HStack {
             Text(label)
             Spacer()
-            Text(value)
-                .fontWeight(.semibold)
-                .foregroundStyle(color)
+            Text(value).fontWeight(.semibold).foregroundStyle(color)
         }
     }
 }

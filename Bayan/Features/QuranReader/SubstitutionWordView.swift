@@ -1,8 +1,7 @@
 import SwiftUI
 
-/// A single word in the substitution line. Tapping a substituted word
-/// shows a popover with its English meaning, transliteration, and Arabic script.
-/// Includes a play button to hear the exact word from audio.qurancdn.com.
+/// A single word in the substitution line. Tapping a substituted (Arabic) word
+/// shows a popover with its English meaning and play button.
 struct SubstitutionWordView: View {
     let word: Word
     let display: SubstitutionDisplay
@@ -56,9 +55,10 @@ struct SubstitutionWordView: View {
                     }
                 }
 
-        case .transliteration(let text):
+        case .arabic(let text):
+            // Learned word — Arabic script in accent color
             Text(text)
-                .font(.system(size: isHighlighted ? 19 : 17, weight: .semibold, design: .serif))
+                .font(.system(size: isHighlighted ? 24 : 22, design: .serif))
                 .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
                 .padding(.horizontal, 5)
                 .padding(.vertical, isHighlighted ? 3 : 1)
@@ -67,10 +67,11 @@ struct SubstitutionWordView: View {
                         .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
                 )
 
-        case .transitioning(let transliteration, let english):
+        case .transitioning(let arabic, let english):
+            // Learning — Arabic script with small English hint below
             VStack(spacing: 0) {
-                Text(transliteration)
-                    .font(.system(size: isHighlighted ? 18 : 16, weight: .medium, design: .serif))
+                Text(arabic)
+                    .font(.system(size: isHighlighted ? 22 : 20, design: .serif))
                     .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
                 Text(english)
                     .font(.system(size: 9))
@@ -89,15 +90,14 @@ struct SubstitutionWordView: View {
 
     private var wordDetailPopover: some View {
         VStack(spacing: 14) {
-            // Arabic script large + play button
+            // Arabic script large + play
             HStack(spacing: 12) {
                 Spacer()
 
                 Text(word.textUthmani ?? "")
-                    .font(.system(size: 34, design: .serif))
+                    .font(.system(size: 36, design: .serif))
                     .foregroundStyle(BayanColors.textPrimary)
 
-                // Play pronunciation from audio.qurancdn.com
                 Button {
                     wordPlayer.play(verseKey: verseKey, wordPosition: word.position)
                 } label: {
@@ -112,24 +112,13 @@ struct SubstitutionWordView: View {
 
             Divider()
 
-            // Transliteration
-            HStack {
-                Text("Sounds like")
-                    .font(.system(size: 12))
-                    .foregroundStyle(BayanColors.textSecondary)
-                Spacer()
-                Text(word.transliteration?.text ?? "—")
-                    .font(.system(size: 16, weight: .semibold, design: .serif))
-                    .foregroundStyle(BayanColors.primary)
-            }
-
             // English meaning
             HStack {
                 Text("Meaning")
                     .font(.system(size: 12))
                     .foregroundStyle(BayanColors.textSecondary)
                 Spacer()
-                Text(word.translation?.text ?? "—")
+                Text(word.translation?.text ?? "")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(BayanColors.textPrimary)
             }
@@ -137,6 +126,4 @@ struct SubstitutionWordView: View {
         .padding(16)
         .frame(width: 240)
     }
-
-
 }

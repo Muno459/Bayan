@@ -5,7 +5,6 @@ struct WordLearningState: Codable, Sendable {
     let wordId: Int
     let arabicText: String
     let translationText: String
-    let transliterationText: String
     var masteryLevel: MasteryLevel
     var exposureCount: Int
     var lastSeenDate: Date?
@@ -15,7 +14,6 @@ struct WordLearningState: Codable, Sendable {
         wordId: Int,
         arabicText: String,
         translationText: String,
-        transliterationText: String,
         masteryLevel: MasteryLevel = .unseen,
         exposureCount: Int = 0,
         lastSeenDate: Date? = nil,
@@ -24,7 +22,6 @@ struct WordLearningState: Codable, Sendable {
         self.wordId = wordId
         self.arabicText = arabicText
         self.translationText = translationText
-        self.transliterationText = transliterationText
         self.masteryLevel = masteryLevel
         self.exposureCount = exposureCount
         self.lastSeenDate = lastSeenDate
@@ -35,9 +32,9 @@ struct WordLearningState: Codable, Sendable {
 enum MasteryLevel: Int, Codable, Sendable, CaseIterable, Comparable {
     case unseen = 0
     case introduced = 1   // Seen a few times, still English
-    case learning = 2     // Shows transliteration with English hint below
-    case familiar = 3     // Shows transliteration only
-    case mastered = 4     // Shows transliteration confidently, optional Arabic script
+    case learning = 2     // Shows Arabic with English hint below
+    case familiar = 3     // Shows Arabic only
+    case mastered = 4     // Confidently reads Arabic
 
     static func < (lhs: MasteryLevel, rhs: MasteryLevel) -> Bool {
         lhs.rawValue < rhs.rawValue
@@ -55,12 +52,12 @@ enum MasteryLevel: Int, Codable, Sendable, CaseIterable, Comparable {
 }
 
 /// How a word appears in the reading view.
-/// The journey: English -> English+transliteration -> transliteration -> transliteration (confident)
+/// The journey: English → English + Arabic hint → Arabic only
 enum SubstitutionDisplay: Sendable {
     /// User hasn't learned this word yet — show English translation
     case english(String)
-    /// User is learning — show transliteration with small English hint
-    case transitioning(transliteration: String, english: String)
-    /// User knows this word — show transliteration only
-    case transliteration(String)
+    /// User is learning — show Arabic script with small English hint below
+    case transitioning(arabic: String, english: String)
+    /// User knows this word — show Arabic script only
+    case arabic(String)
 }

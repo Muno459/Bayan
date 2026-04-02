@@ -1,8 +1,8 @@
 import SwiftUI
 
 /// Verse display: progressive substitution is the PRIMARY reading text.
-/// English words gradually become transliterated Arabic as the user learns.
-/// Audio highlighting happens on the substitution line.
+/// English words gradually become Arabic script as the user learns.
+/// Audio word highlighting happens on the substitution line.
 struct VerseCell: View {
     let verse: Verse
     let isCurrentVerse: Bool
@@ -45,29 +45,19 @@ struct VerseCell: View {
 
             // ===========================================
             // PRIMARY: Progressive substitution
-            // The main reading line. English words become
-            // transliterated Arabic as the user learns.
+            // English words become Arabic script as user learns.
             // Audio word highlighting is HERE.
             // ===========================================
             substitutionView
 
             // ===========================================
-            // SECONDARY: Full transliteration
-            // Pronunciation guide — smaller, below
+            // SECONDARY: Full English translation
             // ===========================================
-            if settings.showTransliteration {
-                transliterationView
-            }
-
-            // ===========================================
-            // TERTIARY: Arabic script (optional, small)
-            // ===========================================
-            if settings.showArabicScript {
-                Text(verse.textUthmani ?? "")
-                    .font(.system(size: 13, design: .serif))
-                    .foregroundStyle(BayanColors.textSecondary.opacity(0.4))
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .environment(\.layoutDirection, .rightToLeft)
+            if settings.showTransliteration, let translation = verse.translations?.first {
+                Text(translation.text.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression))
+                    .font(.system(size: 13))
+                    .foregroundStyle(BayanColors.textSecondary.opacity(0.7))
+                    .lineSpacing(3)
             }
         }
         .padding(.horizontal, 16)
@@ -88,7 +78,7 @@ struct VerseCell: View {
         Divider().padding(.leading, 16)
     }
 
-    // MARK: - PRIMARY: Progressive Substitution with Audio Highlight
+    // MARK: - Progressive Substitution with Audio Highlight
 
     private var substitutionView: some View {
         let words = verse.words?.filter { $0.isWord } ?? []
@@ -105,21 +95,6 @@ struct VerseCell: View {
                 )
             }
         }
-        .lineSpacing(6)
-    }
-
-    // MARK: - SECONDARY: Transliteration Guide
-
-    private var transliterationView: some View {
-        let text = verse.words?
-            .filter { $0.isWord }
-            .compactMap { $0.transliteration?.text }
-            .joined(separator: " ") ?? ""
-
-        return Text(text)
-            .font(.system(size: 13, design: .serif))
-            .italic()
-            .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
-            .lineSpacing(3)
+        .lineSpacing(8)
     }
 }
