@@ -14,7 +14,7 @@ struct OnboardingView: View {
                 iconColor: BayanColors.primary,
                 title: "Welcome to Bayan",
                 subtitle: "Learn Quranic Arabic naturally",
-                body: "Bayan helps you understand the Quran by gradually teaching you Arabic vocabulary as you read — no prior Arabic knowledge needed."
+                body: "Bayan helps you understand the Quran by gradually teaching you Arabic vocabulary as you read. No prior Arabic knowledge needed."
             )
             .tag(0)
 
