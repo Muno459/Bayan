@@ -194,6 +194,9 @@ struct WordLearningCard: View {
                 )
             }
 
+            // Letter breakdown — teach Arabic reading
+            LetterBreakdownView(arabicText: word.textUthmani ?? "")
+
             // "I Know This" button
             if let state = vocabularyStore.wordStates[word.id], state.masteryLevel < .familiar {
                 Button {

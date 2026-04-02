@@ -11,6 +11,7 @@
 		06F34D74F099B513DFB66BBF /* DailyWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B9F41428421B9178DED4BD /* DailyWordView.swift */; };
 		08F3199271330C9DB2CD6871 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 7E8EC6F05F88E13BBDB04421 /* GRDB */; };
 		0BB374F813C999845ED2988E /* BayanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DC26419D0924EBF714B5B7 /* BayanTests.swift */; };
+		0D7A74A6AA41B4AF3FEAED91 /* LetterBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */; };
 		0ED2BB2A3B0D82407CECF6E5 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9129D60E125ABD73E2850380 /* SettingsManager.swift */; };
 		1511B52CBFCE08A9F626FE79 /* VocabularyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */; };
 		2CB484D0A1FCDCEDD4A6B30B /* WordAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */; };
@@ -30,6 +31,7 @@
 		842920337DC5387D7F47135A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC8835784181590124853E68 /* Assets.xcassets */; };
 		8D96F80B437B29791D0A28CD /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131D3C3DBD81D86B7714DBA /* Chapter.swift */; };
 		90FAF3988D417255E1A24973 /* AudioPlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */; };
+		9366217F4E924B20C893B818 /* ArabicLetterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */; };
 		95485533C43F5A0C8ACD2753 /* VocabularyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */; };
 		C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */; };
 		CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */; };
@@ -56,6 +58,7 @@
 		07211B76D703781FA8C56786 /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
 		132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerBar.swift; sourceTree = "<group>"; };
 		2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionControlsSheet.swift; sourceTree = "<group>"; };
+		2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArabicLetterData.swift; sourceTree = "<group>"; };
 		38C860FA5FE8046DEE0FD1EB /* Bayan.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Bayan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		447B75B102513CD4AD8B4415 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListView.swift; sourceTree = "<group>"; };
@@ -77,6 +80,7 @@
 		92DC26419D0924EBF714B5B7 /* BayanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanTests.swift; sourceTree = "<group>"; };
 		A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionWordView.swift; sourceTree = "<group>"; };
 		A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTabView.swift; sourceTree = "<group>"; };
+		A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterBreakdownView.swift; sourceTree = "<group>"; };
 		AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStore.swift; sourceTree = "<group>"; };
 		B6B9F41428421B9178DED4BD /* DailyWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWordView.swift; sourceTree = "<group>"; };
 		C093DA1BBAD42A930B4FBA7F /* Verse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verse.swift; sourceTree = "<group>"; };
@@ -290,6 +294,7 @@
 				4010CDC557F4CECE8BFCCF6F /* API */,
 				B8D6782009C73B5CF9D97C46 /* Audio */,
 				4DF38BB80CD729DC4BD1ACC0 /* Persistence */,
+				2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */,
 				7E41583B9A523FB07D83CC53 /* QuranicWordData.swift */,
 				9129D60E125ABD73E2850380 /* SettingsManager.swift */,
 			);
@@ -300,6 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				5B871515C5CE216F4E8F381B /* Haptics.swift */,
+				A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */,
 				F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */,
 			);
 			path = Components;
@@ -430,6 +436,7 @@
 			files = (
 				3C707AD598F27F80551E6E83 /* APIClient.swift in Sources */,
 				E4D64CAC6899A265B1B0CF4B /* APIConfig.swift in Sources */,
+				9366217F4E924B20C893B818 /* ArabicLetterData.swift in Sources */,
 				8038A84BD43A0F34450DE6C1 /* AudioModels.swift in Sources */,
 				76BF4A014335B33EFE6446A5 /* AudioPlaybackManager.swift in Sources */,
 				90FAF3988D417255E1A24973 /* AudioPlayerBar.swift in Sources */,
@@ -439,6 +446,7 @@
 				4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */,
 				06F34D74F099B513DFB66BBF /* DailyWordView.swift in Sources */,
 				38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */,
+				0D7A74A6AA41B4AF3FEAED91 /* LetterBreakdownView.swift in Sources */,
 				D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */,
 				643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */,
 				00B659A3FA1E4BB891951183 /* QuizView.swift in Sources */,
