@@ -99,7 +99,8 @@ struct VerseCell: View {
                 SubstitutionWordView(
                     word: word,
                     display: display,
-                    isHighlighted: isHighlighted
+                    isHighlighted: isHighlighted,
+                    verseKey: verse.verseKey
                 )
             }
         }

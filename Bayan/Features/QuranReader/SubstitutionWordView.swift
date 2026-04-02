@@ -1,17 +1,16 @@
-import AVFoundation
 import SwiftUI
 
 /// A single word in the substitution line. Tapping a substituted word
 /// shows a popover with its English meaning, transliteration, and Arabic script.
-/// Includes a play button to hear the word pronounced.
+/// Includes a play button to hear the exact word from audio.qurancdn.com.
 struct SubstitutionWordView: View {
     let word: Word
     let display: SubstitutionDisplay
     let isHighlighted: Bool
+    let verseKey: String
 
-    @Environment(AudioPlaybackManager.self) private var audioManager
     @State private var showDetail = false
-    @State private var isPlayingWord = false
+    @State private var wordPlayer = WordAudioPlayer()
 
     var body: some View {
         wordContent
@@ -92,14 +91,14 @@ struct SubstitutionWordView: View {
                     .font(.system(size: 34, design: .serif))
                     .foregroundStyle(BayanColors.textPrimary)
 
-                // Play pronunciation
+                // Play pronunciation from audio.qurancdn.com
                 Button {
-                    Task { await playWordAudio() }
+                    wordPlayer.play(verseKey: verseKey, wordPosition: word.position)
                 } label: {
-                    Image(systemName: isPlayingWord ? "speaker.wave.2.fill" : "play.circle.fill")
+                    Image(systemName: wordPlayer.isPlaying ? "speaker.wave.2.fill" : "play.circle.fill")
                         .font(.system(size: 28))
                         .foregroundStyle(BayanColors.primary)
-                        .symbolEffect(.pulse, isActive: isPlayingWord)
+                        .symbolEffect(.pulse, isActive: wordPlayer.isPlaying)
                 }
 
                 Spacer()
@@ -133,28 +132,5 @@ struct SubstitutionWordView: View {
         .frame(width: 240)
     }
 
-    // MARK: - Word Audio
 
-    /// Play just this word by seeking the chapter audio to the word's timestamp.
-    /// Uses the AudioPlaybackManager's loaded audio if available,
-    /// otherwise uses iOS text-to-speech as fallback.
-    private func playWordAudio() async {
-        isPlayingWord = true
-
-        // Try using the already-loaded chapter audio with word timing
-        if audioManager.playWordClip(wordPosition: word.position) {
-            // Word clip will play for its duration, then we reset
-            try? await Task.sleep(for: .seconds(1.5))
-        } else {
-            // Fallback: use AVSpeechSynthesizer for the Arabic text
-            let utterance = AVSpeechUtterance(string: word.textUthmani ?? "")
-            utterance.voice = AVSpeechSynthesisVoice(language: "ar-SA")
-            utterance.rate = 0.4
-            let synthesizer = AVSpeechSynthesizer()
-            synthesizer.speak(utterance)
-            try? await Task.sleep(for: .seconds(2))
-        }
-
-        isPlayingWord = false
-    }
 }
