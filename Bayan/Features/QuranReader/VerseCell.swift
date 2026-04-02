@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// A verse displayed with transliteration as the PRIMARY reading text.
-/// Arabic script is secondary (small, optional). The progressive substitution
-/// replaces English words with transliterated Arabic as the user learns.
+/// Verse display: progressive substitution is the PRIMARY reading text.
+/// English words gradually become transliterated Arabic as the user learns.
+/// Audio highlighting happens on the substitution line.
 struct VerseCell: View {
     let verse: Verse
     let isCurrentVerse: Bool
@@ -14,8 +14,8 @@ struct VerseCell: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            // Top bar: verse number + bookmark
+        VStack(alignment: .leading, spacing: 12) {
+            // Top bar
             HStack {
                 Text(verse.verseKey)
                     .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -42,24 +42,31 @@ struct VerseCell: View {
                 }
             }
 
-            // ============================================
-            // PRIMARY: Transliteration line with word highlighting
-            // This is what the user reads along with audio
-            // ============================================
-            transliterationView
-
-            // ============================================
-            // SECONDARY: Progressive substitution line
-            // English words gradually become transliterated Arabic
-            // ============================================
+            // ===========================================
+            // PRIMARY: Progressive substitution
+            // The main reading line. English words become
+            // transliterated Arabic as the user learns.
+            // Audio word highlighting is HERE.
+            // ===========================================
             substitutionView
 
-            // ============================================
-            // TERTIARY: Arabic script (small, optional)
-            // For reference — users can toggle this in settings
-            // ============================================
+            // ===========================================
+            // SECONDARY: Full transliteration
+            // Pronunciation guide — smaller, below
+            // ===========================================
+            if settings.showTransliteration {
+                transliterationView
+            }
+
+            // ===========================================
+            // TERTIARY: Arabic script (optional, small)
+            // ===========================================
             if settings.showArabicScript {
-                arabicScriptView
+                Text(verse.textUthmani ?? "")
+                    .font(.system(size: 13, design: .serif))
+                    .foregroundStyle(BayanColors.textSecondary.opacity(0.4))
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .environment(\.layoutDirection, .rightToLeft)
             }
         }
         .padding(.horizontal, 16)
@@ -71,10 +78,7 @@ struct VerseCell: View {
         )
         .overlay(alignment: .leading) {
             if isCurrentVerse {
-                Rectangle()
-                    .fill(BayanColors.gold)
-                    .frame(width: 3)
-                    .padding(.vertical, 4)
+                Rectangle().fill(BayanColors.gold).frame(width: 3).padding(.vertical, 4)
             }
         }
         .animation(.easeInOut(duration: 0.25), value: isCurrentVerse)
@@ -83,95 +87,80 @@ struct VerseCell: View {
         Divider().padding(.leading, 16)
     }
 
-    // MARK: - Transliteration (PRIMARY — highlighted during audio)
+    // MARK: - PRIMARY: Progressive Substitution with Audio Highlight
 
-    private var transliterationView: some View {
+    private var substitutionView: some View {
         let words = verse.words?.filter { $0.isWord } ?? []
         return WrappingHStack(alignment: .leading, spacing: 4) {
             ForEach(words) { word in
                 let isHighlighted = currentWordIndex != nil && word.position == currentWordIndex
-                let translit = word.transliteration?.text ?? ""
+                let display = vocabularyStore.displayMode(for: word)
 
-                Text(translit)
-                    .font(.system(
-                        size: isHighlighted ? 19 : 17,
-                        weight: isHighlighted ? .bold : .medium,
-                        design: .serif
-                    ))
-                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
-                    .padding(.horizontal, isHighlighted ? 4 : 1)
-                    .padding(.vertical, isHighlighted ? 3 : 0)
-                    .background(
-                        isHighlighted
-                            ? RoundedRectangle(cornerRadius: 6)
-                                .fill(BayanColors.primary.opacity(0.12))
-                            : nil
-                    )
+                substitutionWord(display: display, isHighlighted: isHighlighted)
             }
         }
         .lineSpacing(6)
     }
 
-    // MARK: - Progressive Substitution (English → transliteration)
-
-    private var substitutionView: some View {
-        let words = verse.words?.filter { $0.isWord } ?? []
-        return WrappingHStack(alignment: .leading, spacing: 3) {
-            ForEach(words) { word in
-                substitutionWord(for: word)
-            }
-        }
-        .lineSpacing(4)
-    }
-
     @ViewBuilder
-    private func substitutionWord(for word: Word) -> some View {
-        let display = vocabularyStore.displayMode(for: word)
+    private func substitutionWord(display: SubstitutionDisplay, isHighlighted: Bool) -> some View {
         switch display {
         case .english(let text):
-            // Not learned yet — plain English
             Text(text)
-                .font(.system(size: 15))
-                .foregroundStyle(BayanColors.textSecondary)
+                .font(.system(size: isHighlighted ? 19 : 17))
+                .fontWeight(isHighlighted ? .bold : .regular)
+                .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
+                .padding(.horizontal, isHighlighted ? 4 : 0)
+                .padding(.vertical, isHighlighted ? 2 : 0)
+                .background(
+                    isHighlighted
+                        ? AnyShape(RoundedRectangle(cornerRadius: 6)).fill(BayanColors.primary.opacity(0.1))
+                        : nil
+                )
 
         case .transliteration(let text):
-            // Learned — show transliteration in accent color
+            // Learned word — transliteration in accent color, stands out
             Text(text)
-                .font(.system(size: 15, weight: .semibold, design: .serif))
-                .foregroundStyle(BayanColors.primary)
-                .padding(.horizontal, 3)
-                .padding(.vertical, 1)
+                .font(.system(size: isHighlighted ? 19 : 17, weight: .semibold, design: .serif))
+                .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
+                .padding(.horizontal, 5)
+                .padding(.vertical, isHighlighted ? 3 : 1)
                 .background(
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(BayanColors.primary.opacity(0.07))
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
                 )
 
         case .transitioning(let transliteration, let english):
-            // Learning — transliteration with tiny English hint
+            // Learning — show transliteration with tiny English hint below
             VStack(spacing: 0) {
                 Text(transliteration)
-                    .font(.system(size: 15, weight: .medium, design: .serif))
-                    .foregroundStyle(BayanColors.primary)
+                    .font(.system(size: isHighlighted ? 18 : 16, weight: .medium, design: .serif))
+                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
                 Text(english)
-                    .font(.system(size: 10))
-                    .foregroundStyle(BayanColors.textSecondary.opacity(0.7))
+                    .font(.system(size: 9))
+                    .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
             }
-            .padding(.horizontal, 3)
+            .padding(.horizontal, 4)
+            .padding(.vertical, isHighlighted ? 2 : 0)
             .background(
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(BayanColors.learning.opacity(0.06))
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(isHighlighted ? BayanColors.learning.opacity(0.12) : BayanColors.learning.opacity(0.05))
             )
         }
     }
 
-    // MARK: - Arabic Script (TERTIARY — small, reference only)
+    // MARK: - SECONDARY: Transliteration Guide
 
-    private var arabicScriptView: some View {
-        Text(verse.textUthmani ?? "")
-            .font(.system(size: 14, design: .serif))
-            .foregroundStyle(BayanColors.textSecondary.opacity(0.5))
-            .frame(maxWidth: .infinity, alignment: .trailing)
-            .environment(\.layoutDirection, .rightToLeft)
-            .lineSpacing(4)
+    private var transliterationView: some View {
+        let text = verse.words?
+            .filter { $0.isWord }
+            .compactMap { $0.transliteration?.text }
+            .joined(separator: " ") ?? ""
+
+        return Text(text)
+            .font(.system(size: 13, design: .serif))
+            .italic()
+            .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
+            .lineSpacing(3)
     }
 }
