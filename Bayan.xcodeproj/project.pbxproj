@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00B659A3FA1E4BB891951183 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792FB7B2C649FC6507CA74AC /* QuizView.swift */; };
+		06F34D74F099B513DFB66BBF /* DailyWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B9F41428421B9178DED4BD /* DailyWordView.swift */; };
 		08F3199271330C9DB2CD6871 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 7E8EC6F05F88E13BBDB04421 /* GRDB */; };
 		0BB374F813C999845ED2988E /* BayanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DC26419D0924EBF714B5B7 /* BayanTests.swift */; };
 		0ED2BB2A3B0D82407CECF6E5 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9129D60E125ABD73E2850380 /* SettingsManager.swift */; };
@@ -31,6 +33,7 @@
 		CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */; };
 		D0ED492690D4ECB3B0FCF839 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5942E0AE9528D5335A881F18 /* FlowLayout.swift */; };
 		D90A5BC3E27D68AE494047D6 /* SubstitutionWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */; };
+		D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69786BA6DF671EFC6B4EA717 /* OnboardingView.swift */; };
 		DBA78A8116990B09AF5E2EC7 /* ChapterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */; };
 		E3A40877B08348F00AAC9D89 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6447627CECC3016C7A61FF71 /* Theme.swift */; };
 		E4D64CAC6899A265B1B0CF4B /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31A05CB80635C8CE7D48599 /* APIConfig.swift */; };
@@ -60,7 +63,9 @@
 		5D2B225323C0E98272174DA2 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
 		6447627CECC3016C7A61FF71 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioPlayer.swift; sourceTree = "<group>"; };
+		69786BA6DF671EFC6B4EA717 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		72D7D9D64668CB1FACB6779C /* BayanTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BayanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		792FB7B2C649FC6507CA74AC /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
 		7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackManager.swift; sourceTree = "<group>"; };
 		7D15F1999A179436E8E4BE6C /* VerseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseCell.swift; sourceTree = "<group>"; };
 		7FDA53811E0A20062F10B789 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -69,6 +74,7 @@
 		92DC26419D0924EBF714B5B7 /* BayanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanTests.swift; sourceTree = "<group>"; };
 		A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionWordView.swift; sourceTree = "<group>"; };
 		AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStore.swift; sourceTree = "<group>"; };
+		B6B9F41428421B9178DED4BD /* DailyWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWordView.swift; sourceTree = "<group>"; };
 		C093DA1BBAD42A930B4FBA7F /* Verse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verse.swift; sourceTree = "<group>"; };
 		C31A05CB80635C8CE7D48599 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		CC8835784181590124853E68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -202,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				3FF8FE295E13B62C01B2B0FE /* Auth */,
+				F30D49B5BA5E0D676A60D6B6 /* Onboarding */,
 				4293AC91CD09644B0BF7006C /* QuranReader */,
 				B5C0F959847F50F77A6CA5E4 /* Settings */,
 				B9E9F01FB33904F1C405A459 /* Vocabulary */,
@@ -237,6 +244,8 @@
 		B9E9F01FB33904F1C405A459 /* Vocabulary */ = {
 			isa = PBXGroup;
 			children = (
+				B6B9F41428421B9178DED4BD /* DailyWordView.swift */,
+				792FB7B2C649FC6507CA74AC /* QuizView.swift */,
 			);
 			path = Vocabulary;
 			sourceTree = "<group>";
@@ -288,6 +297,14 @@
 				92DC26419D0924EBF714B5B7 /* BayanTests.swift */,
 			);
 			path = BayanTests;
+			sourceTree = "<group>";
+		};
+		F30D49B5BA5E0D676A60D6B6 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				69786BA6DF671EFC6B4EA717 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -406,7 +423,10 @@
 				8D96F80B437B29791D0A28CD /* Chapter.swift in Sources */,
 				DBA78A8116990B09AF5E2EC7 /* ChapterListView.swift in Sources */,
 				4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */,
+				06F34D74F099B513DFB66BBF /* DailyWordView.swift in Sources */,
 				D0ED492690D4ECB3B0FCF839 /* FlowLayout.swift in Sources */,
+				D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */,
+				00B659A3FA1E4BB891951183 /* QuizView.swift in Sources */,
 				5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */,
 				0ED2BB2A3B0D82407CECF6E5 /* SettingsManager.swift in Sources */,
 				CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */,

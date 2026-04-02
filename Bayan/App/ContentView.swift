@@ -51,56 +51,105 @@ struct ReadTab: View {
     }
 }
 
-// MARK: - Learn Tab (Placeholder)
+// MARK: - Learn Tab
 
 struct LearnTab: View {
     @Environment(VocabularyStore.self) private var vocabularyStore
+    @Environment(UserStore.self) private var userStore
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: BayanSpacing.lg) {
-                    // Stats Header
-                    VStack(spacing: BayanSpacing.sm) {
-                        Text("\(vocabularyStore.totalWordsEncountered)")
-                            .font(.system(size: 48, weight: .bold, design: .rounded))
-                            .foregroundStyle(BayanColors.primary)
+                    // Daily Word
+                    DailyWordCard()
+                        .padding(.horizontal, BayanSpacing.md)
 
-                        Text("Words Encountered")
-                            .font(BayanFonts.body)
-                            .foregroundStyle(BayanColors.textSecondary)
+                    // Continue Reading
+                    if let lastSession = userStore.sessions.last {
+                        ContinueReadingCard(lastSession: lastSession)
+                            .padding(.horizontal, BayanSpacing.md)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, BayanSpacing.xl)
 
-                    // Mastery breakdown
+                    // Quiz button
+                    NavigationLink {
+                        QuizView()
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Label("Vocabulary Quiz", systemImage: "brain.head.profile")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(BayanColors.textPrimary)
+                                Text("Test your knowledge of \(vocabularyStore.totalWordsEncountered) words")
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(BayanColors.textSecondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(BayanColors.textSecondary)
+                        }
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(BayanColors.primary.opacity(0.06))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .strokeBorder(BayanColors.primary.opacity(0.12), lineWidth: 1)
+                                )
+                        )
+                    }
+                    .padding(.horizontal, BayanSpacing.md)
+
+                    // Mastery stats
                     VStack(spacing: BayanSpacing.md) {
+                        Text("Vocabulary Breakdown")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(BayanColors.textSecondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
                         MasteryRow(label: "Mastered", count: vocabularyStore.masteredCount, color: BayanColors.mastered, icon: "checkmark.seal.fill")
                         MasteryRow(label: "Familiar", count: vocabularyStore.familiarCount, color: BayanColors.introduced, icon: "star.fill")
                         MasteryRow(label: "Learning", count: vocabularyStore.learningCount, color: BayanColors.learning, icon: "flame.fill")
-                    }
-                    .padding(BayanSpacing.md)
-                    .bayanCard()
-                    .padding(.horizontal, BayanSpacing.md)
-
-                    // Info card
-                    VStack(alignment: .leading, spacing: BayanSpacing.sm) {
-                        Label("How Learning Works", systemImage: "lightbulb.fill")
-                            .font(BayanFonts.subtitle)
-                            .foregroundStyle(BayanColors.gold)
-
-                        Text("As you read the Quran, Bayan tracks every Arabic word you encounter. Words are gradually introduced in place of their English translations as you become more familiar with them.")
-                            .font(BayanFonts.body)
-                            .foregroundStyle(BayanColors.textSecondary)
-                            .lineSpacing(4)
+                        MasteryRow(label: "Total Encountered", count: vocabularyStore.totalWordsEncountered, color: BayanColors.textPrimary, icon: "book.fill")
                     }
                     .padding(BayanSpacing.md)
                     .bayanCard()
                     .padding(.horizontal, BayanSpacing.md)
                 }
+                .padding(.top, BayanSpacing.sm)
             }
             .background(BayanColors.background)
             .navigationTitle("Learn")
+        }
+    }
+}
+
+// MARK: - Continue Reading Card
+
+private struct ContinueReadingCard: View {
+    let lastSession: ReadingSession
+
+    var body: some View {
+        NavigationLink(value: lastSession.chapterId) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Continue Reading")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(BayanColors.textSecondary)
+                    Text("Surah \(lastSession.chapterId) - Verse \(lastSession.startVerseKey)")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(BayanColors.textPrimary)
+                }
+                Spacer()
+                Image(systemName: "arrow.right.circle.fill")
+                    .font(.system(size: 24))
+                    .foregroundStyle(BayanColors.primary)
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(BayanColors.primary.opacity(0.06))
+            )
         }
     }
 }
