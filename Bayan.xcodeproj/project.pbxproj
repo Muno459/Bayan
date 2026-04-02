@@ -15,7 +15,9 @@
 		3C707AD598F27F80551E6E83 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D538DE5486419F8657E04B7C /* APIClient.swift */; };
 		481D819BAA99970119BBD79B /* VerseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D15F1999A179436E8E4BE6C /* VerseCell.swift */; };
 		4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447B75B102513CD4AD8B4415 /* ContentView.swift */; };
+		51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07211B76D703781FA8C56786 /* UserModels.swift */; };
 		5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2B225323C0E98272174DA2 /* QuranStore.swift */; };
+		637F2E0A5ACBFF320CFE028E /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569342C6252C64C5DCCF3179 /* UserStore.swift */; };
 		76BF4A014335B33EFE6446A5 /* AudioPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */; };
 		76F4197CB025CA22DCDE7419 /* Verse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C093DA1BBAD42A930B4FBA7F /* Verse.swift */; };
 		8038A84BD43A0F34450DE6C1 /* AudioModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD184595EC4B2E2A3C4F242 /* AudioModels.swift */; };
@@ -43,12 +45,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07211B76D703781FA8C56786 /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
 		132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerBar.swift; sourceTree = "<group>"; };
 		2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionControlsSheet.swift; sourceTree = "<group>"; };
 		38C860FA5FE8046DEE0FD1EB /* Bayan.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Bayan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		447B75B102513CD4AD8B4415 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListView.swift; sourceTree = "<group>"; };
 		4F42879BFF4970DA7ADFC56A /* Bayan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Bayan.entitlements; sourceTree = "<group>"; };
+		569342C6252C64C5DCCF3179 /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
 		5942E0AE9528D5335A881F18 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		5D2B225323C0E98272174DA2 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
 		6447627CECC3016C7A61FF71 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -126,6 +130,7 @@
 				C31A05CB80635C8CE7D48599 /* APIConfig.swift */,
 				5D2B225323C0E98272174DA2 /* QuranStore.swift */,
 				EFB670B091D43E8B7133206D /* TokenManager.swift */,
+				569342C6252C64C5DCCF3179 /* UserStore.swift */,
 				AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */,
 			);
 			path = API;
@@ -242,6 +247,7 @@
 			children = (
 				FCD184595EC4B2E2A3C4F242 /* AudioModels.swift */,
 				D131D3C3DBD81D86B7714DBA /* Chapter.swift */,
+				07211B76D703781FA8C56786 /* UserModels.swift */,
 				C093DA1BBAD42A930B4FBA7F /* Verse.swift */,
 				F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */,
 			);
@@ -397,6 +403,8 @@
 				CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */,
 				E3A40877B08348F00AAC9D89 /* Theme.swift in Sources */,
 				3564266BA666EBF705758BF5 /* TokenManager.swift in Sources */,
+				51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */,
+				637F2E0A5ACBFF320CFE028E /* UserStore.swift in Sources */,
 				76F4197CB025CA22DCDE7419 /* Verse.swift in Sources */,
 				481D819BAA99970119BBD79B /* VerseCell.swift in Sources */,
 				C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */,

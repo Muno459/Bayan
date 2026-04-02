@@ -7,6 +7,7 @@ struct VerseCell: View {
 
     @Environment(VocabularyStore.self) private var vocabularyStore
     @Environment(SettingsManager.self) private var settings
+    @Environment(UserStore.self) private var userStore
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
@@ -28,11 +29,21 @@ struct VerseCell: View {
 
                 Spacer()
 
-                // Bookmark button (placeholder)
-                Button {} label: {
-                    Image(systemName: "bookmark")
+                // Bookmark button
+                Button {
+                    userStore.toggleBookmark(
+                        verseKey: verse.verseKey,
+                        chapterId: Int(verse.verseKey.split(separator: ":").first ?? "1") ?? 1,
+                        verseNumber: verse.verseNumber
+                    )
+                } label: {
+                    Image(systemName: userStore.isBookmarked(verse.verseKey) ? "bookmark.fill" : "bookmark")
                         .font(.system(size: 14))
-                        .foregroundStyle(BayanColors.textSecondary)
+                        .foregroundStyle(
+                            userStore.isBookmarked(verse.verseKey)
+                                ? BayanColors.gold
+                                : BayanColors.textSecondary
+                        )
                 }
             }
 

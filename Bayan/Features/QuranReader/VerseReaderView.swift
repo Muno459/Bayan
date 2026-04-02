@@ -7,6 +7,7 @@ struct VerseReaderView: View {
     @Environment(VocabularyStore.self) private var vocabularyStore
     @Environment(AudioPlaybackManager.self) private var audioManager
     @Environment(SettingsManager.self) private var settings
+    @Environment(UserStore.self) private var userStore
     @Environment(\.colorScheme) private var colorScheme
 
     @State private var showSubstitutionControls = false
@@ -77,6 +78,12 @@ struct VerseReaderView: View {
         }
         .task {
             await quranStore.loadVerses(for: chapter)
+        }
+        .onAppear {
+            userStore.startSession(chapterId: chapter.id, verseKey: "\(chapter.id):1")
+        }
+        .onDisappear {
+            userStore.endCurrentSession()
         }
         .onChange(of: audioManager.currentVerseKey) { _, newValue in
             if let key = newValue {
