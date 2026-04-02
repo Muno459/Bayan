@@ -1,25 +1,21 @@
 import Foundation
 import SwiftUI
 
-/// Manages vocabulary learning states and the progressive substitution engine.
+/// Manages vocabulary learning and the progressive substitution engine.
 ///
-/// The core idea: users start reading entirely in English. As they encounter
-/// Arabic words repeatedly (through reading + audio), English words are gradually
-/// replaced with their transliterated Arabic equivalents (phonetic spelling),
-/// NOT Arabic script. This lets non-Arabic readers build vocabulary through
-/// sound recognition.
-///
-/// Journey per word: English → English+transliteration → transliteration only
+/// The substitution level slider is the PRIMARY control. It determines
+/// what percentage of words show as transliteration vs English.
+/// Individual word mastery adjusts within that — learned words get
+/// substituted first, unknown words last.
 @MainActor
 @Observable
 final class VocabularyStore {
-    /// All known word learning states, keyed by word ID
     private(set) var wordStates: [Int: WordLearningState] = [:]
 
-    /// Current substitution level (0.0 = all English, 1.0 = all transliteration)
+    /// 0.0 = all English, 1.0 = all transliteration.
+    /// This is the MAIN control the user interacts with.
     var substitutionLevel: Double = 0.3
 
-    /// Total unique words encountered
     var totalWordsEncountered: Int { wordStates.count }
 
     var masteredCount: Int {
@@ -36,8 +32,13 @@ final class VocabularyStore {
 
     // MARK: - Progressive Substitution
 
-    /// Determine how a word should be displayed.
-    /// Returns English, transitioning (translit + English hint), or transliteration only.
+    /// Determine display for a word. The substitution level slider is king.
+    ///
+    /// At level 0.0: everything is English
+    /// At level 0.3: common words (Allah, Rabb, bismillah) become transliteration
+    /// At level 0.5: common + frequently-seen words become transliteration
+    /// At level 0.7: most words become transliteration, rare ones transition
+    /// At level 1.0: everything is transliteration
     func displayMode(for word: Word) -> SubstitutionDisplay {
         guard word.isWord else {
             return .english(word.translation?.text ?? "")
@@ -46,33 +47,57 @@ final class VocabularyStore {
         let englishText = word.translation?.text ?? ""
         let translitText = word.transliteration?.text ?? englishText
 
-        // If we have a learning state for this word, use mastery level
-        if let state = wordStates[word.id] {
-            switch state.masteryLevel {
-            case .mastered, .familiar:
-                return .transliteration(translitText)
-            case .learning:
-                return .transitioning(transliteration: translitText, english: englishText)
-            case .introduced, .unseen:
-                return .english(englishText)
-            }
+        // Level 0 = pure English, no substitution at all
+        if substitutionLevel < 0.05 {
+            return .english(englishText)
         }
 
-        // Word not yet tracked — use global substitution level + common word detection
-        if isCommonQuranicWord(translitText) && substitutionLevel >= 0.1 {
+        // Level 1.0 = pure transliteration, everything substituted
+        if substitutionLevel >= 0.95 {
             return .transliteration(translitText)
         }
 
-        if substitutionLevel >= 0.7 {
+        // In between: use a score per word to decide
+        let wordScore = wordSubstitutionScore(for: word)
+
+        if wordScore <= substitutionLevel {
+            // This word gets substituted to transliteration
             return .transliteration(translitText)
-        } else if substitutionLevel >= 0.4 {
+        } else if wordScore <= substitutionLevel + 0.2 {
+            // Close to the threshold — show transitioning
             return .transitioning(transliteration: translitText, english: englishText)
         } else {
             return .english(englishText)
         }
     }
 
-    /// Record that the user has seen/heard a word
+    /// Score from 0.0 (easiest to substitute) to 1.0 (hardest).
+    /// Lower score = gets substituted earlier (at lower slider values).
+    private func wordSubstitutionScore(for word: Word) -> Double {
+        let translitText = word.transliteration?.text ?? ""
+
+        // Common Quranic words are easiest — substitute first
+        if isCommonQuranicWord(translitText) {
+            return 0.05
+        }
+
+        // Check mastery from exposure history
+        if let state = wordStates[word.id] {
+            switch state.masteryLevel {
+            case .mastered: return 0.1
+            case .familiar: return 0.25
+            case .learning: return 0.45
+            case .introduced: return 0.65
+            case .unseen: return 0.8
+            }
+        }
+
+        // Never seen — hardest to substitute
+        return 0.85
+    }
+
+    // MARK: - Exposure Tracking
+
     func recordExposure(for word: Word) {
         guard word.isWord else { return }
 
@@ -80,7 +105,6 @@ final class VocabularyStore {
             state.exposureCount += 1
             state.lastSeenDate = Date()
 
-            // Auto-promote based on repeated exposure
             if state.exposureCount >= 25 && state.masteryLevel < .familiar {
                 state.masteryLevel = .familiar
             } else if state.exposureCount >= 12 && state.masteryLevel < .learning {
@@ -123,24 +147,22 @@ final class VocabularyStore {
 
     // MARK: - Common Words
 
-    /// High-frequency Quranic words that get substituted early.
-    /// Users hear these constantly — "Allah", "Rabb", "bismillah" etc.
     private func isCommonQuranicWord(_ transliteration: String) -> Bool {
         let common: Set<String> = [
             "l-lahi", "lillahi", "l-lahu", "allahu", "allah",
             "rabbi", "rabba", "rabbu",
             "bis'mi", "bismi",
-            "l-rahmani", "al-rahmani",
-            "l-rahimi", "al-rahimi",
-            "qala",
-            "alladhina",
-            "kana",
+            "l-raḥmāni", "al-rahmani", "l-rahmani",
+            "l-raḥīmi", "al-rahimi", "l-rahimi",
+            "qāla", "qala",
+            "alladhīna", "alladhina",
+            "kāna", "kana",
             "inna",
             "min", "mina",
-            "ala", "'ala",
-            "fi",
-            "la",
-            "ma",
+            "ʿalā", "ala", "'ala",
+            "fī", "fi",
+            "lā", "la",
+            "mā", "ma",
             "huwa",
         ]
         return common.contains(transliteration.lowercased())
