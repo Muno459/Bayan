@@ -130,6 +130,8 @@ struct WordLearningCard: View {
                               ? "speaker.wave.2.fill" : "play.circle.fill")
                             .font(.system(size: 32))
                             .foregroundStyle(BayanColors.primary)
+                            .contentTransition(.symbolEffect(.replace))
+                            .symbolEffect(.variableColor.iterative, isActive: wordPlayer.isPlaying && !wordPlayer.isDrilling)
                         Text("Listen")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(BayanColors.textSecondary)
@@ -142,22 +144,24 @@ struct WordLearningCard: View {
                 } label: {
                     VStack(spacing: 4) {
                         ZStack {
-                            Image(systemName: "repeat")
+                            Image(systemName: wordPlayer.isDrilling ? "waveform" : "repeat")
                                 .font(.system(size: 28))
                                 .foregroundStyle(wordPlayer.isDrilling ? BayanColors.gold : BayanColors.primary)
+                                .contentTransition(.symbolEffect(.replace))
+                                .symbolEffect(.variableColor.iterative.reversing, isActive: wordPlayer.isDrilling)
 
                             if wordPlayer.isDrilling {
                                 Text(drillStepLabel)
                                     .font(.system(size: 9, weight: .bold))
                                     .foregroundStyle(BayanColors.gold)
-                                    .offset(y: 16)
+                                    .offset(y: 18)
                             }
                         }
                         .frame(height: 32)
 
-                        Text("Practice")
+                        Text(wordPlayer.isDrilling ? "Practicing..." : "Practice")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundStyle(BayanColors.textSecondary)
+                            .foregroundStyle(wordPlayer.isDrilling ? BayanColors.gold : BayanColors.textSecondary)
                     }
                 }
             }
