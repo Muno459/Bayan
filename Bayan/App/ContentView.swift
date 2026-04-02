@@ -18,7 +18,7 @@ struct ContentView: View {
                 }
                 .tag(AppTab.learn)
 
-            ProgressTab()
+            ProgressTabView()
                 .tabItem {
                     Label("Progress", systemImage: "chart.bar.fill")
                 }
@@ -181,74 +181,6 @@ private struct MasteryRow: View {
     }
 }
 
-// MARK: - Progress Tab
-
-struct ProgressTab: View {
-    @Environment(UserStore.self) private var userStore
-    @Environment(VocabularyStore.self) private var vocabularyStore
-
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: BayanSpacing.lg) {
-                    // Streak card
-                    VStack(spacing: BayanSpacing.md) {
-                        Image(systemName: "flame.fill")
-                            .font(.system(size: 40))
-                            .foregroundStyle(BayanColors.gold)
-
-                        Text("\(userStore.streak.currentDays)")
-                            .font(.system(size: 56, weight: .bold, design: .rounded))
-                            .foregroundStyle(BayanColors.primary)
-
-                        Text("Day Streak")
-                            .font(BayanFonts.body)
-                            .foregroundStyle(BayanColors.textSecondary)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, BayanSpacing.xl)
-
-                    // Stats grid
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: BayanSpacing.md) {
-                        StatCard(title: "Sessions", value: "\(userStore.streak.totalSessions)", icon: "book.closed.fill", color: BayanColors.primary)
-                        StatCard(title: "Minutes Read", value: "\(userStore.streak.totalMinutes)", icon: "clock.fill", color: BayanColors.learning)
-                        StatCard(title: "Words Learned", value: "\(vocabularyStore.masteredCount + vocabularyStore.familiarCount)", icon: "character.book.closed.fill", color: BayanColors.mastered)
-                        StatCard(title: "Bookmarks", value: "\(userStore.bookmarks.count)", icon: "bookmark.fill", color: BayanColors.gold)
-                    }
-                    .padding(.horizontal, BayanSpacing.md)
-                }
-                .padding(.top, BayanSpacing.md)
-            }
-            .background(BayanColors.background)
-            .navigationTitle("Progress")
-        }
-    }
-}
-
-private struct StatCard: View {
-    let title: String
-    let value: String
-    let icon: String
-    let color: Color
-
-    var body: some View {
-        VStack(spacing: BayanSpacing.sm) {
-            Image(systemName: icon)
-                .font(.system(size: 24))
-                .foregroundStyle(color)
-            Text(value)
-                .font(.system(size: 28, weight: .bold, design: .rounded))
-                .foregroundStyle(BayanColors.textPrimary)
-            Text(title)
-                .font(BayanFonts.caption)
-                .foregroundStyle(BayanColors.textSecondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(BayanSpacing.md)
-        .bayanCard()
-    }
-}
-
 // MARK: - Settings Tab
 
 struct SettingsTab: View {
@@ -283,14 +215,12 @@ struct SettingsTab: View {
                 }
 
                 Section {
-                    Toggle("Auto-play Audio", isOn: $s.autoPlayAudio)
-                        .tint(BayanColors.primary)
-                    Toggle("Auto-play Word Pronunciation", isOn: $s.autoPlayWordPronunciation)
+                    Toggle("Auto-play Pronunciation", isOn: $s.autoPlayWordPronunciation)
                         .tint(BayanColors.primary)
                 } header: {
                     Text("Audio")
                 } footer: {
-                    Text("When enabled, tapping a word automatically plays its pronunciation.")
+                    Text("When enabled, tapping a substituted word automatically plays its pronunciation from Quran audio.")
                 }
 
                 Section("About") {

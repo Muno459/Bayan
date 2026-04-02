@@ -27,6 +27,7 @@ struct VerseCell: View {
                 Spacer()
 
                 Button {
+                    Haptics.medium()
                     userStore.toggleBookmark(
                         verseKey: verse.verseKey,
                         chapterId: Int(verse.verseKey.split(separator: ":").first ?? "1") ?? 1,

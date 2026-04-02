@@ -15,6 +15,7 @@
 		1511B52CBFCE08A9F626FE79 /* VocabularyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */; };
 		2CB484D0A1FCDCEDD4A6B30B /* WordAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */; };
 		3564266BA666EBF705758BF5 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB670B091D43E8B7133206D /* TokenManager.swift */; };
+		38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B871515C5CE216F4E8F381B /* Haptics.swift */; };
 		3C707AD598F27F80551E6E83 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D538DE5486419F8657E04B7C /* APIClient.swift */; };
 		481D819BAA99970119BBD79B /* VerseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D15F1999A179436E8E4BE6C /* VerseCell.swift */; };
 		4AEAADE8F7E471FE1D42EE59 /* WrappingHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */; };
@@ -22,6 +23,7 @@
 		51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07211B76D703781FA8C56786 /* UserModels.swift */; };
 		5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2B225323C0E98272174DA2 /* QuranStore.swift */; };
 		637F2E0A5ACBFF320CFE028E /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569342C6252C64C5DCCF3179 /* UserStore.swift */; };
+		643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */; };
 		76BF4A014335B33EFE6446A5 /* AudioPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */; };
 		76F4197CB025CA22DCDE7419 /* Verse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C093DA1BBAD42A930B4FBA7F /* Verse.swift */; };
 		8038A84BD43A0F34450DE6C1 /* AudioModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD184595EC4B2E2A3C4F242 /* AudioModels.swift */; };
@@ -60,6 +62,7 @@
 		4F42879BFF4970DA7ADFC56A /* Bayan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Bayan.entitlements; sourceTree = "<group>"; };
 		569342C6252C64C5DCCF3179 /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
 		5942E0AE9528D5335A881F18 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		5B871515C5CE216F4E8F381B /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		5D2B225323C0E98272174DA2 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
 		6447627CECC3016C7A61FF71 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioPlayer.swift; sourceTree = "<group>"; };
@@ -73,6 +76,7 @@
 		9129D60E125ABD73E2850380 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		92DC26419D0924EBF714B5B7 /* BayanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanTests.swift; sourceTree = "<group>"; };
 		A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionWordView.swift; sourceTree = "<group>"; };
+		A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTabView.swift; sourceTree = "<group>"; };
 		AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStore.swift; sourceTree = "<group>"; };
 		B6B9F41428421B9178DED4BD /* DailyWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWordView.swift; sourceTree = "<group>"; };
 		C093DA1BBAD42A930B4FBA7F /* Verse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verse.swift; sourceTree = "<group>"; };
@@ -191,6 +195,14 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		79DB3BFF4E5AC154108B2DDF /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
 		87B487856C8D271096713F00 /* Bayan */ = {
 			isa = PBXGroup;
 			children = (
@@ -209,6 +221,7 @@
 			children = (
 				3FF8FE295E13B62C01B2B0FE /* Auth */,
 				F30D49B5BA5E0D676A60D6B6 /* Onboarding */,
+				79DB3BFF4E5AC154108B2DDF /* Progress */,
 				4293AC91CD09644B0BF7006C /* QuranReader */,
 				B5C0F959847F50F77A6CA5E4 /* Settings */,
 				B9E9F01FB33904F1C405A459 /* Vocabulary */,
@@ -286,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				5942E0AE9528D5335A881F18 /* FlowLayout.swift */,
+				5B871515C5CE216F4E8F381B /* Haptics.swift */,
 				F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */,
 			);
 			path = Components;
@@ -425,7 +439,9 @@
 				4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */,
 				06F34D74F099B513DFB66BBF /* DailyWordView.swift in Sources */,
 				D0ED492690D4ECB3B0FCF839 /* FlowLayout.swift in Sources */,
+				38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */,
 				D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */,
+				643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */,
 				00B659A3FA1E4BB891951183 /* QuizView.swift in Sources */,
 				5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */,
 				0ED2BB2A3B0D82407CECF6E5 /* SettingsManager.swift in Sources */,

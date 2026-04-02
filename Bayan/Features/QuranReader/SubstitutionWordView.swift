@@ -17,6 +17,7 @@ struct SubstitutionWordView: View {
         wordContent
             .onTapGesture {
                 if !isEnglishDisplay {
+                    Haptics.light()
                     showDetail = true
                 }
             }

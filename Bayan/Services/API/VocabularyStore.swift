@@ -10,11 +10,15 @@ import SwiftUI
 @MainActor
 @Observable
 final class VocabularyStore {
-    private(set) var wordStates: [Int: WordLearningState] = [:]
+    private(set) var wordStates: [Int: WordLearningState] = [:] {
+        didSet { saveWordStates() }
+    }
 
     /// 0.0 = all English, 1.0 = all transliteration.
     /// This is the MAIN control the user interacts with.
-    var substitutionLevel: Double = 0.3
+    var substitutionLevel: Double = 0.3 {
+        didSet { UserDefaults.standard.set(substitutionLevel, forKey: "bayan_substitutionLevel") }
+    }
 
     var totalWordsEncountered: Int { wordStates.count }
 
@@ -166,5 +170,29 @@ final class VocabularyStore {
             "huwa",
         ]
         return common.contains(transliteration.lowercased())
+    }
+
+    // MARK: - Persistence
+
+    private let statesKey = "bayan_wordStates"
+
+    init() {
+        loadWordStates()
+        if let saved = UserDefaults.standard.object(forKey: "bayan_substitutionLevel") as? Double {
+            substitutionLevel = saved
+        }
+    }
+
+    private func saveWordStates() {
+        if let data = try? JSONEncoder().encode(wordStates) {
+            UserDefaults.standard.set(data, forKey: statesKey)
+        }
+    }
+
+    private func loadWordStates() {
+        if let data = UserDefaults.standard.data(forKey: statesKey),
+           let saved = try? JSONDecoder().decode([Int: WordLearningState].self, from: data) {
+            wordStates = saved
+        }
     }
 }
