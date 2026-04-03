@@ -53,10 +53,10 @@ struct SubstitutionWordView: View {
         case .english(let text):
             StableHighlight(isHighlighted: isHighlighted) {
                 Text(text)
-                    .font(.system(size: 17))
+                    .font(.system(size: 20))
                     .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
-                    .padding(.horizontal, 3)
-                    .padding(.vertical, 2)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 3)
             } background: {
                 RoundedRectangle(cornerRadius: 6)
                     .fill(isHighlighted ? BayanColors.primary.opacity(0.12) : .clear)
@@ -65,29 +65,29 @@ struct SubstitutionWordView: View {
         case .arabic(let text):
             StableHighlight(isHighlighted: isHighlighted) {
                 Text(text)
-                    .font(.system(size: 22, design: .serif))
+                    .font(.system(size: 26, design: .serif))
                     .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 2)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
             } background: {
-                RoundedRectangle(cornerRadius: 6)
+                RoundedRectangle(cornerRadius: 8)
                     .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
             }
 
         case .transitioning(let arabic, let english):
             StableHighlight(isHighlighted: isHighlighted) {
-                VStack(spacing: 0) {
+                VStack(spacing: 1) {
                     Text(arabic)
-                        .font(.system(size: 20, design: .serif))
+                        .font(.system(size: 24, design: .serif))
                         .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
                     Text(english)
-                        .font(.system(size: 9))
+                        .font(.system(size: 10))
                         .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
                 }
-                .padding(.horizontal, 4)
-                .padding(.vertical, 2)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 3)
             } background: {
-                RoundedRectangle(cornerRadius: 5)
+                RoundedRectangle(cornerRadius: 7)
                     .fill(isHighlighted ? BayanColors.learning.opacity(0.15) : BayanColors.learning.opacity(0.05))
             }
         }
