@@ -31,13 +31,25 @@ final class PronunciationChecker {
         state = .loading
 
         do {
-            inferenceEngine = try await Task.detached {
+            inferenceEngine = try await Task.detached(priority: .userInitiated) {
                 try PronunciationInferenceEngine()
             }.value
             isModelLoaded = true
             state = .idle
         } catch {
-            state = .error("Model load failed")
+            state = .error("Model loading — try again")
+        }
+    }
+
+    /// Pre-warm the model in the background (call on app launch)
+    func preloadModel() {
+        guard !isModelLoaded else { return }
+        Task.detached(priority: .background) { [weak self] in
+            let engine = try? PronunciationInferenceEngine()
+            await MainActor.run {
+                self?.inferenceEngine = engine
+                self?.isModelLoaded = engine != nil
+            }
         }
     }
 
@@ -109,22 +121,37 @@ final class PronunciationChecker {
             return
         }
 
-        // ALL heavy work runs off main thread
+        // ALL heavy work runs off main thread with timeout
         let expected = expectedArabic
-        let result = await Task.detached { () -> (Bool, String)? in
+        let inferenceTask = Task.detached(priority: .userInitiated) { () -> (Bool, String)? in
             do {
                 return try engine.processRecording(url: url, expectedArabic: expected)
             } catch {
                 return nil
             }
-        }.value
+        }
+
+        // Race inference against a 15-second timeout
+        let timeoutTask = Task {
+            try? await Task.sleep(for: .seconds(15))
+            return nil as (Bool, String)?
+        }
+
+        let result: (Bool, String)?
+        if let inferenceResult = await inferenceTask.value {
+            timeoutTask.cancel()
+            result = inferenceResult
+        } else {
+            result = nil
+        }
 
         try? FileManager.default.removeItem(at: url)
 
         if let (correct, transcription) = result {
             state = .result(correct: correct, transcription: transcription)
-        } else {
-            state = .idle // Silent failure — likely silence or non-Arabic
+        } else if case .processing = state {
+            // Still in processing after timeout or failure
+            state = .error("Could not process — try on a real device")
         }
     }
 

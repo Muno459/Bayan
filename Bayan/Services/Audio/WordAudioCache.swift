@@ -71,9 +71,13 @@ final class WordAudioCache {
 
             downloadProgress = 0.5
 
-            // Extract zip to cache directory
-            try extractZip(from: tempURL, to: cacheDir)
-            try? FileManager.default.removeItem(at: tempURL)
+            // Extract zip off main thread
+            let dest = cacheDir
+            let src = tempURL
+            try await Task.detached { [self] in
+                try self.extractZip(from: src, to: dest)
+                try? FileManager.default.removeItem(at: src)
+            }.value
 
             downloadedSurahs.insert(surahNumber)
             downloadProgress = 1.0
@@ -124,7 +128,7 @@ final class WordAudioCache {
 
     // MARK: - Zip Extraction
 
-    private func extractZip(from zipURL: URL, to destDir: URL) throws {
+    nonisolated private func extractZip(from zipURL: URL, to destDir: URL) throws {
         let fm = FileManager.default
         let tempDir = fm.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try fm.createDirectory(at: tempDir, withIntermediateDirectories: true)
