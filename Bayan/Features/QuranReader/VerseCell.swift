@@ -27,10 +27,14 @@ struct VerseCell: View {
 
                 // Verse word progress
                 let progress = verseProgress
-                if progress.total > 0 {
-                    Text("\(progress.known)/\(progress.total)")
-                        .font(.system(size: 11, weight: .medium, design: .rounded))
-                        .foregroundStyle(progress.known == progress.total ? BayanColors.mastered : BayanColors.textSecondary)
+                if progress.total > 0 && progress.known > 0 {
+                    HStack(spacing: 2) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 9))
+                        Text("\(progress.known)/\(progress.total)")
+                            .font(.system(size: 11, weight: .medium, design: .rounded))
+                    }
+                    .foregroundStyle(progress.known == progress.total ? BayanColors.mastered : BayanColors.textSecondary)
                 }
 
                 Spacer()

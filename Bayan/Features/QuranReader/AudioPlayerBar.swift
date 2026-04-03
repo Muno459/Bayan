@@ -56,6 +56,7 @@ struct AudioPlayerBar: View {
 
                 // Previous verse
                 Button {
+                    Haptics.selection()
                     audioManager.skipToPreviousVerse()
                 } label: {
                     Image(systemName: "backward.fill")
@@ -87,6 +88,7 @@ struct AudioPlayerBar: View {
 
                 // Next verse
                 Button {
+                    Haptics.selection()
                     audioManager.skipToNextVerse()
                 } label: {
                     Image(systemName: "forward.fill")

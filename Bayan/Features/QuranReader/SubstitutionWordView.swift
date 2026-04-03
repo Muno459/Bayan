@@ -30,7 +30,7 @@ struct SubstitutionWordView: View {
                     wordPlayer: $wordPlayer,
                     vocabularyStore: vocabularyStore
                 )
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.fraction(0.45), .medium])
                 .presentationDragIndicator(.visible)
             }
             .onChange(of: showDetail) { _, isShowing in

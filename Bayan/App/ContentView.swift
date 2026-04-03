@@ -204,6 +204,7 @@ private struct MasteryRow: View {
 struct SettingsTab: View {
     @Environment(SettingsManager.self) private var settings
     @Environment(QuranStore.self) private var quranStore
+    @Environment(VocabularyStore.self) private var vocabularyStore
 
     var body: some View {
         @Bindable var s = settings
@@ -221,15 +222,28 @@ struct SettingsTab: View {
                         .tint(BayanColors.primary)
                 }
 
+                // Learning Mode
+                Section {
+                    @Bindable var vocab = vocabularyStore
+                    Picker("Learning Mode", selection: $vocab.useTransliteration) {
+                        Text("Arabic Script").tag(false)
+                        Text("Transliteration").tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                } header: {
+                    Text("Learning Mode")
+                } footer: {
+                    Text(vocabularyStore.useTransliteration
+                         ? "English words become phonetic pronunciation guides."
+                         : "English words become original Arabic script. Reading Arabic directly carries greater reward.")
+                }
+
                 Section {
                     Toggle("Show Full English Translation", isOn: $s.showFullTranslation)
                         .tint(BayanColors.primary)
-                    Toggle("Show Transliteration Guide", isOn: $s.showTransliteration)
-                        .tint(BayanColors.primary)
                 } header: {
                     Text("Display")
-                } footer: {
-                    Text("Transliteration shows the pronunciation of Arabic words using English letters as a learning aid. Reading the Arabic script directly carries greater reward.")
                 }
 
                 // Reciter Picker

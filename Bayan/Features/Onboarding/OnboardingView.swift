@@ -103,6 +103,7 @@ struct OnboardingView: View {
                 VStack(spacing: 14) {
                     // Option 1: Arabic Script (recommended)
                     Button {
+                        Haptics.medium()
                         vocabularyStore.useTransliteration = false
                         withAnimation { currentPage += 1 }
                     } label: {
@@ -144,6 +145,7 @@ struct OnboardingView: View {
 
                     // Option 2: Transliteration
                     Button {
+                        Haptics.medium()
                         vocabularyStore.useTransliteration = true
                         withAnimation { currentPage += 1 }
                     } label: {
@@ -236,6 +238,7 @@ struct OnboardingView: View {
                 .lineSpacing(4)
             Spacer()
             Button {
+                Haptics.light()
                 withAnimation { currentPage += 1 }
             } label: {
                 Text("Continue")
@@ -252,6 +255,7 @@ struct OnboardingView: View {
 
     private func levelButton(title: String, subtitle: String, level: Double) -> some View {
         Button {
+            Haptics.success()
             vocabularyStore.substitutionLevel = level
             hasCompleted = true
         } label: {
