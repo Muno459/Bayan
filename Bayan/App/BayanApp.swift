@@ -18,10 +18,25 @@ struct BayanApp: App {
                     .environment(audioManager)
                     .environment(settingsManager)
                     .environment(userStore)
+                    .task {
+                        // Preload pronunciation model in background
+                        SharedPronunciationChecker.shared.preloadModel()
+                    }
             } else {
                 OnboardingView()
                     .environment(vocabularyStore)
             }
         }
+    }
+}
+
+/// Shared pronunciation checker — preloaded at app launch so recording is instant.
+@MainActor
+final class SharedPronunciationChecker {
+    static let shared = SharedPronunciationChecker()
+    let checker = PronunciationChecker()
+
+    func preloadModel() {
+        checker.preloadModel()
     }
 }
