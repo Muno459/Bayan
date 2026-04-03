@@ -54,15 +54,17 @@ struct ChapterListView: View {
                     }
 
                     // Continue Reading
-                    if let lastSession = userStore.sessions.last {
+                    if let chapterId = userStore.lastReadChapterId {
+                        let chapterName = quranStore.chapters.first(where: { $0.id == chapterId })?.nameSimple ?? "Surah \(chapterId)"
+                        let verseDisplay = userStore.lastReadVerseKey ?? "\(chapterId):1"
                         Section {
-                            NavigationLink(value: lastSession.chapterId) {
+                            NavigationLink(value: chapterId) {
                                 HStack {
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text("Continue Reading")
                                             .font(.system(size: 13, weight: .medium))
                                             .foregroundStyle(BayanColors.textSecondary)
-                                        Text("Surah \(lastSession.chapterId), verse \(lastSession.startVerseKey)")
+                                        Text("\(chapterName) - \(verseDisplay)")
                                             .font(.system(size: 15, weight: .semibold))
                                     }
                                     Spacer()

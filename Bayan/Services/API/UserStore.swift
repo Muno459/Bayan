@@ -35,6 +35,14 @@ final class UserStore {
     private(set) var sessions: [ReadingSession] = []
     private(set) var activeSession: ReadingSession?
 
+    /// Last verse the user was reading — persisted for "Continue Reading"
+    var lastReadChapterId: Int? {
+        didSet { UserDefaults.standard.set(lastReadChapterId, forKey: "bayan_lastChapter") }
+    }
+    var lastReadVerseKey: String? {
+        didSet { UserDefaults.standard.set(lastReadVerseKey, forKey: "bayan_lastVerse") }
+    }
+
     func startSession(chapterId: Int, verseKey: String) {
         // End any existing session
         endCurrentSession()
@@ -110,6 +118,8 @@ final class UserStore {
         loadBookmarks()
         loadSessions()
         updateStreak()
+        lastReadChapterId = UserDefaults.standard.object(forKey: "bayan_lastChapter") as? Int
+        lastReadVerseKey = UserDefaults.standard.string(forKey: "bayan_lastVerse")
     }
 
     private func saveBookmarks() {

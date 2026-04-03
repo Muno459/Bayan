@@ -81,9 +81,14 @@ struct VerseReaderView: View {
         }
         .onAppear {
             userStore.startSession(chapterId: chapter.id, verseKey: "\(chapter.id):1")
+            userStore.lastReadChapterId = chapter.id
         }
         .onDisappear {
             userStore.endCurrentSession()
+            // Save current scroll position
+            if let pos = scrollPosition {
+                userStore.lastReadVerseKey = pos
+            }
         }
         .onChange(of: audioManager.currentVerseKey) { _, newValue in
             if let key = newValue {

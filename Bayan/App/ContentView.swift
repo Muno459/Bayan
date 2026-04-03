@@ -61,6 +61,24 @@ struct LearnTab: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: BayanSpacing.lg) {
+                    // Empty state for first launch
+                    if vocabularyStore.totalWordsEncountered == 0 {
+                        VStack(spacing: 12) {
+                            Image(systemName: "book.and.wrench")
+                                .font(.system(size: 40))
+                                .foregroundStyle(BayanColors.primary.opacity(0.4))
+                            Text("Start Reading to Learn")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(BayanColors.textPrimary)
+                            Text("Open any surah from the Read tab. As you read, Bayan will track every Arabic word and help you learn it.")
+                                .font(.system(size: 14))
+                                .foregroundStyle(BayanColors.textSecondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 32)
+                        }
+                        .padding(.vertical, 32)
+                    }
+
                     // Daily Word
                     DailyWordCard()
                         .padding(.horizontal, BayanSpacing.md)
