@@ -61,6 +61,7 @@ struct SubstitutionWordView: View {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(isHighlighted ? BayanColors.primary.opacity(0.12) : .clear)
                 )
+                .scaleEffect(isHighlighted ? 1.08 : 1.0)
 
         case .arabic(let text):
             Text(text)
@@ -72,6 +73,7 @@ struct SubstitutionWordView: View {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
                 )
+                .scaleEffect(isHighlighted ? 1.1 : 1.0)
 
         case .transitioning(let arabic, let english):
             VStack(spacing: 0) {
@@ -88,6 +90,7 @@ struct SubstitutionWordView: View {
                 RoundedRectangle(cornerRadius: 5)
                     .fill(isHighlighted ? BayanColors.learning.opacity(0.15) : BayanColors.learning.opacity(0.05))
             )
+            .scaleEffect(isHighlighted ? 1.08 : 1.0)
         }
     }
 }
