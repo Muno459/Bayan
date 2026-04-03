@@ -28,6 +28,7 @@
 		51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07211B76D703781FA8C56786 /* UserModels.swift */; };
 		5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2B225323C0E98272174DA2 /* QuranStore.swift */; };
 		643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */; };
+		72954141C3FB489F1B2025B2 /* WordAudioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB75642F22E98805E5629A71 /* WordAudioTests.swift */; };
 		76BF4A014335B33EFE6446A5 /* AudioPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */; };
 		76F4197CB025CA22DCDE7419 /* Verse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C093DA1BBAD42A930B4FBA7F /* Verse.swift */; };
 		7F3D90B9BC600F0F193AF801 /* Reciter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86E8D50EE21ED1EF303F478 /* Reciter.swift */; };
@@ -99,6 +100,7 @@
 		B1581A36C14976FB9A0B296D /* PronunciationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationButton.swift; sourceTree = "<group>"; };
 		B6B9F41428421B9178DED4BD /* DailyWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWordView.swift; sourceTree = "<group>"; };
 		BB43C370A12A90D6B8496D6B /* VocabularyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStore.swift; sourceTree = "<group>"; };
+		BB75642F22E98805E5629A71 /* WordAudioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioTests.swift; sourceTree = "<group>"; };
 		C093DA1BBAD42A930B4FBA7F /* Verse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verse.swift; sourceTree = "<group>"; };
 		C31A05CB80635C8CE7D48599 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		C52013B49F8ADD6419D8B4DB /* TarteelEncoder.mlpackage */ = {isa = PBXFileReference; path = TarteelEncoder.mlpackage; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 			isa = PBXGroup;
 			children = (
 				92DC26419D0924EBF714B5B7 /* BayanTests.swift */,
+				BB75642F22E98805E5629A71 /* WordAudioTests.swift */,
 			);
 			path = BayanTests;
 			sourceTree = "<group>";
@@ -462,6 +465,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BB374F813C999845ED2988E /* BayanTests.swift in Sources */,
+				72954141C3FB489F1B2025B2 /* WordAudioTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
