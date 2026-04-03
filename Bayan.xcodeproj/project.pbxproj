@@ -15,6 +15,7 @@
 		0ED2BB2A3B0D82407CECF6E5 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9129D60E125ABD73E2850380 /* SettingsManager.swift */; };
 		1511B52CBFCE08A9F626FE79 /* VocabularyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */; };
 		16D273F6F31D099CA527B778 /* PronunciationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1581A36C14976FB9A0B296D /* PronunciationButton.swift */; };
+		1F44B0605784A137A3DB441A /* MilestoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1200987D8D2D2A3205D13691 /* MilestoneView.swift */; };
 		2CB484D0A1FCDCEDD4A6B30B /* WordAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */; };
 		3564266BA666EBF705758BF5 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB670B091D43E8B7133206D /* TokenManager.swift */; };
 		3741FCBE4C5BF365C29DEFDC /* MelSpectrogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC771BA420C2D07B46F5559A /* MelSpectrogram.swift */; };
@@ -63,6 +64,7 @@
 
 /* Begin PBXFileReference section */
 		07211B76D703781FA8C56786 /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
+		1200987D8D2D2A3205D13691 /* MilestoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneView.swift; sourceTree = "<group>"; };
 		132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerBar.swift; sourceTree = "<group>"; };
 		2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionControlsSheet.swift; sourceTree = "<group>"; };
 		2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArabicLetterData.swift; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 			children = (
 				5B871515C5CE216F4E8F381B /* Haptics.swift */,
 				A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */,
+				1200987D8D2D2A3205D13691 /* MilestoneView.swift */,
 				B1581A36C14976FB9A0B296D /* PronunciationButton.swift */,
 				F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */,
 			);
@@ -471,6 +474,7 @@
 				38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */,
 				0D7A74A6AA41B4AF3FEAED91 /* LetterBreakdownView.swift in Sources */,
 				3741FCBE4C5BF365C29DEFDC /* MelSpectrogram.swift in Sources */,
+				1F44B0605784A137A3DB441A /* MilestoneView.swift in Sources */,
 				D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */,
 				643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */,
 				16D273F6F31D099CA527B778 /* PronunciationButton.swift in Sources */,

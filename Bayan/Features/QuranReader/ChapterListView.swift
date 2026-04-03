@@ -157,12 +157,24 @@ struct ChapterListView: View {
 
             Spacer(minLength: 8)
 
-            // Arabic name
-            Text(chapter.nameArabic)
-                .font(.system(size: 20, design: .serif))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
+            // Read indicator + Arabic name
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(chapter.nameArabic)
+                    .font(.system(size: 20, design: .serif))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+
+                if hasRead(chapter.id) {
+                    Text("Read")
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundStyle(BayanColors.mastered)
+                }
+            }
         }
         .padding(.vertical, 4)
+    }
+
+    private func hasRead(_ chapterId: Int) -> Bool {
+        userStore.sessions.contains { $0.chapterId == chapterId }
     }
 }

@@ -12,24 +12,33 @@ struct VerseReaderView: View {
 
     @State private var showSubstitutionControls = false
     @State private var scrollPosition: String?
+    @State private var currentMilestone: VocabularyMilestone?
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // Main content
-            Group {
-                if quranStore.isLoadingVerses {
-                    loadingView
-                } else if let error = quranStore.error {
-                    errorView(error)
-                } else {
-                    verseScrollView
+        ZStack {
+            VStack(spacing: 0) {
+                // Main content
+                Group {
+                    if quranStore.isLoadingVerses {
+                        loadingView
+                    } else if let error = quranStore.error {
+                        errorView(error)
+                    } else {
+                        verseScrollView
+                    }
+                }
+
+                // Floating audio player
+                if audioManager.currentVerseKey != nil || audioManager.isLoading {
+                    AudioPlayerBar(chapterId: chapter.id)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
 
-            // Floating audio player
-            if audioManager.currentVerseKey != nil || audioManager.isLoading {
-                AudioPlayerBar(chapterId: chapter.id)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            // Milestone celebration overlay
+            if let milestone = currentMilestone {
+                MilestoneOverlay(milestone: milestone)
+                    .transition(.scale.combined(with: .opacity))
             }
         }
         .background(colorScheme == .dark ? BayanColors.readerBackgroundDark : BayanColors.readerBackground)
@@ -94,6 +103,15 @@ struct VerseReaderView: View {
             if let key = newValue {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     scrollPosition = key
+                }
+            }
+        }
+        .onChange(of: vocabularyStore.familiarCount) { oldVal, newVal in
+            if let milestone = VocabularyMilestone.check(oldCount: oldVal, newCount: newVal) {
+                withAnimation { currentMilestone = milestone }
+                Task {
+                    try? await Task.sleep(for: .seconds(2.5))
+                    withAnimation { currentMilestone = nil }
                 }
             }
         }
