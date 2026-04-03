@@ -22,7 +22,7 @@ final class PronunciationChecker {
     private var audioRecorder: AVAudioRecorder?
     private var recordingURL: URL?
     private var inferenceEngine: PronunciationInferenceEngine?
-    private var isModelLoaded = false
+    private(set) var isModelLoaded = false
 
     // MARK: - Model Loading (background)
 
@@ -94,10 +94,17 @@ final class PronunciationChecker {
             AVLinearPCMIsFloatKey: false,
         ]
 
+        guard let url = recordingURL else {
+            state = .error("Recording failed")
+            return
+        }
+
         do {
-            audioRecorder = try AVAudioRecorder(url: recordingURL!, settings: settings)
+            audioRecorder = try AVAudioRecorder(url: url, settings: settings)
             audioRecorder?.record()
         } catch {
+            // Restore audio session on failure
+            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
             state = .error("Recording failed")
         }
     }
@@ -402,7 +409,9 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         // Decode each character through the byte mapping
         var bytes: [UInt8] = []
         for char in cleaned {
-            if let byte = byteDecoder[char] {
+            if char == " " {
+                bytes.append(32) // Space byte not in GPT-2 byte decoder
+            } else if let byte = byteDecoder[char] {
                 bytes.append(byte)
             }
         }
@@ -422,11 +431,20 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     }
 
     private func stripDiacritics(_ text: String) -> String {
-        let range: ClosedRange<Unicode.Scalar> = "\u{064B}"..."\u{065F}"
-        return String(text.unicodeScalars.filter { !range.contains($0) })
-            .replacingOccurrences(of: "\u{0670}", with: "")
-            .replacingOccurrences(of: "\u{06E1}", with: "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return String(text.unicodeScalars.filter { scalar in
+            // Remove Arabic diacritics (tashkeel)
+            if scalar.value >= 0x064B && scalar.value <= 0x065F { return false }
+            // Remove Quranic annotation signs
+            if scalar.value >= 0x0610 && scalar.value <= 0x061A { return false }
+            // Remove Uthmani small/superscript marks
+            if scalar.value >= 0x06D6 && scalar.value <= 0x06ED { return false }
+            // Remove tatweel
+            if scalar.value == 0x0640 { return false }
+            // Remove superscript alef
+            if scalar.value == 0x0670 { return false }
+            return true
+        })
+        .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     private func levenshteinDistance(_ s1: String, _ s2: String) -> Int {
