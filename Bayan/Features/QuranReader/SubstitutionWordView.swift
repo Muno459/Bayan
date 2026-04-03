@@ -45,6 +45,10 @@ struct SubstitutionWordView: View {
         return false
     }
 
+    private func isArabicText(_ text: String) -> Bool {
+        text.unicodeScalars.contains { $0.value >= 0x0600 && $0.value <= 0x06FF }
+    }
+
     // MARK: - Word Display
 
     @ViewBuilder
@@ -59,21 +63,21 @@ struct SubstitutionWordView: View {
                         .fill(isHighlighted ? BayanColors.primary.opacity(0.1) : .clear)
                 )
 
-        case .arabic(let text):
+        case .learned(let text):
             Text(text)
-                .font(.system(size: 28))
-                .environment(\.locale, Locale(identifier: "ar"))
+                .font(isArabicText(text) ? .system(size: 28) : .system(size: 22, weight: .semibold))
+                .environment(\.locale, isArabicText(text) ? Locale(identifier: "ar") : .current)
                 .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
                 .background(
                     RoundedRectangle(cornerRadius: 6)
                         .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
                 )
 
-        case .transitioning(let arabic, let english):
+        case .transitioning(let target, let english):
             VStack(spacing: 0) {
-                Text(arabic)
-                    .font(.system(size: 26))
-                    .environment(\.locale, Locale(identifier: "ar"))
+                Text(target)
+                    .font(isArabicText(target) ? .system(size: 26) : .system(size: 20, weight: .medium))
+                    .environment(\.locale, isArabicText(target) ? Locale(identifier: "ar") : .current)
                     .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
                 Text(english)
                     .font(.system(size: 10))

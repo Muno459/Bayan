@@ -88,7 +88,99 @@ struct OnboardingView: View {
             )
             .tag(2)
 
-            // Page 4: Set level
+            // Page 4: Choose your path
+            VStack(spacing: 20) {
+                Spacer()
+
+                Text("Choose Your Path")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(BayanColors.textPrimary)
+
+                Text("How would you like to learn?")
+                    .font(.system(size: 15))
+                    .foregroundStyle(BayanColors.textSecondary)
+
+                VStack(spacing: 14) {
+                    // Option 1: Arabic Script (recommended)
+                    Button {
+                        vocabularyStore.useTransliteration = false
+                        withAnimation { currentPage += 1 }
+                    } label: {
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text("Learn Arabic Script")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(BayanColors.textPrimary)
+                                Spacer()
+                                Text("Recommended")
+                                    .font(.system(size: 11, weight: .medium))
+                                    .foregroundStyle(BayanColors.mastered)
+                                    .padding(.horizontal, 8).padding(.vertical, 3)
+                                    .background(Capsule().fill(BayanColors.mastered.opacity(0.1)))
+                            }
+                            Text("English words gradually become Arabic script. You learn to read the Quran in its original form.")
+                                .font(.system(size: 13))
+                                .foregroundStyle(BayanColors.textSecondary)
+                                .lineSpacing(2)
+                            // Preview
+                            HStack(spacing: 4) {
+                                Text("In the name of")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(BayanColors.textSecondary)
+                                Text("ٱللَّهِ")
+                                    .font(.system(size: 18))
+                                    .foregroundStyle(BayanColors.primary)
+                            }
+                            .padding(.top, 4)
+                        }
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(Color(.systemBackground))
+                                .shadow(color: .black.opacity(0.06), radius: 8, y: 3)
+                                .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(BayanColors.primary.opacity(0.2)))
+                        )
+                    }
+
+                    // Option 2: Transliteration
+                    Button {
+                        vocabularyStore.useTransliteration = true
+                        withAnimation { currentPage += 1 }
+                    } label: {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Learn with Transliteration")
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundStyle(BayanColors.textPrimary)
+                            Text("English words become phonetic pronunciation guides. Helpful if you cannot read Arabic letters yet.")
+                                .font(.system(size: 13))
+                                .foregroundStyle(BayanColors.textSecondary)
+                                .lineSpacing(2)
+                            // Preview
+                            HStack(spacing: 4) {
+                                Text("In the name of")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(BayanColors.textSecondary)
+                                Text("l-lahi")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(BayanColors.primary)
+                            }
+                            .padding(.top, 4)
+                        }
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(Color(.systemBackground))
+                                .shadow(color: .black.opacity(0.04), radius: 6, y: 2)
+                        )
+                    }
+                }
+                .padding(.horizontal, 24)
+
+                Spacer()
+            }
+            .tag(3)
+
+            // Page 5: Set level
             VStack(spacing: 24) {
                 Spacer()
 
@@ -100,21 +192,21 @@ struct OnboardingView: View {
                     .font(.system(size: 24, weight: .bold))
                     .foregroundStyle(BayanColors.textPrimary)
 
-                Text("How much Quranic Arabic do you already know?")
+                Text("How much do you already know?")
                     .font(.system(size: 15))
                     .foregroundStyle(BayanColors.textSecondary)
 
                 VStack(spacing: 12) {
-                    levelButton(title: "Complete Beginner", subtitle: "I read the Quran only in English", level: 0.0)
-                    levelButton(title: "Know Some Words", subtitle: "I recognize Allah, Bismillah, Rahman", level: 0.3)
-                    levelButton(title: "Intermediate", subtitle: "I can read some Arabic script", level: 0.6)
-                    levelButton(title: "Advanced", subtitle: "I want mostly Arabic", level: 0.9)
+                    levelButton(title: "Complete Beginner", subtitle: "Start with all English", level: 0.0)
+                    levelButton(title: "Know Some Words", subtitle: "Allah, Bismillah, Rahman", level: 0.3)
+                    levelButton(title: "Intermediate", subtitle: "I know many Quranic words", level: 0.6)
+                    levelButton(title: "Advanced", subtitle: "Show me mostly Arabic", level: 0.9)
                 }
                 .padding(.horizontal, 24)
 
                 Spacer()
             }
-            .tag(3)
+            .tag(4)
         }
         .tabViewStyle(.page(indexDisplayMode: .always))
         .background(BayanColors.background)

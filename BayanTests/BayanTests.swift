@@ -36,10 +36,10 @@ struct VocabularyStoreTests {
         let store = VocabularyStore()
         store.substitutionLevel = 1.0
         let display = store.displayMode(for: makeWord(id: 2, arabic: "ٱلرَّحِيمِ", english: "the Most Merciful"))
-        if case .arabic(let text) = display {
+        if case .learned(let text) = display {
             #expect(text == "ٱلرَّحِيمِ")
         } else {
-            Issue.record("Expected .arabic at level 1.0")
+            Issue.record("Expected .learned at level 1.0")
         }
     }
 
@@ -51,10 +51,10 @@ struct VocabularyStoreTests {
 
         let allah = makeWord(id: 3, arabic: "ٱللَّهِ", english: "(of) Allah")
         let display = store.displayMode(for: allah)
-        if case .arabic = display {
-            // Common word should show Arabic even at low level
+        if case .learned = display {
+            // Common word should show learned even at low level
         } else {
-            Issue.record("Expected .arabic for common word 'Allah' at level 0.1")
+            Issue.record("Expected .learned for common word 'Allah' at level 0.1")
         }
     }
 

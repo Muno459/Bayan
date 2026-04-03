@@ -68,12 +68,13 @@ enum TapLearningStage: Sendable {
 }
 
 /// How a word appears in the reading view.
-/// The journey: English → English + Arabic hint → Arabic only
+/// Arabic mode: English → Arabic script
+/// Transliteration mode: English → transliterated pronunciation
 enum SubstitutionDisplay: Sendable {
-    /// User hasn't learned this word yet — show English translation
+    /// Show English translation (word not yet learned)
     case english(String)
-    /// User is learning — show Arabic script with small English hint below
-    case transitioning(arabic: String, english: String)
-    /// User knows this word — show Arabic script only
-    case arabic(String)
+    /// Learning — show target with small English hint below
+    case transitioning(target: String, english: String)
+    /// Learned — show target only (Arabic script or transliteration)
+    case learned(String)
 }

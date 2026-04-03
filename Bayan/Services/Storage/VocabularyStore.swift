@@ -38,35 +38,41 @@ final class VocabularyStore {
 
     // MARK: - Progressive Substitution
 
-    /// Determine display for a word. The substitution level slider is king.
-    ///
-    /// At level 0.0: everything is English
-    /// At level 0.3: common words (Allah, Rabb) become Arabic script
-    /// At level 0.5: common + frequently-seen words become Arabic
-    /// At level 0.7: most words become Arabic, rare ones transition
-    /// At level 1.0: everything is Arabic script
+    /// Whether user is in transliteration mode (set during onboarding)
+    var useTransliteration: Bool = false {
+        didSet { UserDefaults.standard.set(useTransliteration, forKey: "bayan_useTransliteration") }
+    }
+
+    /// Determine display for a word.
+    /// In Arabic mode: substitutes with Arabic script
+    /// In Transliteration mode: substitutes with transliterated pronunciation
     func displayMode(for word: Word) -> SubstitutionDisplay {
         guard word.isWord else {
             return .english(word.translation?.text ?? "")
         }
 
         let englishText = word.translation?.text ?? ""
-        let arabicText = word.textUthmani ?? word.textImlaei ?? ""
+        let targetText: String
+        if useTransliteration {
+            targetText = word.transliteration?.text ?? word.textUthmani ?? ""
+        } else {
+            targetText = word.textUthmani ?? word.textImlaei ?? ""
+        }
 
         if substitutionLevel < 0.05 {
             return .english(englishText)
         }
 
         if substitutionLevel >= 0.95 {
-            return .arabic(arabicText)
+            return .learned(targetText)
         }
 
         let wordScore = wordSubstitutionScore(for: word)
 
         if wordScore <= substitutionLevel {
-            return .arabic(arabicText)
+            return .learned(targetText)
         } else if wordScore <= substitutionLevel + 0.2 {
-            return .transitioning(arabic: arabicText, english: englishText)
+            return .transitioning(target: targetText, english: englishText)
         } else {
             return .english(englishText)
         }
@@ -182,6 +188,7 @@ final class VocabularyStore {
         if let saved = UserDefaults.standard.object(forKey: "bayan_substitutionLevel") as? Double {
             substitutionLevel = saved
         }
+        useTransliteration = UserDefaults.standard.bool(forKey: "bayan_useTransliteration")
     }
 
     /// Debounce saves — coalesce rapid word state changes into one write
