@@ -15,6 +15,8 @@ final class AudioPlaybackManager {
     var isLoading = false
     var error: String?
 
+    private var lastWordIndex: Int? // Monotonic tracking — prevents backward jumps
+
     // MARK: - Private
 
     private var player: AVPlayer?
@@ -175,6 +177,7 @@ final class AudioPlaybackManager {
     }
 
     func seekToVerse(_ verseKey: String) {
+        lastWordIndex = nil // Reset monotonic tracking on seek
         guard let timestamp = verseTimestamps.first(where: { $0.verseKey == verseKey }) else {
             return
         }
@@ -216,6 +219,7 @@ final class AudioPlaybackManager {
         isPlaying = false
         currentVerseKey = nil
         currentWordIndex = nil
+        lastWordIndex = nil
         playbackProgress = 0.0
     }
 
@@ -292,11 +296,24 @@ final class AudioPlaybackManager {
 
         // Update both atomically — verse key always updates before word index
         if newVerseKey != currentVerseKey {
-            currentWordIndex = nil // Clear word first to prevent flash on old verse
+            currentWordIndex = nil
             currentVerseKey = newVerseKey
+            lastWordIndex = nil
         }
-        if newWordIndex != currentWordIndex {
-            currentWordIndex = newWordIndex
+
+        // Only advance forward within a verse — never jump backward
+        // This prevents jitter from AVPlayer timing fluctuations
+        if let newIdx = newWordIndex {
+            if let lastIdx = lastWordIndex {
+                if newIdx >= lastIdx {
+                    currentWordIndex = newIdx
+                    lastWordIndex = newIdx
+                }
+                // If newIdx < lastIdx, ignore it (jitter)
+            } else {
+                currentWordIndex = newIdx
+                lastWordIndex = newIdx
+            }
         }
     }
 
