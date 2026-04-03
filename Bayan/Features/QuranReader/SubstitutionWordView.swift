@@ -108,119 +108,94 @@ struct WordLearningCard: View {
     }
 
     var body: some View {
-        VStack(spacing: 24) {
-            // Arabic word — large, centered
-            Text(word.textUthmani ?? "")
-                .font(.system(size: 56, design: .serif))
-                .foregroundStyle(BayanColors.textPrimary)
-                .padding(.top, 20)
+        ScrollView {
+            VStack(spacing: 14) {
+                // Arabic word + meaning side by side
+                HStack(spacing: 16) {
+                    Text(word.textUthmani ?? "")
+                        .font(.system(size: 38, design: .serif))
+                        .foregroundStyle(BayanColors.textPrimary)
 
-            // English meaning
-            Text(word.translation?.text ?? "")
-                .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(BayanColors.textSecondary)
-
-            Divider().padding(.horizontal, 32)
-
-            // Audio controls
-            HStack(spacing: 20) {
-                // Single play
-                Button {
-                    wordPlayer.play(verseKey: verseKey, wordPosition: word.position)
-                } label: {
-                    VStack(spacing: 4) {
-                        Image(systemName: wordPlayer.isPlaying && !wordPlayer.isDrilling
-                              ? "speaker.wave.2.fill" : "play.circle.fill")
-                            .font(.system(size: 32))
-                            .foregroundStyle(BayanColors.primary)
-                            .contentTransition(.symbolEffect(.replace))
-                            .symbolEffect(.variableColor.iterative, isActive: wordPlayer.isPlaying && !wordPlayer.isDrilling)
-                        Text("Listen")
-                            .font(.system(size: 12, weight: .medium))
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(word.translation?.text ?? "")
+                            .font(.system(size: 16, weight: .medium))
                             .foregroundStyle(BayanColors.textSecondary)
-                    }
-                }
 
-                // Drill (3x: normal → slow → normal)
-                Button {
-                    wordPlayer.drill(verseKey: verseKey, wordPosition: word.position)
-                } label: {
-                    VStack(spacing: 4) {
-                        ZStack {
-                            Image(systemName: wordPlayer.isDrilling ? "waveform" : "repeat")
-                                .font(.system(size: 28))
-                                .foregroundStyle(wordPlayer.isDrilling ? BayanColors.gold : BayanColors.primary)
-                                .contentTransition(.symbolEffect(.replace))
-                                .symbolEffect(.variableColor.iterative.reversing, isActive: wordPlayer.isDrilling)
-
-                            if wordPlayer.isDrilling {
-                                Text(drillStepLabel)
-                                    .font(.system(size: 9, weight: .bold))
-                                    .foregroundStyle(BayanColors.gold)
-                                    .offset(y: 18)
-                            }
+                        // Word frequency inline
+                        if let freq = frequency {
+                            Text("Appears \(freq)x in the Quran")
+                                .font(.system(size: 11))
+                                .foregroundStyle(BayanColors.primary.opacity(0.7))
                         }
-                        .frame(height: 32)
-
-                        Text(wordPlayer.isDrilling ? "Practicing..." : "Practice")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundStyle(wordPlayer.isDrilling ? BayanColors.gold : BayanColors.textSecondary)
                     }
                 }
-            }
-            .padding(.vertical, 8)
+                .padding(.top, 16)
 
-            // Drill explanation
-            if wordPlayer.isDrilling {
-                Text(drillStatusText)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(BayanColors.gold)
-                    .transition(.opacity)
-            }
-
-            // Word frequency
-            if let freq = frequency {
-                HStack(spacing: 6) {
-                    Image(systemName: "text.book.closed")
-                        .font(.system(size: 14))
+                // Audio controls — compact row
+                HStack(spacing: 24) {
+                    Button {
+                        wordPlayer.play(verseKey: verseKey, wordPosition: word.position)
+                    } label: {
+                        Label(
+                            wordPlayer.isPlaying && !wordPlayer.isDrilling ? "Playing" : "Listen",
+                            systemImage: wordPlayer.isPlaying && !wordPlayer.isDrilling ? "speaker.wave.2.fill" : "play.circle.fill"
+                        )
+                        .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(BayanColors.primary)
-                    Text("Appears \(freq) time\(freq == 1 ? "" : "s") in the Quran")
-                        .font(.system(size: 14))
-                        .foregroundStyle(BayanColors.textSecondary)
+                        .symbolEffect(.variableColor.iterative, isActive: wordPlayer.isPlaying && !wordPlayer.isDrilling)
+                    }
+
+                    Button {
+                        wordPlayer.drill(verseKey: verseKey, wordPosition: word.position)
+                    } label: {
+                        Label(
+                            wordPlayer.isDrilling ? drillStepLabel : "Practice 3x",
+                            systemImage: wordPlayer.isDrilling ? "waveform" : "repeat"
+                        )
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(wordPlayer.isDrilling ? BayanColors.gold : BayanColors.primary)
+                        .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.variableColor.iterative.reversing, isActive: wordPlayer.isDrilling)
+                    }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(BayanColors.primary.opacity(0.05))
-                )
-            }
+                .padding(.vertical, 6)
 
-            // Letter breakdown — teach Arabic reading
-            LetterBreakdownView(arabicText: word.textUthmani ?? "")
-
-            // "I Know This" button
-            if let state = vocabularyStore.wordStates[word.id], state.masteryLevel < .familiar {
-                Button {
-                    Haptics.success()
-                    vocabularyStore.promote(wordId: word.id)
-                    vocabularyStore.promote(wordId: word.id) // double promote to familiar
-                } label: {
-                    Label("I Know This Word", systemImage: "checkmark.circle.fill")
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(BayanColors.mastered))
+                // Drill status
+                if wordPlayer.isDrilling {
+                    Text(drillStatusText)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(BayanColors.gold)
+                        .transition(.opacity)
                 }
-                .padding(.horizontal, 32)
-            } else if vocabularyStore.wordStates[word.id] != nil {
-                Label("You know this word!", systemImage: "checkmark.seal.fill")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(BayanColors.mastered)
-            }
 
-            Spacer()
+                Divider()
+
+                // Letter breakdown
+                LetterBreakdownView(arabicText: word.textUthmani ?? "")
+
+                // "I Know This" button
+                if let state = vocabularyStore.wordStates[word.id], state.masteryLevel < .familiar {
+                    Button {
+                        Haptics.success()
+                        vocabularyStore.promote(wordId: word.id)
+                        vocabularyStore.promote(wordId: word.id)
+                    } label: {
+                        Label("I Know This Word", systemImage: "checkmark.circle.fill")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(RoundedRectangle(cornerRadius: 10).fill(BayanColors.mastered))
+                    }
+                    .padding(.horizontal, 24)
+                } else if vocabularyStore.wordStates[word.id] != nil {
+                    Label("You know this word!", systemImage: "checkmark.seal.fill")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(BayanColors.mastered)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 16)
         }
         .frame(maxWidth: .infinity)
         .background(BayanColors.background)
