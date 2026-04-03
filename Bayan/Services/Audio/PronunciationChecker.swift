@@ -19,7 +19,7 @@ final class PronunciationChecker {
 
     var state: State = .idle
 
-    private var audioRecorder: AVAudioRecorder?
+    private(set) var audioRecorder: AVAudioRecorder?
     private var recordingURL: URL?
     private var inferenceEngine: PronunciationInferenceEngine?
     private(set) var isModelLoaded = false
