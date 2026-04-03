@@ -33,19 +33,21 @@ enum MelSpectrogram {
         // Load mel filterbank
         let filters = loadMelFilters()
 
-        var melSpec = [Float](repeating: 0, count: nMels * nFrames)
         var fftReal = [Float](repeating: 0, count: fftN / 2)
         var fftImag = [Float](repeating: 0, count: fftN / 2)
+        // Per-frame power spectrum buffer (reused each frame)
+        var framePower = [Float](repeating: 0, count: nFreqBins)
+        var melResult = [Float](repeating: 0, count: nMels * nFrames)
 
         for frame in 0..<nFrames {
             let start = frame * hopLength
             if start + nFFT > nSamples { break }
 
-            // Apply Hann window
-            var windowed = [Float](repeating: 0, count: fftN) // zero-padded to 512
+            // Apply Hann window, zero-pad to 512
+            var windowed = [Float](repeating: 0, count: fftN)
             vDSP_vmul(Array(samples[start..<start + nFFT]), 1, window, 1, &windowed, 1, vDSP_Length(nFFT))
 
-            // Pack for vDSP_fft_zrip: interleaved real pairs
+            // Pack for vDSP_fft_zrip
             for i in 0..<fftN / 2 {
                 fftReal[i] = windowed[2 * i]
                 fftImag[i] = windowed[2 * i + 1]
@@ -56,43 +58,24 @@ enum MelSpectrogram {
                     var split = DSPSplitComplex(realp: rBuf.baseAddress!, imagp: iBuf.baseAddress!)
                     vDSP_fft_zrip(fftSetup, &split, 1, log2n, FFTDirection(kFFTDirection_Forward))
 
-                    // Compute power spectrum for the first nFreqBins
-                    let magBase = frame * nFreqBins
-
-                    // DC: real part squared (packed in realp[0])
-                    melSpec[magBase] = split.realp[0] * split.realp[0]
-
-                    // Bins 1..nFreqBins-2
+                    // Power spectrum into framePower buffer
+                    framePower[0] = split.realp[0] * split.realp[0] // DC
                     for k in 1..<min(nFreqBins - 1, fftN / 2) {
-                        let r = split.realp[k]
-                        let im = split.imagp[k]
-                        // Store power spectrum temporarily in melSpec (will be overwritten)
-                        melSpec[magBase + k] = r * r + im * im
+                        framePower[k] = split.realp[k] * split.realp[k] + split.imagp[k] * split.imagp[k]
                     }
-
-                    // Nyquist: imagp[0] squared
-                    if nFreqBins <= fftN / 2 + 1 {
-                        melSpec[magBase + nFreqBins - 1] = split.imagp[0] * split.imagp[0]
-                    }
+                    framePower[nFreqBins - 1] = split.imagp[0] * split.imagp[0] // Nyquist
                 }
             }
-        }
 
-        // Now melSpec contains [nFrames * nFreqBins] power values (frame-major)
-        // 3. Apply mel filterbank: for each frame, multiply power by filters
-        var melResult = [Float](repeating: 0, count: nMels * nFrames)
-
-        for frame in 0..<nFrames {
+            // Apply mel filterbank for this frame
             for mel in 0..<nMels {
                 var sum: Float = 0
                 let fBase = mel * nFreqBins
-                let pBase = frame * nFreqBins
                 for k in 0..<nFreqBins {
-                    if fBase + k < filters.count && pBase + k < melSpec.count {
-                        sum += filters[fBase + k] * melSpec[pBase + k]
+                    if fBase + k < filters.count {
+                        sum += filters[fBase + k] * framePower[k]
                     }
                 }
-                // Output in mel-major order: melResult[mel * nFrames + frame]
                 melResult[mel * nFrames + frame] = sum
             }
         }

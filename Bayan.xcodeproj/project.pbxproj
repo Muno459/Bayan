@@ -27,6 +27,7 @@
 		51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07211B76D703781FA8C56786 /* UserModels.swift */; };
 		5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2B225323C0E98272174DA2 /* QuranStore.swift */; };
 		643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */; };
+		6A4AA5AC21337261F2E1EDBC /* reference_mel.npy in Resources */ = {isa = PBXBuildFile; fileRef = 4CCB034B8229E3A24F4CDF92 /* reference_mel.npy */; };
 		72954141C3FB489F1B2025B2 /* WordAudioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB75642F22E98805E5629A71 /* WordAudioTests.swift */; };
 		76BF4A014335B33EFE6446A5 /* AudioPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */; };
 		76F4197CB025CA22DCDE7419 /* Verse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C093DA1BBAD42A930B4FBA7F /* Verse.swift */; };
@@ -40,6 +41,7 @@
 		9366217F4E924B20C893B818 /* ArabicLetterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */; };
 		BE92DFED0A149FDB139AC473 /* TarteelDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = B070DC30A9448521D9492B47 /* TarteelDecoder.mlmodelc */; };
 		C2945E79C57EABFE929ADEF6 /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C439367E88D9799AF36F3 /* UserStore.swift */; };
+		C398F86C5DA85CC439EE6257 /* WhisperMelExtractor.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 944132092F094EC2C912A7E1 /* WhisperMelExtractor.mlmodelc */; };
 		C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */; };
 		C86E98AF737C2B39C048C5E0 /* mel_filters.json in Resources */ = {isa = PBXBuildFile; fileRef = 5E9229F9A7B6D47EFAE681B3 /* mel_filters.json */; };
 		CE66E3189A5206B467CDCC57 /* DownloadsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE3E28A70FACBAEDC31904 /* DownloadsView.swift */; };
@@ -75,6 +77,7 @@
 		38C860FA5FE8046DEE0FD1EB /* Bayan.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Bayan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		447B75B102513CD4AD8B4415 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListView.swift; sourceTree = "<group>"; };
+		4CCB034B8229E3A24F4CDF92 /* reference_mel.npy */ = {isa = PBXFileReference; path = reference_mel.npy; sourceTree = "<group>"; };
 		4F42879BFF4970DA7ADFC56A /* Bayan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Bayan.entitlements; sourceTree = "<group>"; };
 		4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationChecker.swift; sourceTree = "<group>"; };
 		5165315F0793F7528B202942 /* WordAudioCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioCache.swift; sourceTree = "<group>"; };
@@ -93,6 +96,7 @@
 		90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseReaderView.swift; sourceTree = "<group>"; };
 		9129D60E125ABD73E2850380 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		92DC26419D0924EBF714B5B7 /* BayanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanTests.swift; sourceTree = "<group>"; };
+		944132092F094EC2C912A7E1 /* WhisperMelExtractor.mlmodelc */ = {isa = PBXFileReference; path = WhisperMelExtractor.mlmodelc; sourceTree = "<group>"; };
 		A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionWordView.swift; sourceTree = "<group>"; };
 		A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTabView.swift; sourceTree = "<group>"; };
 		A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterBreakdownView.swift; sourceTree = "<group>"; };
@@ -210,9 +214,11 @@
 			isa = PBXGroup;
 			children = (
 				5E9229F9A7B6D47EFAE681B3 /* mel_filters.json */,
+				4CCB034B8229E3A24F4CDF92 /* reference_mel.npy */,
 				D5872948DB21F22C6D0C740F /* tarteel_vocab.json */,
 				B070DC30A9448521D9492B47 /* TarteelDecoder.mlmodelc */,
 				E0BC2530171B11C2F95ACD1A /* TarteelEncoder.mlmodelc */,
+				944132092F094EC2C912A7E1 /* WhisperMelExtractor.mlmodelc */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -454,7 +460,9 @@
 				842920337DC5387D7F47135A /* Assets.xcassets in Resources */,
 				BE92DFED0A149FDB139AC473 /* TarteelDecoder.mlmodelc in Resources */,
 				FF36629684F5EF7EF8B7CB41 /* TarteelEncoder.mlmodelc in Resources */,
+				C398F86C5DA85CC439EE6257 /* WhisperMelExtractor.mlmodelc in Resources */,
 				C86E98AF737C2B39C048C5E0 /* mel_filters.json in Resources */,
+				6A4AA5AC21337261F2E1EDBC /* reference_mel.npy in Resources */,
 				831D8D0245F46BFB17291C0F /* tarteel_vocab.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

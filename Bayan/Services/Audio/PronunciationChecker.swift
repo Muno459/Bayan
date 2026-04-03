@@ -160,6 +160,7 @@ final class PronunciationChecker {
 /// Handles all heavy computation off the main thread.
 /// Thread-safe: all state is internal, no shared mutable state.
 final class PronunciationInferenceEngine: @unchecked Sendable {
+    private let melExtractor: MLModel
     private let encoder: MLModel
     private let decoder: MLModel
     private let vocab: [String: Int]
@@ -175,28 +176,26 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
 
     init() throws {
         // Load models — mlmodelc is a directory bundle
-        let encoderURL = Self.findModel(named: "TarteelEncoder")
-        let decoderURL = Self.findModel(named: "TarteelDecoder")
-
-        guard let encURL = encoderURL else {
-            print("[Bayan] Encoder model not found in bundle")
-            print("[Bayan] Bundle path: \(Bundle.main.bundlePath)")
+        guard let melURL = Self.findModel(named: "WhisperMelExtractor") else {
+            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Mel extractor not found"])
+        }
+        guard let encURL = Self.findModel(named: "TarteelEncoder") else {
             throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Encoder not found"])
         }
-        guard let decURL = decoderURL else {
-            print("[Bayan] Decoder model not found in bundle")
+        guard let decURL = Self.findModel(named: "TarteelDecoder") else {
             throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Decoder not found"])
         }
 
-        print("[Bayan] Loading encoder from: \(encURL)")
-        print("[Bayan] Loading decoder from: \(decURL)")
-
         let config = MLModelConfiguration()
         config.computeUnits = .all
+
+        print("[Bayan] Loading mel extractor...")
+        melExtractor = try MLModel(contentsOf: melURL, configuration: config)
+        print("[Bayan] Loading encoder...")
         encoder = try MLModel(contentsOf: encURL, configuration: config)
-        print("[Bayan] Encoder loaded")
+        print("[Bayan] Loading decoder...")
         decoder = try MLModel(contentsOf: decURL, configuration: config)
-        print("[Bayan] Decoder loaded")
+        print("[Bayan] All models loaded")
 
         // Load vocab
         if let vocabURL = Bundle.main.url(forResource: "tarteel_vocab", withExtension: "json"),
@@ -248,10 +247,10 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
             return nil
         }
 
-        let mel = MelSpectrogram.compute(audio: audio)
-        print("[Bayan] Mel computed: \(mel.count) values")
+        let mel = try runMelExtractor(audio: audio)
+        print("[Bayan] Mel computed: \(mel.shape)")
 
-        let encoderOutput = try runEncoder(mel: mel)
+        let encoderOutput = try runEncoder(melArray: mel)
         print("[Bayan] Encoder done, output shape: \(encoderOutput.shape)")
 
         let transcription = try runDecoder(encoderOutput: encoderOutput)
@@ -292,13 +291,43 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         return Array(UnsafeBufferPointer(start: ptr, count: Int(buffer.frameLength)))
     }
 
+    // MARK: - Mel Extractor (CoreML — replaces broken Swift FFT)
+
+    private func runMelExtractor(audio: [Float]) throws -> MLMultiArray {
+        // Pad/trim to 30 seconds (480000 samples)
+        let nSamples = 480000
+        let input = try MLMultiArray(shape: [1, NSNumber(value: nSamples)], dataType: .float32)
+        let count = min(audio.count, nSamples)
+        for i in 0..<count { input[i] = NSNumber(value: audio[i]) }
+        // Rest is already zero-padded
+
+        let features = try MLDictionaryFeatureProvider(dictionary: ["audio": input])
+        let result = try melExtractor.prediction(from: features)
+        guard let mel = result.featureValue(for: "mel_spectrogram")?.multiArrayValue else {
+            throw NSError(domain: "Bayan", code: 4, userInfo: [NSLocalizedDescriptionKey: "Mel extraction failed"])
+        }
+        return mel
+    }
+
     // MARK: - Encoder
 
-    private func runEncoder(mel: [Float]) throws -> MLMultiArray {
-        let input = try MLMultiArray(shape: [1, NSNumber(value: nMels), NSNumber(value: nFrames)], dataType: .float16)
-        for i in 0..<min(mel.count, nMels * nFrames) {
-            input[i] = NSNumber(value: mel[i])
+    private func runEncoder(melArray: MLMultiArray) throws -> MLMultiArray {
+        // Mel from extractor is (1, 80, 3001) — need to trim to (1, 80, 3000) for encoder
+        let input: MLMultiArray
+        if melArray.shape[2].intValue > nFrames {
+            // Trim to nFrames
+            input = try MLMultiArray(shape: [1, NSNumber(value: nMels), NSNumber(value: nFrames)], dataType: .float16)
+            for m in 0..<nMels {
+                for f in 0..<nFrames {
+                    let srcIdx = m * melArray.shape[2].intValue + f
+                    let dstIdx = m * nFrames + f
+                    input[dstIdx] = melArray[srcIdx]
+                }
+            }
+        } else {
+            input = melArray
         }
+
         let features = try MLDictionaryFeatureProvider(dictionary: ["input_features": input])
         let result = try encoder.prediction(from: features)
         guard let output = result.featureValue(for: "encoder_output")?.multiArrayValue else {
