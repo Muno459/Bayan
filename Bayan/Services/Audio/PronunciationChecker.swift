@@ -180,7 +180,7 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     private let eotToken = 50257
     private let langToken = 50272
     private let transcribeToken = 50359
-    private let maxTokens = 32
+    private let maxTokens = 5 // Single Quranic word = 1-3 tokens max
 
     init() throws {
         // Load models — mlmodelc is a directory bundle
@@ -261,7 +261,7 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     /// Returns nil if silence or non-Arabic detected.
     func processRecording(url: URL, expectedArabic: String) throws -> (Bool, String)? {
         print("[Bayan] Processing recording: \(url.lastPathComponent)")
-        let audio = try loadAudio(url: url)
+        var audio = try loadAudio(url: url)
         print("[Bayan] Audio loaded: \(audio.count) samples")
 
         // Silence check
@@ -271,6 +271,11 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
             print("[Bayan] Silence detected, skipping")
             return nil
         }
+
+        // Trim to speech only — remove leading/trailing silence
+        // This prevents Whisper from hallucinating on long silence
+        audio = trimSilence(audio: audio, threshold: 0.005)
+        print("[Bayan] Trimmed to \(audio.count) samples (\(String(format: "%.1f", Float(audio.count) / 16000))s)")
 
         let mel = try runMelExtractor(audio: audio)
         print("[Bayan] Mel computed: \(mel.shape)")
@@ -416,6 +421,38 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
             }
         }
         return String(bytes: bytes, encoding: .utf8) ?? ""
+    }
+
+    // MARK: - Audio Trimming
+
+    /// Trim leading and trailing silence from audio.
+    /// Keeps a small margin (0.1s) around the speech for natural sound.
+    private func trimSilence(audio: [Float], threshold: Float) -> [Float] {
+        let margin = 1600 // 0.1s at 16kHz
+        let windowSize = 400 // Check in 25ms windows
+
+        // Find first sample above threshold
+        var start = 0
+        for i in stride(from: 0, to: audio.count - windowSize, by: windowSize) {
+            let windowMax = audio[i..<min(i + windowSize, audio.count)].map { abs($0) }.max() ?? 0
+            if windowMax > threshold {
+                start = max(0, i - margin)
+                break
+            }
+        }
+
+        // Find last sample above threshold
+        var end = audio.count
+        for i in stride(from: audio.count - windowSize, through: 0, by: -windowSize) {
+            let windowMax = audio[max(0, i)..<min(i + windowSize, audio.count)].map { abs($0) }.max() ?? 0
+            if windowMax > threshold {
+                end = min(audio.count, i + windowSize + margin)
+                break
+            }
+        }
+
+        guard start < end else { return audio }
+        return Array(audio[start..<end])
     }
 
     // MARK: - Comparison
