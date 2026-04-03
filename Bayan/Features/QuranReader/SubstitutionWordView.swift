@@ -110,24 +110,25 @@ struct WordLearningCard: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 14) {
-                // Arabic word + meaning side by side
+                // Arabic word + meaning side by side (RTL: Arabic on right)
                 HStack(spacing: 16) {
-                    Text(word.textUthmani ?? "")
-                        .font(.system(size: 38, design: .serif))
-                        .foregroundStyle(BayanColors.textPrimary)
-
                     VStack(alignment: .leading, spacing: 2) {
                         Text(word.translation?.text ?? "")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundStyle(BayanColors.textSecondary)
 
-                        // Word frequency inline
                         if let freq = frequency {
                             Text("Appears \(freq)x in the Quran")
                                 .font(.system(size: 11))
                                 .foregroundStyle(BayanColors.primary.opacity(0.7))
                         }
                     }
+
+                    Spacer()
+
+                    Text(word.textUthmani ?? "")
+                        .font(.system(size: 38, design: .serif))
+                        .foregroundStyle(BayanColors.textPrimary)
                 }
                 .padding(.top, 16)
 
