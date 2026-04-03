@@ -3,10 +3,8 @@ import CoreML
 import Foundation
 import SwiftUI
 
-/// On-device Quranic Arabic pronunciation checker using Tarteel AI's
-/// Whisper model converted to CoreML. Records user audio, runs mel
-/// spectrogram + encoder + decoder natively, compares transcription
-/// to expected Arabic text.
+/// On-device Quranic Arabic pronunciation checker.
+/// All heavy work (model loading, mel spectrogram, inference) runs off main thread.
 @MainActor
 @Observable
 final class PronunciationChecker {
@@ -21,72 +19,25 @@ final class PronunciationChecker {
 
     var state: State = .idle
 
-    private var encoder: MLModel?
-    private var decoder: MLModel?
-    private var vocab: [String: Int] = [:]
-    private var reverseVocab: [Int: String] = [:]
     private var audioRecorder: AVAudioRecorder?
     private var recordingURL: URL?
+    private var inferenceEngine: PronunciationInferenceEngine?
     private var isModelLoaded = false
 
-    // Whisper constants
-    private let sampleRate = 16000
-    private let nMels = 80
-    private let nFrames = 3000 // 30 seconds
-    private let sotToken = 50258
-    private let eotToken = 50257
-    private let langToken = 50272 // Arabic
-    private let transcribeToken = 50359
-    private let maxTokens = 32
-
-    // MARK: - Model Loading
+    // MARK: - Model Loading (background)
 
     func loadModel() async {
         guard !isModelLoaded else { return }
         state = .loading
 
         do {
-            // Load encoder
-            guard let encoderURL = Bundle.main.url(forResource: "TarteelEncoder", withExtension: "mlmodelc")
-                    ?? compiledModelURL(for: "TarteelEncoder") else {
-                state = .error("Encoder model not found")
-                return
-            }
-            encoder = try MLModel(contentsOf: encoderURL)
-
-            // Load decoder
-            guard let decoderURL = Bundle.main.url(forResource: "TarteelDecoder", withExtension: "mlmodelc")
-                    ?? compiledModelURL(for: "TarteelDecoder") else {
-                state = .error("Decoder model not found")
-                return
-            }
-            decoder = try MLModel(contentsOf: decoderURL)
-
-            // Load vocab
-            if let vocabURL = Bundle.main.url(forResource: "tarteel_vocab", withExtension: "json"),
-               let data = try? Data(contentsOf: vocabURL),
-               let v = try? JSONDecoder().decode([String: Int].self, from: data) {
-                vocab = v
-                reverseVocab = Dictionary(uniqueKeysWithValues: v.map { ($1, $0) })
-            }
-
+            inferenceEngine = try await Task.detached {
+                try PronunciationInferenceEngine()
+            }.value
             isModelLoaded = true
             state = .idle
         } catch {
-            state = .error("Model load failed: \(error.localizedDescription)")
-        }
-    }
-
-    /// Compile .mlpackage to .mlmodelc if needed
-    private func compiledModelURL(for name: String) -> URL? {
-        guard let packageURL = Bundle.main.url(forResource: name, withExtension: "mlpackage") else {
-            return nil
-        }
-        do {
-            let compiled = try MLModel.compileModel(at: packageURL)
-            return compiled
-        } catch {
-            return nil
+            state = .error("Model load failed")
         }
     }
 
@@ -95,7 +46,6 @@ final class PronunciationChecker {
     func startRecording() {
         state = .recording
 
-        // Check mic permission first
         switch AVAudioApplication.shared.recordPermission {
         case .denied:
             state = .error("Microphone access denied. Enable in Settings.")
@@ -103,22 +53,17 @@ final class PronunciationChecker {
         case .undetermined:
             AVAudioApplication.requestRecordPermission { [weak self] granted in
                 Task { @MainActor in
-                    if granted {
-                        self?.startRecording()
-                    } else {
-                        self?.state = .error("Microphone access required")
-                    }
+                    if granted { self?.startRecording() }
+                    else { self?.state = .error("Microphone access required") }
                 }
             }
             return
-        case .granted:
-            break
-        @unknown default:
-            break
+        case .granted: break
+        @unknown default: break
         }
 
-        let session = AVAudioSession.sharedInstance()
         do {
+            let session = AVAudioSession.sharedInstance()
             try session.setCategory(.record, mode: .measurement)
             try session.setActive(true)
         } catch {
@@ -131,7 +76,7 @@ final class PronunciationChecker {
 
         let settings: [String: Any] = [
             AVFormatIDKey: Int(kAudioFormatLinearPCM),
-            AVSampleRateKey: Float(sampleRate),
+            AVSampleRateKey: Float(16000),
             AVNumberOfChannelsKey: 1,
             AVLinearPCMBitDepthKey: 16,
             AVLinearPCMIsFloatKey: false,
@@ -159,101 +104,155 @@ final class PronunciationChecker {
 
         if !isModelLoaded { await loadModel() }
 
-        guard encoder != nil, decoder != nil else {
+        guard let engine = inferenceEngine else {
             state = .error("Model not ready")
             return
         }
 
-        do {
-            let audio = try loadAudio(url: url)
-
-            // Check if audio has meaningful content (not just silence)
-            let maxAmplitude = audio.map { abs($0) }.max() ?? 0
-            if maxAmplitude < 0.01 {
-                // Silence — don't trigger a result
-                state = .idle
-                try? FileManager.default.removeItem(at: url)
-                return
+        // ALL heavy work runs off main thread
+        let expected = expectedArabic
+        let result = await Task.detached { () -> (Bool, String)? in
+            do {
+                return try engine.processRecording(url: url, expectedArabic: expected)
+            } catch {
+                return nil
             }
+        }.value
 
-            let mel = MelSpectrogram.compute(audio: audio)
-            let encoderOutput = try runEncoder(mel: mel)
-            let transcription = try runDecoder(encoderOutput: encoderOutput)
+        try? FileManager.default.removeItem(at: url)
 
-            // Only show result if transcription contains Arabic characters
-            // This filters out noise/random English that the model might hallucinate
-            let hasArabic = transcription.unicodeScalars.contains { $0.value >= 0x0600 && $0.value <= 0x06FF }
-            if !hasArabic && !transcription.isEmpty {
-                // Model didn't detect Arabic — likely not a faithful attempt
-                state = .idle
-                try? FileManager.default.removeItem(at: url)
-                return
-            }
-
-            let isCorrect = compareArabic(transcription: transcription, expected: expectedArabic)
-            state = .result(correct: isCorrect, transcription: transcription)
-            try? FileManager.default.removeItem(at: url)
-        } catch {
-            state = .error("Processing failed: \(error.localizedDescription)")
+        if let (correct, transcription) = result {
+            state = .result(correct: correct, transcription: transcription)
+        } else {
+            state = .idle // Silent failure — likely silence or non-Arabic
         }
     }
 
     func reset() {
         state = .idle
     }
+}
 
-    // MARK: - Audio Processing
+// MARK: - Background Inference Engine (not @MainActor)
+
+/// Handles all heavy computation off the main thread.
+/// Thread-safe: all state is internal, no shared mutable state.
+final class PronunciationInferenceEngine: @unchecked Sendable {
+    private let encoder: MLModel
+    private let decoder: MLModel
+    private let vocab: [String: Int]
+    private let reverseVocab: [Int: String]
+
+    private let nMels = 80
+    private let nFrames = 3000
+    private let sotToken = 50258
+    private let eotToken = 50257
+    private let langToken = 50272
+    private let transcribeToken = 50359
+    private let maxTokens = 32
+
+    init() throws {
+        // Load models
+        guard let encoderURL = Bundle.main.url(forResource: "TarteelEncoder", withExtension: "mlmodelc")
+                ?? Self.compileModel(named: "TarteelEncoder"),
+              let decoderURL = Bundle.main.url(forResource: "TarteelDecoder", withExtension: "mlmodelc")
+                ?? Self.compileModel(named: "TarteelDecoder") else {
+            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Model not found"])
+        }
+
+        let config = MLModelConfiguration()
+        config.computeUnits = .cpuAndGPU
+        encoder = try MLModel(contentsOf: encoderURL, configuration: config)
+        decoder = try MLModel(contentsOf: decoderURL, configuration: config)
+
+        // Load vocab
+        if let vocabURL = Bundle.main.url(forResource: "tarteel_vocab", withExtension: "json"),
+           let data = try? Data(contentsOf: vocabURL),
+           let v = try? JSONDecoder().decode([String: Int].self, from: data) {
+            vocab = v
+            reverseVocab = Dictionary(uniqueKeysWithValues: v.map { ($1, $0) })
+        } else {
+            vocab = [:]
+            reverseVocab = [:]
+        }
+    }
+
+    private static func compileModel(named name: String) -> URL? {
+        guard let packageURL = Bundle.main.url(forResource: name, withExtension: "mlpackage") else { return nil }
+        return try? MLModel.compileModel(at: packageURL)
+    }
+
+    /// Process a recording: load audio, compute mel, run encoder+decoder, compare.
+    /// Returns nil if silence or non-Arabic detected.
+    func processRecording(url: URL, expectedArabic: String) throws -> (Bool, String)? {
+        let audio = try loadAudio(url: url)
+
+        // Silence check
+        let maxAmplitude = audio.map { abs($0) }.max() ?? 0
+        if maxAmplitude < 0.01 { return nil }
+
+        let mel = MelSpectrogram.compute(audio: audio)
+        let encoderOutput = try runEncoder(mel: mel)
+        let transcription = try runDecoder(encoderOutput: encoderOutput)
+
+        // Filter non-Arabic transcriptions
+        let hasArabic = transcription.unicodeScalars.contains { $0.value >= 0x0600 && $0.value <= 0x06FF }
+        if !hasArabic && !transcription.isEmpty { return nil }
+
+        let correct = compareArabic(transcription: transcription, expected: expectedArabic)
+        return (correct, transcription)
+    }
+
+    // MARK: - Audio
 
     private func loadAudio(url: URL) throws -> [Float] {
         let file = try AVAudioFile(forReading: url)
-        let format = AVAudioFormat(standardFormatWithSampleRate: Double(sampleRate), channels: 1)!
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: 16000, channels: 1) else {
+            throw NSError(domain: "Bayan", code: 2)
+        }
         let frameCount = AVAudioFrameCount(file.length)
-        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount)!
+        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount) else {
+            throw NSError(domain: "Bayan", code: 3)
+        }
         try file.read(into: buffer)
-        let ptr = buffer.floatChannelData![0]
+        guard let ptr = buffer.floatChannelData?[0] else {
+            throw NSError(domain: "Bayan", code: 4)
+        }
         return Array(UnsafeBufferPointer(start: ptr, count: Int(buffer.frameLength)))
     }
 
-    // MARK: - Model Inference
+    // MARK: - Encoder
 
     private func runEncoder(mel: [Float]) throws -> MLMultiArray {
-        guard let enc = encoder else { throw NSError(domain: "Bayan", code: 1) }
-
         let input = try MLMultiArray(shape: [1, NSNumber(value: nMels), NSNumber(value: nFrames)], dataType: .float16)
-        for i in 0..<mel.count {
+        for i in 0..<min(mel.count, nMels * nFrames) {
             input[i] = NSNumber(value: mel[i])
         }
-
-        let inputFeatures = try MLDictionaryFeatureProvider(dictionary: ["input_features": input])
-        let result = try enc.prediction(from: inputFeatures)
+        let features = try MLDictionaryFeatureProvider(dictionary: ["input_features": input])
+        let result = try encoder.prediction(from: features)
         guard let output = result.featureValue(for: "encoder_output")?.multiArrayValue else {
-            throw NSError(domain: "Bayan", code: 2)
+            throw NSError(domain: "Bayan", code: 5)
         }
         return output
     }
 
-    private func runDecoder(encoderOutput: MLMultiArray) throws -> String {
-        guard let dec = decoder else { throw NSError(domain: "Bayan", code: 3) }
+    // MARK: - Decoder
 
-        // Start with <|startoftranscript|> <|ar|> <|transcribe|>
+    private func runDecoder(encoderOutput: MLMultiArray) throws -> String {
         var tokens = [sotToken, langToken, transcribeToken]
         var outputText = ""
 
         for _ in 0..<maxTokens {
             let inputIds = try MLMultiArray(shape: [1, NSNumber(value: tokens.count)], dataType: .int32)
-            for (i, t) in tokens.enumerated() {
-                inputIds[i] = NSNumber(value: t)
-            }
+            for (i, t) in tokens.enumerated() { inputIds[i] = NSNumber(value: t) }
 
             let features = try MLDictionaryFeatureProvider(dictionary: [
                 "input_ids": inputIds,
                 "encoder_output": encoderOutput,
             ])
-
-            let result = try dec.prediction(from: features)
+            let result = try decoder.prediction(from: features)
             guard let logits = result.featureValue(for: "logits")?.multiArrayValue else { break }
 
-            // Get the last token's logits and find argmax
             let vocabSize = logits.shape[2].intValue
             let offset = (tokens.count - 1) * vocabSize
             var maxIdx = 0
@@ -264,29 +263,25 @@ final class PronunciationChecker {
             }
 
             if maxIdx == eotToken { break }
-
             tokens.append(maxIdx)
+
             if let word = reverseVocab[maxIdx] {
-                // Clean up Whisper's byte-level BPE encoding
-                let cleaned = word
+                outputText += word
                     .replacingOccurrences(of: "Ġ", with: " ")
                     .replacingOccurrences(of: "▁", with: " ")
-                outputText += cleaned
             }
         }
 
         return outputText.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    // MARK: - Arabic Comparison
+    // MARK: - Comparison
 
     private func compareArabic(transcription: String, expected: String) -> Bool {
         let clean1 = stripDiacritics(transcription)
         let clean2 = stripDiacritics(expected)
-
         if clean1 == clean2 { return true }
         if !clean1.isEmpty && (clean1.contains(clean2) || clean2.contains(clean1)) { return true }
-
         let dist = levenshteinDistance(clean1, clean2)
         let maxLen = max(clean1.count, clean2.count, 1)
         return (1.0 - Double(dist) / Double(maxLen)) >= 0.6
