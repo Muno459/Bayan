@@ -181,7 +181,8 @@ final class PronunciationChecker {
 final class PronunciationInferenceEngine: @unchecked Sendable {
     private let melExtractor: MLModel
     private let encoder: MLModel
-    private let decoder: MLModel
+    private let promptDecoder: MLModel
+    private let stepDecoder: MLModel
     private let vocab: [String: Int]
     private let reverseVocab: [Int: String]
     private let byteDecoder: [Character: UInt8] // GPT-2 byte-level BPE decoder
@@ -202,8 +203,11 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         guard let encURL = Self.findModel(named: "TarteelEncoder") else {
             throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Encoder not found"])
         }
-        guard let decURL = Self.findModel(named: "TarteelDecoder") else {
-            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Decoder not found"])
+        guard let promptURL = Self.findModel(named: "TarteelPromptDecoder") else {
+            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Prompt decoder not found"])
+        }
+        guard let stepURL = Self.findModel(named: "TarteelStepDecoder") else {
+            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Step decoder not found"])
         }
 
         let config = MLModelConfiguration()
@@ -213,8 +217,10 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         melExtractor = try MLModel(contentsOf: melURL, configuration: config)
         print("[Bayan] Loading encoder...")
         encoder = try MLModel(contentsOf: encURL, configuration: config)
-        print("[Bayan] Loading decoder...")
-        decoder = try MLModel(contentsOf: decURL, configuration: config)
+        print("[Bayan] Loading prompt decoder...")
+        promptDecoder = try MLModel(contentsOf: promptURL, configuration: config)
+        print("[Bayan] Loading step decoder...")
+        stepDecoder = try MLModel(contentsOf: stepURL, configuration: config)
         print("[Bayan] All models loaded")
 
         // Load vocab
@@ -381,38 +387,84 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     // MARK: - Decoder
 
     private func runDecoder(encoderOutput: MLMultiArray) throws -> String {
-        var tokens = [sotToken, langToken, transcribeToken]
+        // Step 1: Run prompt decoder with [SOT, AR, TRANSCRIBE] — get logits + KV cache
+        let promptIds = try MLMultiArray(shape: [1, 3], dataType: .int32)
+        promptIds[0] = NSNumber(value: sotToken)
+        promptIds[1] = NSNumber(value: langToken)
+        promptIds[2] = NSNumber(value: transcribeToken)
+
+        let promptFeatures = try MLDictionaryFeatureProvider(dictionary: [
+            "input_ids": promptIds,
+            "encoder_output": encoderOutput,
+        ])
+        let promptResult = try promptDecoder.prediction(from: promptFeatures)
+        guard let promptLogits = promptResult.featureValue(for: "logits")?.multiArrayValue else {
+            return ""
+        }
+
+        // Extract first token from prompt logits (last position = index 2)
+        var firstToken = argmax(logits: promptLogits, position: 2)
+        if firstToken == eotToken { return "" }
+
+        // Extract KV cache from prompt
+        var kvCache: [String: MLMultiArray] = [:]
+        for i in 0..<4 {
+            kvCache["pk\(i)"] = promptResult.featureValue(for: "pk\(i)")?.multiArrayValue
+            kvCache["pv\(i)"] = promptResult.featureValue(for: "pv\(i)")?.multiArrayValue
+        }
+
         var outputText = ""
+        if let word = reverseVocab[firstToken] {
+            outputText += decodeBPEToken(word)
+        }
 
-        for _ in 0..<maxTokens {
-            let inputIds = try MLMultiArray(shape: [1, NSNumber(value: tokens.count)], dataType: .int32)
-            for (i, t) in tokens.enumerated() { inputIds[i] = NSNumber(value: t) }
+        // Step 2: Run step decoder for remaining tokens (with KV cache — O(1) per step)
+        for _ in 1..<maxTokens {
+            let inputId = try MLMultiArray(shape: [1, 1], dataType: .int32)
+            inputId[0] = NSNumber(value: firstToken)
 
-            let features = try MLDictionaryFeatureProvider(dictionary: [
-                "input_ids": inputIds,
+            var stepDict: [String: Any] = [
+                "input_id": inputId,
                 "encoder_output": encoderOutput,
-            ])
-            let result = try decoder.prediction(from: features)
-            guard let logits = result.featureValue(for: "logits")?.multiArrayValue else { break }
-
-            let vocabSize = logits.shape[2].intValue
-            let offset = (tokens.count - 1) * vocabSize
-            var maxIdx = 0
-            var maxVal: Float = -Float.infinity
-            for i in 0..<vocabSize {
-                let val = logits[offset + i].floatValue
-                if val > maxVal { maxVal = val; maxIdx = i }
+            ]
+            for i in 0..<4 {
+                if let pk = kvCache["pk\(i)"] { stepDict["pk\(i)"] = pk }
+                if let pv = kvCache["pv\(i)"] { stepDict["pv\(i)"] = pv }
             }
 
-            if maxIdx == eotToken { break }
-            tokens.append(maxIdx)
+            let stepFeatures = try MLDictionaryFeatureProvider(dictionary: stepDict)
+            let stepResult = try stepDecoder.prediction(from: stepFeatures)
+            guard let stepLogits = stepResult.featureValue(for: "logits")?.multiArrayValue else { break }
 
-            if let word = reverseVocab[maxIdx] {
+            let nextToken = argmax(logits: stepLogits, position: 0)
+            if nextToken == eotToken { break }
+
+            // Update KV cache
+            for i in 0..<4 {
+                kvCache["pk\(i)"] = stepResult.featureValue(for: "npk\(i)")?.multiArrayValue
+                kvCache["pv\(i)"] = stepResult.featureValue(for: "npv\(i)")?.multiArrayValue
+            }
+
+            if let word = reverseVocab[nextToken] {
                 outputText += decodeBPEToken(word)
             }
+            firstToken = nextToken
         }
 
         return outputText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// Argmax over vocabulary at a given sequence position
+    private func argmax(logits: MLMultiArray, position: Int) -> Int {
+        let vocabSize = logits.shape[2].intValue
+        let offset = position * vocabSize
+        var maxIdx = 0
+        var maxVal: Float = -Float.infinity
+        for i in 0..<vocabSize {
+            let val = logits[offset + i].floatValue
+            if val > maxVal { maxVal = val; maxIdx = i }
+        }
+        return maxIdx
     }
 
     /// Decode a GPT-2 byte-level BPE token to actual Unicode text.

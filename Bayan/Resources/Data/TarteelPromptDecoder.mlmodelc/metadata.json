@@ -1,0 +1,162 @@
+[
+  {
+    "metadataOutputVersion" : "3.0",
+    "storagePrecision" : "Float16",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 3 × 51865)",
+        "shortDescription" : "",
+        "shape" : "[1, 3, 51865]",
+        "name" : "logits",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 6 × 3 × 64)",
+        "shortDescription" : "",
+        "shape" : "[1, 6, 3, 64]",
+        "name" : "pk0",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 6 × 3 × 64)",
+        "shortDescription" : "",
+        "shape" : "[1, 6, 3, 64]",
+        "name" : "pv0",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 6 × 3 × 64)",
+        "shortDescription" : "",
+        "shape" : "[1, 6, 3, 64]",
+        "name" : "pk1",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 6 × 3 × 64)",
+        "shortDescription" : "",
+        "shape" : "[1, 6, 3, 64]",
+        "name" : "pv1",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 6 × 3 × 64)",
+        "shortDescription" : "",
+        "shape" : "[1, 6, 3, 64]",
+        "name" : "pk2",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 6 × 3 × 64)",
+        "shortDescription" : "",
+        "shape" : "[1, 6, 3, 64]",
+        "name" : "pv2",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 6 × 3 × 64)",
+        "shortDescription" : "",
+        "shape" : "[1, 6, 3, 64]",
+        "name" : "pk3",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 6 × 3 × 64)",
+        "shortDescription" : "",
+        "shape" : "[1, 6, 3, 64]",
+        "name" : "pv3",
+        "type" : "MultiArray"
+      }
+    ],
+    "modelParameters" : [
+
+    ],
+    "specificationVersion" : 8,
+    "mlProgramOperationTypeHistogram" : {
+      "Ios17.mul" : 8,
+      "Ios17.linear" : 41,
+      "Select" : 1,
+      "Ios17.transpose" : 32,
+      "Ios17.matmul" : 16,
+      "Ios17.gather" : 1,
+      "Ios17.add" : 18,
+      "Ios16.softmax" : 8,
+      "Ios17.greaterEqual" : 1,
+      "Ios16.gelu" : 4,
+      "Ios17.reshape" : 72,
+      "Ios17.layerNorm" : 13
+    },
+    "computePrecision" : "Mixed (Float16, Int32)",
+    "isUpdatable" : "0",
+    "stateSchema" : [
+
+    ],
+    "availability" : {
+      "macOS" : "14.0",
+      "tvOS" : "17.0",
+      "visionOS" : "1.0",
+      "watchOS" : "10.0",
+      "iOS" : "17.0",
+      "macCatalyst" : "17.0"
+    },
+    "modelType" : {
+      "name" : "MLModelType_mlProgram"
+    },
+    "userDefinedMetadata" : {
+      "com.github.apple.coremltools.conversion_date" : "2026-04-03",
+      "com.github.apple.coremltools.source" : "torch==2.11.0",
+      "com.github.apple.coremltools.version" : "9.0b1",
+      "com.github.apple.coremltools.source_dialect" : "TorchScript"
+    },
+    "inputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Int32",
+        "formattedType" : "MultiArray (Int32 1 × 3)",
+        "shortDescription" : "",
+        "shape" : "[1, 3]",
+        "name" : "input_ids",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float16",
+        "formattedType" : "MultiArray (Float16 1 × 1500 × 384)",
+        "shortDescription" : "",
+        "shape" : "[1, 1500, 384]",
+        "name" : "encoder_output",
+        "type" : "MultiArray"
+      }
+    ],
+    "generatedClassName" : "TarteelPromptDecoder",
+    "method" : "predict"
+  }
+]
