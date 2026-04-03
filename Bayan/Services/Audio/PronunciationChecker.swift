@@ -123,35 +123,30 @@ final class PronunciationChecker {
 
         // ALL heavy work runs off main thread with timeout
         let expected = expectedArabic
-        let inferenceTask = Task.detached(priority: .userInitiated) { () -> (Bool, String)? in
+        let inferenceTask = Task.detached(priority: .userInitiated) { () -> Result<(Bool, String)?, Error> in
             do {
-                return try engine.processRecording(url: url, expectedArabic: expected)
+                let result = try engine.processRecording(url: url, expectedArabic: expected)
+                return .success(result)
             } catch {
-                return nil
+                print("[Bayan] Inference error: \(error)")
+                return .failure(error)
             }
         }
 
-        // Race inference against a 15-second timeout
-        let timeoutTask = Task {
-            try? await Task.sleep(for: .seconds(15))
-            return nil as (Bool, String)?
-        }
-
-        let result: (Bool, String)?
-        if let inferenceResult = await inferenceTask.value {
-            timeoutTask.cancel()
-            result = inferenceResult
-        } else {
-            result = nil
-        }
-
+        let inferenceResult = await inferenceTask.value
         try? FileManager.default.removeItem(at: url)
 
-        if let (correct, transcription) = result {
-            state = .result(correct: correct, transcription: transcription)
-        } else if case .processing = state {
-            // Still in processing after timeout or failure
-            state = .error("Could not process — try on a real device")
+        switch inferenceResult {
+        case .success(let result):
+            if let (correct, transcription) = result {
+                state = .result(correct: correct, transcription: transcription)
+            } else {
+                // Silence, no Arabic, or empty — just reset
+                state = .idle
+            }
+        case .failure(let error):
+            print("[Bayan] Processing failed: \(error)")
+            state = .error("Error: \(error.localizedDescription)")
         }
     }
 
@@ -179,18 +174,29 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     private let maxTokens = 32
 
     init() throws {
-        // Load models
-        guard let encoderURL = Bundle.main.url(forResource: "TarteelEncoder", withExtension: "mlmodelc")
-                ?? Self.compileModel(named: "TarteelEncoder"),
-              let decoderURL = Bundle.main.url(forResource: "TarteelDecoder", withExtension: "mlmodelc")
-                ?? Self.compileModel(named: "TarteelDecoder") else {
-            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Model not found"])
+        // Load models — mlmodelc is a directory bundle
+        let encoderURL = Self.findModel(named: "TarteelEncoder")
+        let decoderURL = Self.findModel(named: "TarteelDecoder")
+
+        guard let encURL = encoderURL else {
+            print("[Bayan] Encoder model not found in bundle")
+            print("[Bayan] Bundle path: \(Bundle.main.bundlePath)")
+            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Encoder not found"])
+        }
+        guard let decURL = decoderURL else {
+            print("[Bayan] Decoder model not found in bundle")
+            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Decoder not found"])
         }
 
+        print("[Bayan] Loading encoder from: \(encURL)")
+        print("[Bayan] Loading decoder from: \(decURL)")
+
         let config = MLModelConfiguration()
-        config.computeUnits = .cpuAndGPU
-        encoder = try MLModel(contentsOf: encoderURL, configuration: config)
-        decoder = try MLModel(contentsOf: decoderURL, configuration: config)
+        config.computeUnits = .all
+        encoder = try MLModel(contentsOf: encURL, configuration: config)
+        print("[Bayan] Encoder loaded")
+        decoder = try MLModel(contentsOf: decURL, configuration: config)
+        print("[Bayan] Decoder loaded")
 
         // Load vocab
         if let vocabURL = Bundle.main.url(forResource: "tarteel_vocab", withExtension: "json"),
@@ -204,29 +210,67 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         }
     }
 
-    private static func compileModel(named name: String) -> URL? {
-        guard let packageURL = Bundle.main.url(forResource: name, withExtension: "mlpackage") else { return nil }
-        return try? MLModel.compileModel(at: packageURL)
+    /// Find a .mlmodelc bundle in the app bundle
+    private static func findModel(named name: String) -> URL? {
+        // Try direct lookup
+        if let url = Bundle.main.url(forResource: name, withExtension: "mlmodelc") {
+            return url
+        }
+        // Search in bundle
+        let bundlePath = Bundle.main.bundlePath
+        let modelPath = (bundlePath as NSString).appendingPathComponent("\(name).mlmodelc")
+        if FileManager.default.fileExists(atPath: modelPath) {
+            return URL(fileURLWithPath: modelPath)
+        }
+        // Search recursively
+        if let enumerator = FileManager.default.enumerator(atPath: bundlePath) {
+            while let path = enumerator.nextObject() as? String {
+                if path.hasSuffix("\(name).mlmodelc") {
+                    return URL(fileURLWithPath: (bundlePath as NSString).appendingPathComponent(path))
+                }
+            }
+        }
+        return nil
     }
 
     /// Process a recording: load audio, compute mel, run encoder+decoder, compare.
     /// Returns nil if silence or non-Arabic detected.
     func processRecording(url: URL, expectedArabic: String) throws -> (Bool, String)? {
+        print("[Bayan] Processing recording: \(url.lastPathComponent)")
         let audio = try loadAudio(url: url)
+        print("[Bayan] Audio loaded: \(audio.count) samples")
 
         // Silence check
         let maxAmplitude = audio.map { abs($0) }.max() ?? 0
-        if maxAmplitude < 0.01 { return nil }
+        print("[Bayan] Max amplitude: \(maxAmplitude)")
+        if maxAmplitude < 0.01 {
+            print("[Bayan] Silence detected, skipping")
+            return nil
+        }
 
         let mel = MelSpectrogram.compute(audio: audio)
+        print("[Bayan] Mel computed: \(mel.count) values")
+
         let encoderOutput = try runEncoder(mel: mel)
+        print("[Bayan] Encoder done, output shape: \(encoderOutput.shape)")
+
         let transcription = try runDecoder(encoderOutput: encoderOutput)
+        print("[Bayan] Transcription: '\(transcription)'")
 
         // Filter non-Arabic transcriptions
         let hasArabic = transcription.unicodeScalars.contains { $0.value >= 0x0600 && $0.value <= 0x06FF }
-        if !hasArabic && !transcription.isEmpty { return nil }
+        if !hasArabic && !transcription.isEmpty {
+            print("[Bayan] No Arabic detected in transcription, skipping")
+            return nil
+        }
+
+        if transcription.isEmpty {
+            print("[Bayan] Empty transcription")
+            return nil
+        }
 
         let correct = compareArabic(transcription: transcription, expected: expectedArabic)
+        print("[Bayan] Comparison: correct=\(correct)")
         return (correct, transcription)
     }
 
