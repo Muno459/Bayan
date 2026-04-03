@@ -55,10 +55,8 @@ struct SubstitutionWordView: View {
                 Text(text)
                     .font(.system(size: 20))
                     .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 3)
             } background: {
-                RoundedRectangle(cornerRadius: 6)
+                RoundedRectangle(cornerRadius: 4)
                     .fill(isHighlighted ? BayanColors.primary.opacity(0.12) : .clear)
             }
 
@@ -67,16 +65,14 @@ struct SubstitutionWordView: View {
                 Text(text)
                     .font(.system(size: 26, design: .serif))
                     .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 3)
             } background: {
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: 6)
                     .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
             }
 
         case .transitioning(let arabic, let english):
             StableHighlight(isHighlighted: isHighlighted) {
-                VStack(spacing: 1) {
+                VStack(spacing: 0) {
                     Text(arabic)
                         .font(.system(size: 24, design: .serif))
                         .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
@@ -84,10 +80,8 @@ struct SubstitutionWordView: View {
                         .font(.system(size: 10))
                         .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
                 }
-                .padding(.horizontal, 5)
-                .padding(.vertical, 3)
             } background: {
-                RoundedRectangle(cornerRadius: 7)
+                RoundedRectangle(cornerRadius: 5)
                     .fill(isHighlighted ? BayanColors.learning.opacity(0.15) : BayanColors.learning.opacity(0.05))
             }
         }
