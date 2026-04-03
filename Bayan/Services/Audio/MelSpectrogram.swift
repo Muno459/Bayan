@@ -69,12 +69,13 @@ enum MelSpectrogram {
                     var split = DSPSplitComplex(realp: rBuf.baseAddress!, imagp: iBuf.baseAddress!)
                     vDSP_fft_zrip(fftSetup, &split, 1, log2n, FFTDirection(kFFTDirection_Forward))
 
-                    // Power spectrum
-                    powerSpectrum[0] = split.realp[0] * split.realp[0] // DC
+                    // Power spectrum — scale by 1/(fftSize/2)² to match numpy/torch FFT
+                    let scale: Float = 1.0 / Float(fftSize / 2 * fftSize / 2)
+                    powerSpectrum[0] = split.realp[0] * split.realp[0] * scale // DC
                     for k in 1..<min(nFreqBins - 1, fftSize / 2) {
-                        powerSpectrum[k] = split.realp[k] * split.realp[k] + split.imagp[k] * split.imagp[k]
+                        powerSpectrum[k] = (split.realp[k] * split.realp[k] + split.imagp[k] * split.imagp[k]) * scale
                     }
-                    powerSpectrum[nFreqBins - 1] = split.imagp[0] * split.imagp[0] // Nyquist
+                    powerSpectrum[nFreqBins - 1] = split.imagp[0] * split.imagp[0] * scale // Nyquist
                 }
             }
 

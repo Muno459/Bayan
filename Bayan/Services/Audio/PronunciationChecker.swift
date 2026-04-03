@@ -195,7 +195,6 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     private let maxTokens = 5 // Single Quranic word = 1-3 tokens max
 
     init() throws {
-        // Load models — mlmodelc is a directory bundle
         guard let encURL = Self.findModel(named: "TarteelEncoder") else {
             throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Encoder not found"])
         }
@@ -207,7 +206,7 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         }
 
         let config = MLModelConfiguration()
-        config.computeUnits = .all
+        config.computeUnits = .all // All models use ANE — fixed shapes
 
         print("[Bayan] Loading encoder...")
         encoder = try MLModel(contentsOf: encURL, configuration: config)
@@ -284,10 +283,9 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
             return nil
         }
 
-        // Trim to speech only — remove leading/trailing silence
-        // This prevents Whisper from hallucinating on long silence
-        audio = trimSilence(audio: audio, threshold: 0.005)
-        print("[Bayan] Trimmed to \(audio.count) samples (\(String(format: "%.1f", Float(audio.count) / 16000))s)")
+        // No trimming — maxTokens=5 prevents hallucination
+        // Full audio gives better accuracy for slow speakers
+        print("[Bayan] Processing \(String(format: "%.1f", Float(audio.count) / 16000))s of audio")
 
         guard let mel = MelSpectrogram.compute(audio: audio) else {
             print("[Bayan] Mel computation failed")
