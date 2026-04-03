@@ -25,6 +25,7 @@
 		4AEAADE8F7E471FE1D42EE59 /* WrappingHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */; };
 		4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447B75B102513CD4AD8B4415 /* ContentView.swift */; };
 		51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07211B76D703781FA8C56786 /* UserModels.swift */; };
+		5AAE0C8519C8DB0690653D61 /* bpe_byte_decoder.json in Resources */ = {isa = PBXBuildFile; fileRef = 87D8EDB41DB61B6EA12B8753 /* bpe_byte_decoder.json */; };
 		5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2B225323C0E98272174DA2 /* QuranStore.swift */; };
 		643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */; };
 		6A4AA5AC21337261F2E1EDBC /* reference_mel.npy in Resources */ = {isa = PBXBuildFile; fileRef = 4CCB034B8229E3A24F4CDF92 /* reference_mel.npy */; };
@@ -93,6 +94,7 @@
 		7D15F1999A179436E8E4BE6C /* VerseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseCell.swift; sourceTree = "<group>"; };
 		7E41583B9A523FB07D83CC53 /* QuranicWordData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranicWordData.swift; sourceTree = "<group>"; };
 		7FDA53811E0A20062F10B789 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		87D8EDB41DB61B6EA12B8753 /* bpe_byte_decoder.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bpe_byte_decoder.json; sourceTree = "<group>"; };
 		90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseReaderView.swift; sourceTree = "<group>"; };
 		9129D60E125ABD73E2850380 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		92DC26419D0924EBF714B5B7 /* BayanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanTests.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 		63058A0003A6C093BD870247 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				87D8EDB41DB61B6EA12B8753 /* bpe_byte_decoder.json */,
 				5E9229F9A7B6D47EFAE681B3 /* mel_filters.json */,
 				4CCB034B8229E3A24F4CDF92 /* reference_mel.npy */,
 				D5872948DB21F22C6D0C740F /* tarteel_vocab.json */,
@@ -461,6 +464,7 @@
 				BE92DFED0A149FDB139AC473 /* TarteelDecoder.mlmodelc in Resources */,
 				FF36629684F5EF7EF8B7CB41 /* TarteelEncoder.mlmodelc in Resources */,
 				C398F86C5DA85CC439EE6257 /* WhisperMelExtractor.mlmodelc in Resources */,
+				5AAE0C8519C8DB0690653D61 /* bpe_byte_decoder.json in Resources */,
 				C86E98AF737C2B39C048C5E0 /* mel_filters.json in Resources */,
 				6A4AA5AC21337261F2E1EDBC /* reference_mel.npy in Resources */,
 				831D8D0245F46BFB17291C0F /* tarteel_vocab.json in Resources */,
