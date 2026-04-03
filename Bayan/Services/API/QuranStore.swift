@@ -45,8 +45,9 @@ final class QuranStore {
             var allVerses: [Verse] = []
             var page = 1
             let perPage = 50
+            let maxPages = 20 // Safety guard against infinite pagination
 
-            while true {
+            while page <= maxPages {
                 let response = try await apiClient.fetchVerses(
                     chapterNumber: chapter.id,
                     page: page,

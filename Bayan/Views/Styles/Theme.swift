@@ -7,15 +7,11 @@ import UIKit
 // MARK: - Color Palette
 
 enum BayanColors {
-    // Primary greens — inspired by Islamic geometric art
+    // Primary
     static let primary = Color(hex: 0x1B6B4A)
-    static let primaryLight = Color(hex: 0x2D8F65)
-    static let primaryDark = Color(hex: 0x0F4A32)
 
-    // Gold accent — for highlights, word emphasis
+    // Gold accent
     static let gold = Color(hex: 0xC8A951)
-    static let goldLight = Color(hex: 0xE8D48B)
-    static let goldSubtle = Color(hex: 0xC8A951).opacity(0.15)
 
     // Backgrounds — adaptive for dark mode
     static let background = Color(UIColor.systemGroupedBackground)
@@ -33,7 +29,7 @@ enum BayanColors {
     static let introduced = Color(hex: 0x3B82F6)
     static let unseen = Color(hex: 0x9CA3AF)
 
-    // Legacy aliases — now same as adaptive versions
+    // Legacy aliases
     static let backgroundDark = background
     static let cardBackgroundDark = cardBackground
     static let readerBackgroundDark = readerBackground
@@ -42,25 +38,13 @@ enum BayanColors {
 // MARK: - Typography
 
 enum BayanFonts {
-    // Arabic text — system Arabic with generous size
     static func arabic(_ size: CGFloat) -> Font {
         .system(size: size, weight: .regular, design: .serif)
     }
 
-    static func arabicBold(_ size: CGFloat) -> Font {
-        .system(size: size, weight: .semibold, design: .serif)
-    }
-
-    // English body text
     static let body = Font.system(size: 16, weight: .regular, design: .default)
     static let bodyMedium = Font.system(size: 16, weight: .medium, design: .default)
     static let caption = Font.system(size: 13, weight: .regular, design: .default)
-    static let captionMedium = Font.system(size: 13, weight: .medium, design: .default)
-
-    // Headers
-    static let title = Font.system(size: 24, weight: .bold, design: .rounded)
-    static let subtitle = Font.system(size: 18, weight: .semibold, design: .rounded)
-    static let sectionHeader = Font.system(size: 14, weight: .semibold, design: .default)
 }
 
 // MARK: - Spacing
@@ -71,16 +55,12 @@ enum BayanSpacing {
     static let md: CGFloat = 16
     static let lg: CGFloat = 24
     static let xl: CGFloat = 32
-    static let xxl: CGFloat = 48
 }
 
 // MARK: - Corner Radius
 
 enum BayanRadius {
-    static let sm: CGFloat = 8
     static let md: CGFloat = 12
-    static let lg: CGFloat = 16
-    static let xl: CGFloat = 24
 }
 
 // MARK: - Color Hex Init
