@@ -7,6 +7,7 @@ struct VerseCell: View {
     let verse: Verse
     let isCurrentVerse: Bool
     let currentWordIndex: Int?
+    let onPlayVerse: () -> Void
 
     @Environment(VocabularyStore.self) private var vocabularyStore
     @Environment(SettingsManager.self) private var settings
@@ -33,6 +34,15 @@ struct VerseCell: View {
                 }
 
                 Spacer()
+
+                // Play this verse
+                Button {
+                    onPlayVerse()
+                } label: {
+                    Image(systemName: isCurrentVerse ? "speaker.wave.2.fill" : "play.circle")
+                        .font(.system(size: 15))
+                        .foregroundStyle(isCurrentVerse ? BayanColors.primary : BayanColors.textSecondary)
+                }
 
                 // Share
                 ShareLink(item: shareText) {

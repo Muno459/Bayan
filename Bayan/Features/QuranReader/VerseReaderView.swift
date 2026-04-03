@@ -132,7 +132,23 @@ struct VerseReaderView: View {
                         verse: verse,
                         isCurrentVerse: audioManager.currentVerseKey == verse.verseKey,
                         currentWordIndex: audioManager.currentVerseKey == verse.verseKey
-                            ? audioManager.currentWordIndex : nil
+                            ? audioManager.currentWordIndex : nil,
+                        onPlayVerse: {
+                            Task {
+                                if audioManager.currentVerseKey == nil {
+                                    // Load audio first if not loaded
+                                    do {
+                                        let audioFile = try await quranStore.fetchAudio(for: chapter.id)
+                                        await audioManager.loadAudio(audioFile: audioFile)
+                                    } catch {
+                                        audioManager.error = error.localizedDescription
+                                        return
+                                    }
+                                }
+                                audioManager.seekToVerse(verse.verseKey)
+                                audioManager.play()
+                            }
+                        }
                     )
                     .id(verse.verseKey)
                     .onAppear {
