@@ -102,11 +102,12 @@ final class VocabularyStore {
             state.exposureCount += 1
             state.lastSeenDate = Date()
 
-            if state.exposureCount >= 25 && state.masteryLevel < .familiar {
+            // Auto-promote requires sustained engagement, not just scrolling past
+            if state.exposureCount >= 50 && state.masteryLevel < .familiar {
                 state.masteryLevel = .familiar
-            } else if state.exposureCount >= 12 && state.masteryLevel < .learning {
+            } else if state.exposureCount >= 25 && state.masteryLevel < .learning {
                 state.masteryLevel = .learning
-            } else if state.exposureCount >= 4 && state.masteryLevel < .introduced {
+            } else if state.exposureCount >= 10 && state.masteryLevel < .introduced {
                 state.masteryLevel = .introduced
             }
 

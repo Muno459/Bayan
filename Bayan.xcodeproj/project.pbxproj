@@ -31,9 +31,11 @@
 		643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */; };
 		76BF4A014335B33EFE6446A5 /* AudioPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */; };
 		76F4197CB025CA22DCDE7419 /* Verse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C093DA1BBAD42A930B4FBA7F /* Verse.swift */; };
+		7F3D90B9BC600F0F193AF801 /* Reciter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86E8D50EE21ED1EF303F478 /* Reciter.swift */; };
 		8038A84BD43A0F34450DE6C1 /* AudioModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCD184595EC4B2E2A3C4F242 /* AudioModels.swift */; };
 		831D8D0245F46BFB17291C0F /* tarteel_vocab.json in Resources */ = {isa = PBXBuildFile; fileRef = D5872948DB21F22C6D0C740F /* tarteel_vocab.json */; };
 		842920337DC5387D7F47135A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC8835784181590124853E68 /* Assets.xcassets */; };
+		8CF76FA2004AEB3C5F3F1D05 /* WordAudioCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5165315F0793F7528B202942 /* WordAudioCache.swift */; };
 		8D96F80B437B29791D0A28CD /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131D3C3DBD81D86B7714DBA /* Chapter.swift */; };
 		90FAF3988D417255E1A24973 /* AudioPlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */; };
 		9366217F4E924B20C893B818 /* ArabicLetterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */; };
@@ -41,6 +43,7 @@
 		A0BBA0948224D953EE7568FC /* TarteelDecoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = D40AD8B083E75CFB97FD7E51 /* TarteelDecoder.mlpackage */; };
 		C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */; };
 		C86E98AF737C2B39C048C5E0 /* mel_filters.json in Resources */ = {isa = PBXBuildFile; fileRef = 5E9229F9A7B6D47EFAE681B3 /* mel_filters.json */; };
+		CE66E3189A5206B467CDCC57 /* DownloadsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE3E28A70FACBAEDC31904 /* DownloadsView.swift */; };
 		CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */; };
 		D710AB490B86A961D93F78FA /* PronunciationChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */; };
 		D90A5BC3E27D68AE494047D6 /* SubstitutionWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */; };
@@ -73,6 +76,7 @@
 		469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListView.swift; sourceTree = "<group>"; };
 		4F42879BFF4970DA7ADFC56A /* Bayan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Bayan.entitlements; sourceTree = "<group>"; };
 		4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationChecker.swift; sourceTree = "<group>"; };
+		5165315F0793F7528B202942 /* WordAudioCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioCache.swift; sourceTree = "<group>"; };
 		569342C6252C64C5DCCF3179 /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
 		5B871515C5CE216F4E8F381B /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		5D2B225323C0E98272174DA2 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
@@ -100,6 +104,7 @@
 		C52013B49F8ADD6419D8B4DB /* TarteelEncoder.mlpackage */ = {isa = PBXFileReference; path = TarteelEncoder.mlpackage; sourceTree = "<group>"; };
 		CC8835784181590124853E68 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D131D3C3DBD81D86B7714DBA /* Chapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
+		D2CE3E28A70FACBAEDC31904 /* DownloadsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsView.swift; sourceTree = "<group>"; };
 		D40AD8B083E75CFB97FD7E51 /* TarteelDecoder.mlpackage */ = {isa = PBXFileReference; path = TarteelDecoder.mlpackage; sourceTree = "<group>"; };
 		D538DE5486419F8657E04B7C /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		D5872948DB21F22C6D0C740F /* tarteel_vocab.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tarteel_vocab.json; sourceTree = "<group>"; };
@@ -108,6 +113,7 @@
 		EFB670B091D43E8B7133206D /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappingHStack.swift; sourceTree = "<group>"; };
 		F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyModels.swift; sourceTree = "<group>"; };
+		F86E8D50EE21ED1EF303F478 /* Reciter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reciter.swift; sourceTree = "<group>"; };
 		FCD184595EC4B2E2A3C4F242 /* AudioModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -265,6 +271,7 @@
 		B5C0F959847F50F77A6CA5E4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				D2CE3E28A70FACBAEDC31904 /* DownloadsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -275,6 +282,7 @@
 				7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */,
 				DC771BA420C2D07B46F5559A /* MelSpectrogram.swift */,
 				4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */,
+				5165315F0793F7528B202942 /* WordAudioCache.swift */,
 				6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */,
 			);
 			path = Audio;
@@ -303,6 +311,7 @@
 			children = (
 				FCD184595EC4B2E2A3C4F242 /* AudioModels.swift */,
 				D131D3C3DBD81D86B7714DBA /* Chapter.swift */,
+				F86E8D50EE21ED1EF303F478 /* Reciter.swift */,
 				07211B76D703781FA8C56786 /* UserModels.swift */,
 				C093DA1BBAD42A930B4FBA7F /* Verse.swift */,
 				F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */,
@@ -471,6 +480,7 @@
 				DBA78A8116990B09AF5E2EC7 /* ChapterListView.swift in Sources */,
 				4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */,
 				06F34D74F099B513DFB66BBF /* DailyWordView.swift in Sources */,
+				CE66E3189A5206B467CDCC57 /* DownloadsView.swift in Sources */,
 				38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */,
 				0D7A74A6AA41B4AF3FEAED91 /* LetterBreakdownView.swift in Sources */,
 				3741FCBE4C5BF365C29DEFDC /* MelSpectrogram.swift in Sources */,
@@ -482,6 +492,7 @@
 				00B659A3FA1E4BB891951183 /* QuizView.swift in Sources */,
 				5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */,
 				DEBE8820339AF70CFCAF8859 /* QuranicWordData.swift in Sources */,
+				7F3D90B9BC600F0F193AF801 /* Reciter.swift in Sources */,
 				0ED2BB2A3B0D82407CECF6E5 /* SettingsManager.swift in Sources */,
 				CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */,
 				D90A5BC3E27D68AE494047D6 /* SubstitutionWordView.swift in Sources */,
@@ -496,6 +507,7 @@
 				C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */,
 				1511B52CBFCE08A9F626FE79 /* VocabularyModels.swift in Sources */,
 				95485533C43F5A0C8ACD2753 /* VocabularyStore.swift in Sources */,
+				8CF76FA2004AEB3C5F3F1D05 /* WordAudioCache.swift in Sources */,
 				2CB484D0A1FCDCEDD4A6B30B /* WordAudioPlayer.swift in Sources */,
 				4AEAADE8F7E471FE1D42EE59 /* WrappingHStack.swift in Sources */,
 			);
@@ -605,6 +617,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -681,6 +694,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

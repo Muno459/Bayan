@@ -121,17 +121,22 @@ final class WordAudioPlayer {
         isPlaying = false
     }
 
+    private let cache = WordAudioCache()
+
     private func wordURL(verseKey: String, wordPosition: Int) -> URL? {
-        let parts = verseKey.split(separator: ":")
-        guard parts.count == 2,
-              let surah = Int(parts[0]),
-              let ayah = Int(parts[1])
-        else { return nil }
-
-        let s = String(format: "%03d", surah)
-        let a = String(format: "%03d", ayah)
-        let w = String(format: "%03d", wordPosition)
-
-        return URL(string: "https://audio.qurancdn.com/wbw/\(s)_\(a)_\(w).mp3")
+        // Try local cache first, fall back to CDN streaming
+        return cache.bestURL(verseKey: verseKey, wordPosition: wordPosition)
     }
+}
+
+/// Configurable word-by-word audio source.
+/// Default: audio.qurancdn.com. Can be switched to R2 bucket later.
+/// Word-by-word audio source configuration.
+/// Default: Quran CDN. Switch to R2 bucket when ready.
+enum WordAudioConfig {
+    /// Current audio source
+    @MainActor static var baseURL = "https://audio.qurancdn.com/wbw"
+
+    /// R2 bucket (uncomment when files are uploaded)
+    // @MainActor static var baseURL = "https://pub-28e518d8beea4b8fb9791feeb4933ff9.r2.dev/wbw"
 }

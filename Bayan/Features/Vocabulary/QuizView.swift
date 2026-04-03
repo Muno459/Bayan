@@ -92,7 +92,7 @@ struct QuizView: View {
                             }
                         }
                     }
-                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    .transition(.opacity)
                 } else {
                     Button {
                         withAnimation(.easeOut(duration: 0.25)) { isRevealed = true }
@@ -107,6 +107,7 @@ struct QuizView: View {
             }
             .padding(24)
             .background(RoundedRectangle(cornerRadius: 20).fill(Color(.systemBackground)).shadow(color: .black.opacity(0.08), radius: 20, y: 8))
+            .clipShape(RoundedRectangle(cornerRadius: 20))
             .padding(.horizontal, 20)
 
             Spacer()

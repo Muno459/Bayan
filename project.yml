@@ -53,5 +53,8 @@ targets:
     platform: iOS
     sources:
       - path: BayanTests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: Bayan

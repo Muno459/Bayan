@@ -6,6 +6,7 @@ import SwiftUI
 @Observable
 final class QuranStore {
     var chapters: [Chapter] = []
+    var reciters: [Reciter] = []
     var currentChapter: Chapter?
     var currentVerses: [Verse] = []
     var isLoadingChapters = false
@@ -24,6 +25,10 @@ final class QuranStore {
         error = nil
         do {
             chapters = try await apiClient.fetchChapters()
+            // Load reciters in parallel
+            if reciters.isEmpty {
+                reciters = (try? await apiClient.fetchReciters()) ?? []
+            }
         } catch {
             self.error = error.localizedDescription
         }
@@ -64,7 +69,7 @@ final class QuranStore {
         isLoadingVerses = false
     }
 
-    func fetchAudio(for chapterNumber: Int) async throws -> AudioFile {
-        try await apiClient.fetchAudioWithSegments(chapterNumber: chapterNumber)
+    func fetchAudio(for chapterNumber: Int, reciterId: Int = 7) async throws -> AudioFile {
+        try await apiClient.fetchAudioWithSegments(reciterId: reciterId, chapterNumber: chapterNumber)
     }
 }

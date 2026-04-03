@@ -87,8 +87,16 @@ final class APIClient {
         )
     }
 
+    func fetchReciters() async throws -> [Reciter] {
+        let response: RecitersResponse = try await get(
+            "\(environment.contentAPIBase)/resources/chapter_reciters",
+            queryItems: [URLQueryItem(name: "language", value: "en")]
+        )
+        return response.reciters
+    }
+
     func fetchAudioWithSegments(
-        reciterId: Int = 7, // Mishari Al-Afasy
+        reciterId: Int,
         chapterNumber: Int
     ) async throws -> AudioFile {
         let response: AudioFileResponse = try await get(

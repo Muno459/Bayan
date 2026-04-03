@@ -203,6 +203,7 @@ private struct MasteryRow: View {
 
 struct SettingsTab: View {
     @Environment(SettingsManager.self) private var settings
+    @Environment(QuranStore.self) private var quranStore
 
     var body: some View {
         @Bindable var s = settings
@@ -229,13 +230,40 @@ struct SettingsTab: View {
                     Text("Shows the complete English translation below the progressive substitution line.")
                 }
 
+                // Reciter Picker
                 Section {
+                    Picker("Reciter", selection: $s.selectedReciterId) {
+                        ForEach(quranStore.reciters) { reciter in
+                            Text(reciter.displayName)
+                                .tag(reciter.id)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
+
                     Toggle("Auto-play Pronunciation", isOn: $s.autoPlayWordPronunciation)
                         .tint(BayanColors.primary)
                 } header: {
                     Text("Audio")
                 } footer: {
-                    Text("When enabled, tapping a substituted word automatically plays its pronunciation from Quran audio.")
+                    Text("Choose the reciter for chapter audio playback. Word pronunciation uses the standard Quran audio.")
+                }
+
+                // Downloads
+                Section {
+                    NavigationLink {
+                        DownloadsView()
+                    } label: {
+                        HStack {
+                            Label("Offline Audio", systemImage: "arrow.down.circle")
+                            Spacer()
+                            Text("Manage")
+                                .foregroundStyle(BayanColors.textSecondary)
+                        }
+                    }
+                } header: {
+                    Text("Downloads")
+                } footer: {
+                    Text("Download word pronunciation audio for offline use.")
                 }
 
                 Section("About") {

@@ -6,6 +6,7 @@ struct AudioPlayerBar: View {
 
     @Environment(AudioPlaybackManager.self) private var audioManager
     @Environment(QuranStore.self) private var quranStore
+    @Environment(SettingsManager.self) private var settings
     @State private var playbackSpeed: Float = 1.0
 
     private let speeds: [Float] = [0.5, 0.75, 1.0, 1.25, 1.5]
@@ -69,7 +70,7 @@ struct AudioPlayerBar: View {
                     } else {
                         Task {
                             do {
-                                let audioFile = try await quranStore.fetchAudio(for: chapterId)
+                                let audioFile = try await quranStore.fetchAudio(for: chapterId, reciterId: settings.selectedReciterId)
                                 await audioManager.loadAudio(audioFile: audioFile)
                                 audioManager.play()
                             } catch {

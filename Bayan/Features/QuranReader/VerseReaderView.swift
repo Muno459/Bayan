@@ -13,6 +13,7 @@ struct VerseReaderView: View {
     @State private var showSubstitutionControls = false
     @State private var scrollPosition: String?
     @State private var currentMilestone: VocabularyMilestone?
+    @State private var isWarmedUp = false // Suppress milestones during initial load
 
     var body: some View {
         ZStack {
@@ -66,7 +67,7 @@ struct VerseReaderView: View {
                     Button {
                         Task {
                             do {
-                                let audioFile = try await quranStore.fetchAudio(for: chapter.id)
+                                let audioFile = try await quranStore.fetchAudio(for: chapter.id, reciterId: settings.selectedReciterId)
                                 await audioManager.loadAudio(audioFile: audioFile)
                                 audioManager.play()
                             } catch {
@@ -90,10 +91,12 @@ struct VerseReaderView: View {
             // Scroll to last read position if returning to same surah
             if userStore.lastReadChapterId == chapter.id,
                let lastVerse = userStore.lastReadVerseKey {
-                // Small delay to let the list render first
                 try? await Task.sleep(for: .milliseconds(300))
                 scrollPosition = lastVerse
             }
+            // Suppress milestones for 5 seconds after opening
+            try? await Task.sleep(for: .seconds(5))
+            isWarmedUp = true
         }
         .onAppear {
             userStore.startSession(chapterId: chapter.id, verseKey: "\(chapter.id):1")
@@ -114,6 +117,7 @@ struct VerseReaderView: View {
             }
         }
         .onChange(of: vocabularyStore.familiarCount) { oldVal, newVal in
+            guard isWarmedUp else { return }
             if let milestone = VocabularyMilestone.check(oldCount: oldVal, newCount: newVal) {
                 withAnimation { currentMilestone = milestone }
                 Task {
@@ -145,7 +149,7 @@ struct VerseReaderView: View {
                                 if audioManager.currentVerseKey == nil {
                                     // Load audio first if not loaded
                                     do {
-                                        let audioFile = try await quranStore.fetchAudio(for: chapter.id)
+                                        let audioFile = try await quranStore.fetchAudio(for: chapter.id, reciterId: settings.selectedReciterId)
                                         await audioManager.loadAudio(audioFile: audioFile)
                                     } catch {
                                         audioManager.error = error.localizedDescription
@@ -159,9 +163,17 @@ struct VerseReaderView: View {
                     )
                     .id(verse.verseKey)
                     .onAppear {
-                        if let words = verse.words {
-                            for word in words {
-                                vocabularyStore.recordExposure(for: word)
+                        // Delay exposure tracking — user must stay on verse for 3 seconds
+                        let key = verse.verseKey
+                        let words = verse.words
+                        Task { @MainActor in
+                            try? await Task.sleep(for: .seconds(3))
+                            // Only count if this verse is still likely visible
+                            // (user didn't scroll away quickly)
+                            if let words {
+                                for word in words {
+                                    vocabularyStore.recordExposure(for: word)
+                                }
                             }
                         }
                     }
