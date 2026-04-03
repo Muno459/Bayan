@@ -66,10 +66,27 @@ final class AudioPlaybackManager {
         let playerItem = AVPlayerItem(url: url)
         player = AVPlayer(playerItem: playerItem)
 
+        // Observe end of playback
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: playerItem,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.handlePlaybackEnded()
+            }
+        }
+
         setupPeriodicObserver()
         setupBoundaryObservers()
 
         isLoading = false
+    }
+
+    private func handlePlaybackEnded() {
+        isPlaying = false
+        currentWordIndex = nil
+        // Keep currentVerseKey so the UI shows the last verse played
     }
 
     func play() {
@@ -189,8 +206,12 @@ final class AudioPlaybackManager {
     }
 
     func stop() {
+        removeObservers()
+        if let item = player?.currentItem {
+            NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: item)
+        }
         player?.pause()
-        player?.seek(to: .zero)
+        player = nil
         isPlaying = false
         currentVerseKey = nil
         currentWordIndex = nil
@@ -238,7 +259,7 @@ final class AudioPlaybackManager {
         }
     }
 
-    /// Binary search to find current word based on playback time
+    /// Find current verse AND word atomically, update both together
     private func handleTimeUpdate(_ time: CMTime) {
         let currentMs = Int(CMTimeGetSeconds(time) * 1000)
 
@@ -250,18 +271,30 @@ final class AudioPlaybackManager {
             playbackProgress = durationMs > 0 ? Double(currentMs) / durationMs : 0
         }
 
-        // Find current verse
+        // Find current verse and word TOGETHER
+        var newVerseKey: String?
+        var newWordIndex: Int?
+
         for timestamp in verseTimestamps {
             if currentMs >= timestamp.timestampFrom && currentMs < timestamp.timestampTo {
-                if currentVerseKey != timestamp.verseKey {
-                    currentVerseKey = timestamp.verseKey
+                newVerseKey = timestamp.verseKey
+
+                // Search for word within THIS verse's segments only
+                for timing in timestamp.wordTimings {
+                    if currentMs >= timing.startMs && currentMs < timing.endMs {
+                        newWordIndex = timing.wordIndex
+                        break
+                    }
                 }
                 break
             }
         }
 
-        // Binary search for current word
-        let newWordIndex = findCurrentWord(atMs: currentMs)
+        // Update both atomically — verse key always updates before word index
+        if newVerseKey != currentVerseKey {
+            currentWordIndex = nil // Clear word first to prevent flash on old verse
+            currentVerseKey = newVerseKey
+        }
         if newWordIndex != currentWordIndex {
             currentWordIndex = newWordIndex
         }

@@ -93,8 +93,8 @@ struct VerseReaderView: View {
             userStore.lastReadChapterId = chapter.id
         }
         .onDisappear {
+            audioManager.stop() // Stop audio before view deallocates
             userStore.endCurrentSession()
-            // Save current scroll position
             if let pos = scrollPosition {
                 userStore.lastReadVerseKey = pos
             }
