@@ -29,3 +29,4 @@ Packages/
 
 # Secrets (don't commit in production — for hackathon only)
 # Bayan/Services/API/APIConfig.swift
+models/
