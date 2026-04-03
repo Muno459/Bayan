@@ -102,20 +102,29 @@ final class WordAudioPlayer {
         isPlaying = true
         let item = AVPlayerItem(url: url)
         player = AVPlayer(playerItem: item)
-        player?.rate = rate
 
-        await withCheckedContinuation { continuation in
+        // Play with timeout to prevent hanging if audio never finishes
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            var resumed = false
             var observer: NSObjectProtocol?
+
             observer = NotificationCenter.default.addObserver(
                 forName: .AVPlayerItemDidPlayToEndTime,
                 object: item,
                 queue: .main
             ) { _ in
-                if let observer { NotificationCenter.default.removeObserver(observer) }
-                continuation.resume()
+                if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+                if !resumed { resumed = true; continuation.resume() }
             }
+
             player?.play()
             player?.rate = rate
+
+            // Timeout after 5 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                if let obs = observer { NotificationCenter.default.removeObserver(obs) }
+                if !resumed { resumed = true; continuation.resume() }
+            }
         }
 
         isPlaying = false

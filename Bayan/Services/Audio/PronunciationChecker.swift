@@ -264,7 +264,7 @@ final class PronunciationChecker {
         let clean2 = stripDiacritics(expected)
 
         if clean1 == clean2 { return true }
-        if clean1.contains(clean2) || clean2.contains(clean1) && !clean1.isEmpty { return true }
+        if !clean1.isEmpty && (clean1.contains(clean2) || clean2.contains(clean1)) { return true }
 
         let dist = levenshteinDistance(clean1, clean2)
         let maxLen = max(clean1.count, clean2.count, 1)

@@ -124,6 +124,14 @@ final class VocabularyStore {
         }
     }
 
+    /// Jump a word directly to familiar (for "I Know This Word" button)
+    func markAsFamiliar(wordId: Int) {
+        guard var state = wordStates[wordId] else { return }
+        state.masteryLevel = .familiar
+        state.correctStreak += 1
+        wordStates[wordId] = state
+    }
+
     func promote(wordId: Int) {
         guard var state = wordStates[wordId] else { return }
         if state.masteryLevel < .mastered {

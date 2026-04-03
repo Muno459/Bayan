@@ -133,7 +133,6 @@
 			isa = PBXGroup;
 			children = (
 				63058A0003A6C093BD870247 /* Data */,
-				4DEAA57B9143DBEF2B3A3DFB /* Fonts */,
 				CC8835784181590124853E68 /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -189,13 +188,6 @@
 				90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */,
 			);
 			path = QuranReader;
-			sourceTree = "<group>";
-		};
-		4DEAA57B9143DBEF2B3A3DFB /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 		4DF38BB80CD729DC4BD1ACC0 /* Persistence */ = {

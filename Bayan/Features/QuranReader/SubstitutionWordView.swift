@@ -178,8 +178,7 @@ struct WordLearningCard: View {
                 if let state = vocabularyStore.wordStates[word.id], state.masteryLevel < .familiar {
                     Button {
                         Haptics.success()
-                        vocabularyStore.promote(wordId: word.id)
-                        vocabularyStore.promote(wordId: word.id)
+                        vocabularyStore.markAsFamiliar(wordId: word.id)
                     } label: {
                         Label("I Know This Word", systemImage: "checkmark.circle.fill")
                             .font(.system(size: 14, weight: .semibold))

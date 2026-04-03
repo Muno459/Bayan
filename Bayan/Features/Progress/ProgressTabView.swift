@@ -40,7 +40,7 @@ struct ProgressTabView: View {
                 .font(.system(size: 52, weight: .bold, design: .rounded))
                 .foregroundStyle(BayanColors.primary)
 
-            Text(userStore.streak.currentDays == 1 ? "Day Streak" : "Day Streak")
+            Text(userStore.streak.currentDays == 1 ? "Day Streak" : "Days Streak")
                 .font(.system(size: 15))
                 .foregroundStyle(BayanColors.textSecondary)
         }

@@ -216,7 +216,6 @@ final class AudioPlaybackManager {
         currentVerseKey = nil
         currentWordIndex = nil
         playbackProgress = 0.0
-        removeObservers()
     }
 
     // MARK: - Time Observers
@@ -298,26 +297,6 @@ final class AudioPlaybackManager {
         if newWordIndex != currentWordIndex {
             currentWordIndex = newWordIndex
         }
-    }
-
-    /// Binary search through sorted word timings
-    private func findCurrentWord(atMs ms: Int) -> Int? {
-        var low = 0
-        var high = wordTimings.count - 1
-
-        while low <= high {
-            let mid = (low + high) / 2
-            let timing = wordTimings[mid]
-
-            if ms >= timing.startMs && ms < timing.endMs {
-                return timing.wordIndex
-            } else if ms < timing.startMs {
-                high = mid - 1
-            } else {
-                low = mid + 1
-            }
-        }
-        return nil
     }
 
     private func removeObservers() {

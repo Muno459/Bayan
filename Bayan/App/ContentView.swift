@@ -270,7 +270,7 @@ struct SettingsTab: View {
                     HStack {
                         Text("Version")
                         Spacer()
-                        Text("1.0.0")
+                        Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0")
                             .foregroundStyle(BayanColors.textSecondary)
                     }
                     HStack {
@@ -289,6 +289,7 @@ struct SettingsTab: View {
 #Preview {
     ContentView()
         .environment(QuranStore())
+        .environment(UserStore())
         .environment(VocabularyStore())
         .environment(AudioPlaybackManager())
         .environment(SettingsManager())
