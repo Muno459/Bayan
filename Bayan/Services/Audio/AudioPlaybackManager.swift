@@ -202,6 +202,7 @@ final class AudioPlaybackManager {
     }
 
     func setPlaybackSpeed(_ speed: Float) {
+        guard isPlaying else { return } // Don't set rate when paused (it auto-plays)
         player?.rate = speed
     }
 

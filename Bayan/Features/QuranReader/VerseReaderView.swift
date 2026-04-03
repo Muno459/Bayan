@@ -13,7 +13,8 @@ struct VerseReaderView: View {
     @State private var showSubstitutionControls = false
     @State private var scrollPosition: String?
     @State private var currentMilestone: VocabularyMilestone?
-    @State private var isWarmedUp = false // Suppress milestones during initial load
+    @State private var isWarmedUp = false
+    @State private var trackedVerses: Set<Int> = [] // Prevent duplicate exposure tracking
 
     var body: some View {
         ZStack {
@@ -163,13 +164,14 @@ struct VerseReaderView: View {
                     )
                     .id(verse.verseKey)
                     .onAppear {
-                        // Delay exposure tracking — user must stay on verse for 3 seconds
-                        let key = verse.verseKey
+                        // Track which verses are visible, record exposure only for current verse
                         let words = verse.words
+                        let verseId = verse.id
                         Task { @MainActor in
                             try? await Task.sleep(for: .seconds(3))
-                            // Only count if this verse is still likely visible
-                            // (user didn't scroll away quickly)
+                            // Only count if we haven't already tracked this verse this session
+                            guard !trackedVerses.contains(verseId) else { return }
+                            trackedVerses.insert(verseId)
                             if let words {
                                 for word in words {
                                     vocabularyStore.recordExposure(for: word)
