@@ -51,6 +51,22 @@ enum MasteryLevel: Int, Codable, Sendable, CaseIterable, Comparable {
     }
 }
 
+/// The 3-stage tap learning progression (based on cognitive science research).
+/// Stage 1: Errorless exposure — tap instantly shows meaning (encounters 1-5)
+/// Stage 2: Guided generation — brief pause, then reveal (encounters 5-12)  
+/// Stage 3: Active retrieval — recall before reveal (encounters 12+)
+enum TapLearningStage: Sendable {
+    case errorless    // Immediate reveal, no guessing
+    case guided       // Brief pause before reveal
+    case retrieval    // User must try to recall first
+
+    static func forExposureCount(_ count: Int) -> TapLearningStage {
+        if count < 5 { return .errorless }
+        if count < 12 { return .guided }
+        return .retrieval
+    }
+}
+
 /// How a word appears in the reading view.
 /// The journey: English → English + Arabic hint → Arabic only
 enum SubstitutionDisplay: Sendable {

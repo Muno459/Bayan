@@ -224,10 +224,12 @@ struct SettingsTab: View {
                 Section {
                     Toggle("Show Full English Translation", isOn: $s.showFullTranslation)
                         .tint(BayanColors.primary)
+                    Toggle("Show Transliteration Guide", isOn: $s.showTransliteration)
+                        .tint(BayanColors.primary)
                 } header: {
                     Text("Display")
                 } footer: {
-                    Text("Shows the complete English translation below the progressive substitution line.")
+                    Text("Transliteration shows the pronunciation of Arabic words using English letters as a learning aid. Reading the Arabic script directly carries greater reward.")
                 }
 
                 // Reciter Picker

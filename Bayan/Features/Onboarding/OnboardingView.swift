@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// First-launch onboarding explaining the progressive substitution concept.
+/// First-launch onboarding explaining progressive substitution
+/// with Islamic context for learning Arabic.
 struct OnboardingView: View {
     @Environment(VocabularyStore.self) private var vocabularyStore
     @AppStorage("hasCompletedOnboarding") private var hasCompleted = false
@@ -18,17 +19,76 @@ struct OnboardingView: View {
             )
             .tag(0)
 
-            // Page 2: How it works
-            onboardingPage(
-                icon: "arrow.triangle.swap",
-                iconColor: BayanColors.gold,
-                title: "Progressive Substitution",
-                subtitle: "English becomes Arabic over time",
-                body: "You start reading in English. As you encounter words repeatedly, they are replaced with their original Arabic script. Tap any Arabic word to see its meaning and hear its pronunciation."
-            )
+            // Page 2: The reward of struggling
+            VStack(spacing: 20) {
+                Spacer()
+                Image(systemName: "star.fill")
+                    .font(.system(size: 48))
+                    .foregroundStyle(BayanColors.gold)
+
+                Text("Double the Reward")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(BayanColors.textPrimary)
+
+                // Hadith
+                VStack(spacing: 12) {
+                    Text("The Prophet \u{FDFA} said:")
+                        .font(.system(size: 14))
+                        .foregroundStyle(BayanColors.textSecondary)
+
+                    Text("\u{201C}The one who is proficient in reciting the Quran will be with the noble, obedient angels, and the one who recites the Quran while struggling with it will have a double reward.\u{201D}")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(BayanColors.textPrimary)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(4)
+                        .padding(.horizontal, 24)
+
+                    Text("Sahih al-Bukhari 4937, Sahih Muslim 798")
+                        .font(.system(size: 12))
+                        .foregroundStyle(BayanColors.textSecondary)
+                }
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(BayanColors.gold.opacity(0.06))
+                        .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(BayanColors.gold.opacity(0.15)))
+                )
+                .padding(.horizontal, 24)
+
+                Text("Every effort you make to read Arabic is rewarded, even if it feels difficult at first.")
+                    .font(.system(size: 14))
+                    .foregroundStyle(BayanColors.textSecondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
+
+                Spacer()
+
+                Button {
+                    withAnimation { currentPage += 1 }
+                } label: {
+                    Text("Continue")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(RoundedRectangle(cornerRadius: 14).fill(BayanColors.primary))
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 40)
+            }
             .tag(1)
 
-            // Page 3: Set level
+            // Page 3: How it works
+            onboardingPage(
+                icon: "arrow.triangle.swap",
+                iconColor: BayanColors.primary,
+                title: "Progressive Substitution",
+                subtitle: "English becomes Arabic over time",
+                body: "You start reading in English. As you encounter words repeatedly, they are replaced with their original Arabic script. Tap any Arabic word to hear its pronunciation and see its meaning."
+            )
+            .tag(2)
+
+            // Page 4: Set level
             VStack(spacing: 24) {
                 Spacer()
 
@@ -54,7 +114,7 @@ struct OnboardingView: View {
 
                 Spacer()
             }
-            .tag(2)
+            .tag(3)
         }
         .tabViewStyle(.page(indexDisplayMode: .always))
         .background(BayanColors.background)

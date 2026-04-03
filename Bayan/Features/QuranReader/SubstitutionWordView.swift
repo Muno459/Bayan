@@ -96,6 +96,7 @@ struct WordLearningCard: View {
     let verseKey: String
     @Binding var wordPlayer: WordAudioPlayer
     let vocabularyStore: VocabularyStore
+    @Environment(SettingsManager.self) private var settings
 
     private var frequency: Int? {
         QuranicWordData.frequency(for: word.textUthmani ?? "")
@@ -125,6 +126,14 @@ struct WordLearningCard: View {
                         .foregroundStyle(BayanColors.textPrimary)
                 }
                 .padding(.top, 16)
+
+                // Transliteration guide (optional)
+                if settings.showTransliteration, let translit = word.transliteration?.text, !translit.isEmpty {
+                    Text(translit)
+                        .font(.system(size: 15))
+                        .italic()
+                        .foregroundStyle(BayanColors.textSecondary.opacity(0.7))
+                }
 
                 // Audio controls — compact row
                 HStack(spacing: 24) {

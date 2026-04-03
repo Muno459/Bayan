@@ -31,6 +31,11 @@ final class SettingsManager {
         didSet { UserDefaults.standard.set(autoPlayWordPronunciation, forKey: "autoPlayWordPronunciation") }
     }
 
+    /// Show transliteration as a pronunciation aid (not a replacement for Arabic)
+    var showTransliteration: Bool {
+        didSet { UserDefaults.standard.set(showTransliteration, forKey: "showTransliteration") }
+    }
+
     /// Auto-open mic when viewing a word card to check pronunciation
     var autoPronunciationCheck: Bool {
         didSet { UserDefaults.standard.set(autoPronunciationCheck, forKey: "autoPronunciationCheck") }
@@ -45,6 +50,7 @@ final class SettingsManager {
         self.selectedTranslationId = defaults.object(forKey: "selectedTranslationId") as? Int ?? 131
         self.showFullTranslation = defaults.object(forKey: "showFullTranslation") as? Bool ?? true
         self.autoPlayWordPronunciation = defaults.object(forKey: "autoPlayWordPronunciation") as? Bool ?? true
+        self.showTransliteration = defaults.object(forKey: "showTransliteration") as? Bool ?? false
         self.autoPronunciationCheck = defaults.object(forKey: "autoPronunciationCheck") as? Bool ?? false
     }
 }
