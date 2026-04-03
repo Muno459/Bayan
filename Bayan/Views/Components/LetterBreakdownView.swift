@@ -26,10 +26,10 @@ struct LetterBreakdownView: View {
                 }
                 .padding(.horizontal, 4)
 
-                // Letter grid
+                // Letter grid (RTL: right to left)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        ForEach(Array(breakdown.enumerated()), id: \.element.id) { index, letter in
+                        ForEach(Array(breakdown.enumerated().reversed()), id: \.element.id) { index, letter in
                             VStack(spacing: 4) {
                                 // Arabic letter with diacritics
                                 Text(letter.display)
