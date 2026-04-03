@@ -51,46 +51,45 @@ struct SubstitutionWordView: View {
     private var wordContent: some View {
         switch display {
         case .english(let text):
-            Text(text)
-                .font(.system(size: 17))
-                .fontWeight(isHighlighted ? .bold : .regular)
-                .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
-                .padding(.horizontal, 3)
-                .padding(.vertical, 2)
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(isHighlighted ? BayanColors.primary.opacity(0.12) : .clear)
-                )
-                .scaleEffect(isHighlighted ? 1.08 : 1.0)
+            StableHighlight(isHighlighted: isHighlighted) {
+                Text(text)
+                    .font(.system(size: 17))
+                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
+                    .padding(.horizontal, 3)
+                    .padding(.vertical, 2)
+            } background: {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(isHighlighted ? BayanColors.primary.opacity(0.12) : .clear)
+            }
 
         case .arabic(let text):
-            Text(text)
-                .font(.system(size: 22, design: .serif))
-                .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
-                .padding(.horizontal, 5)
-                .padding(.vertical, 2)
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
-                )
-                .scaleEffect(isHighlighted ? 1.1 : 1.0)
+            StableHighlight(isHighlighted: isHighlighted) {
+                Text(text)
+                    .font(.system(size: 22, design: .serif))
+                    .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+            } background: {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
+            }
 
         case .transitioning(let arabic, let english):
-            VStack(spacing: 0) {
-                Text(arabic)
-                    .font(.system(size: 20, design: .serif))
-                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
-                Text(english)
-                    .font(.system(size: 9))
-                    .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
-            }
-            .padding(.horizontal, 4)
-            .padding(.vertical, 2)
-            .background(
+            StableHighlight(isHighlighted: isHighlighted) {
+                VStack(spacing: 0) {
+                    Text(arabic)
+                        .font(.system(size: 20, design: .serif))
+                        .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
+                    Text(english)
+                        .font(.system(size: 9))
+                        .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
+                }
+                .padding(.horizontal, 4)
+                .padding(.vertical, 2)
+            } background: {
                 RoundedRectangle(cornerRadius: 5)
                     .fill(isHighlighted ? BayanColors.learning.opacity(0.15) : BayanColors.learning.opacity(0.05))
-            )
-            .scaleEffect(isHighlighted ? 1.08 : 1.0)
+            }
         }
     }
 }
