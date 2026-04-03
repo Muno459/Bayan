@@ -28,7 +28,7 @@ final class AudioPlaybackManager {
     private var verseTimestamps: [VerseTimestamp] = []
 
     init() {
-        configureAudioSession()
+        // Don't configure audio session on init — do it lazily when needed
     }
 
     // MARK: - Audio Session
@@ -39,7 +39,7 @@ final class AudioPlaybackManager {
             try session.setCategory(.playback, mode: .spokenAudio)
             try session.setActive(true)
         } catch {
-            self.error = "Failed to configure audio session: \(error.localizedDescription)"
+            // Ignore — will retry when actually playing
         }
     }
 
@@ -94,6 +94,7 @@ final class AudioPlaybackManager {
     }
 
     func play() {
+        configureAudioSession()
         player?.play()
         isPlaying = true
     }

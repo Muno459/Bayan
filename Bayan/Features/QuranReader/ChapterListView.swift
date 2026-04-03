@@ -19,7 +19,7 @@ struct ChapterListView: View {
 
     var body: some View {
         Group {
-            if quranStore.isLoadingChapters {
+            if quranStore.isLoadingChapters || (quranStore.chapters.isEmpty && quranStore.error == nil) {
                 ProgressView("Loading the Quran...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let error = quranStore.error {

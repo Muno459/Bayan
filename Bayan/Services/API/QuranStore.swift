@@ -30,7 +30,8 @@ final class QuranStore {
                 reciters = (try? await apiClient.fetchReciters()) ?? []
             }
         } catch {
-            self.error = error.localizedDescription
+            self.error = "Failed to load: \(error.localizedDescription)"
+            print("[Bayan] Chapter load error: \(error)")
         }
         isLoadingChapters = false
     }

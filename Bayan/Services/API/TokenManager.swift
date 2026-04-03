@@ -67,6 +67,8 @@ final class TokenManager {
         }
 
         guard httpResponse.statusCode == 200 else {
+            let body = String(data: data, encoding: .utf8) ?? "no body"
+            print("[Bayan] Token error \(httpResponse.statusCode): \(body)")
             throw APIError.authFailed(statusCode: httpResponse.statusCode)
         }
 

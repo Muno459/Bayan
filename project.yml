@@ -42,11 +42,6 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
     dependencies:
       - package: GRDB
-    entitlements:
-      path: Bayan/App/Bayan.entitlements
-      properties:
-        com.apple.security.app-sandbox: true
-        com.apple.security.network.client: true
 
   BayanTests:
     type: bundle.unit-test
