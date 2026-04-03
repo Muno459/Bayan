@@ -101,8 +101,6 @@ enum MelSpectrogram {
             vDSP_vsmul(melOutput, 1, [scale], &melOutput, 1, vDSP_Length(melOutput.count))
         }
 
-        vDSP_destroy_fftsetup(fftSetup)
-
         return melOutput
     }
 
