@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Highlights a word during audio playback without affecting layout.
-/// Uses only color changes and a bottom border — no scale, no size changes.
+/// Highlights a word with font size increase and gold underline.
+/// Color/background changes animate. Layout changes are instant (no glitch).
 struct StableHighlight<Content: View, Background: View>: View {
     let isHighlighted: Bool
     @ViewBuilder let content: Content
@@ -12,13 +12,11 @@ struct StableHighlight<Content: View, Background: View>: View {
             .background(background)
             .overlay(alignment: .bottom) {
                 if isHighlighted {
-                    RoundedRectangle(cornerRadius: 1)
+                    Capsule()
                         .fill(BayanColors.gold)
                         .frame(height: 2.5)
-                        .padding(.horizontal, 2)
-                        .transition(.opacity)
+                        .padding(.horizontal, 1)
                 }
             }
-            .animation(.easeInOut(duration: 0.1), value: isHighlighted)
     }
 }

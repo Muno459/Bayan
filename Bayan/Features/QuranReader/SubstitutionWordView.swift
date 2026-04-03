@@ -53,17 +53,17 @@ struct SubstitutionWordView: View {
         case .english(let text):
             StableHighlight(isHighlighted: isHighlighted) {
                 Text(text)
-                    .font(.system(size: 20))
+                    .font(.system(size: isHighlighted ? 23 : 20, weight: isHighlighted ? .semibold : .regular))
                     .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
             } background: {
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(isHighlighted ? BayanColors.primary.opacity(0.12) : .clear)
+                    .fill(isHighlighted ? BayanColors.primary.opacity(0.1) : .clear)
             }
 
         case .arabic(let text):
             StableHighlight(isHighlighted: isHighlighted) {
                 Text(text)
-                    .font(.system(size: 26, design: .serif))
+                    .font(.system(size: isHighlighted ? 30 : 26, design: .serif))
                     .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
             } background: {
                 RoundedRectangle(cornerRadius: 6)
@@ -74,7 +74,7 @@ struct SubstitutionWordView: View {
             StableHighlight(isHighlighted: isHighlighted) {
                 VStack(spacing: 0) {
                     Text(arabic)
-                        .font(.system(size: 24, design: .serif))
+                        .font(.system(size: isHighlighted ? 27 : 24, design: .serif))
                         .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
                     Text(english)
                         .font(.system(size: 10))
