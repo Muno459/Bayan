@@ -21,8 +21,10 @@ struct DailyWordCard: View {
                     .foregroundStyle(BayanColors.gold)
 
                 HStack(alignment: .center, spacing: 16) {
-                    Text(word.arabicText)
-                        .font(.system(size: 32))
+                    let displayText = vocabularyStore.useTransliteration && !word.transliterationText.isEmpty
+                        ? word.transliterationText : word.arabicText
+                    Text(displayText)
+                        .font(.system(size: vocabularyStore.useTransliteration ? 24 : 32))
                         .foregroundStyle(BayanColors.primary)
 
                     Spacer()

@@ -167,8 +167,8 @@ struct QuizView: View {
 
                 Spacer()
 
-                Text(word.arabicText)
-                    .font(.system(size: 48))
+                Text(displayText(for: word))
+                    .font(.system(size: vocabularyStore.useTransliteration ? 36 : 48))
                     .foregroundStyle(BayanColors.textPrimary)
                     .multilineTextAlignment(.center)
 
@@ -190,8 +190,8 @@ struct QuizView: View {
 
             // Back: Meaning
             VStack(spacing: 16) {
-                Text(word.arabicText)
-                    .font(.system(size: 28))
+                Text(displayText(for: word))
+                    .font(.system(size: vocabularyStore.useTransliteration ? 22 : 28))
                     .foregroundStyle(BayanColors.primary)
 
                 Spacer()
@@ -314,6 +314,13 @@ struct QuizView: View {
     }
 
     // MARK: - Logic
+
+    private func displayText(for word: WordLearningState) -> String {
+        if vocabularyStore.useTransliteration {
+            return word.transliterationText.isEmpty ? word.arabicText : word.transliterationText
+        }
+        return word.arabicText
+    }
 
     private func loadQuizWords() {
         quizWords = Array(

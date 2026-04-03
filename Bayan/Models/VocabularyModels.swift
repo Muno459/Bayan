@@ -4,6 +4,7 @@ import Foundation
 struct WordLearningState: Codable, Sendable {
     let wordId: Int
     let arabicText: String
+    let transliterationText: String
     let translationText: String
     var masteryLevel: MasteryLevel
     var exposureCount: Int
@@ -13,6 +14,7 @@ struct WordLearningState: Codable, Sendable {
     init(
         wordId: Int,
         arabicText: String,
+        transliterationText: String = "",
         translationText: String,
         masteryLevel: MasteryLevel = .unseen,
         exposureCount: Int = 0,
@@ -21,6 +23,7 @@ struct WordLearningState: Codable, Sendable {
     ) {
         self.wordId = wordId
         self.arabicText = arabicText
+        self.transliterationText = transliterationText
         self.translationText = translationText
         self.masteryLevel = masteryLevel
         self.exposureCount = exposureCount

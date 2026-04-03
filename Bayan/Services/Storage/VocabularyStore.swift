@@ -122,6 +122,7 @@ final class VocabularyStore {
             wordStates[word.id] = WordLearningState(
                 wordId: word.id,
                 arabicText: word.textUthmani ?? "",
+                transliterationText: word.transliteration?.text ?? "",
                 translationText: word.translation?.text ?? "",
                 masteryLevel: .unseen,
                 exposureCount: 1,

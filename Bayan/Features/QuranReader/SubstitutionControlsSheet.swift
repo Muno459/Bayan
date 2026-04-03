@@ -35,7 +35,9 @@ struct SubstitutionControlsSheet: View {
                 } header: {
                     Text("Substitution")
                 } footer: {
-                    Text("Controls how many English words are replaced with their original Arabic script. Words you've learned through repeated reading are always shown in Arabic.")
+                    Text(vocabularyStore.useTransliteration
+                         ? "Controls how many English words are replaced with their pronunciation. Words you've learned through repeated reading are always shown."
+                         : "Controls how many English words are replaced with their original Arabic script. Words you've learned through repeated reading are always shown in Arabic.")
                 }
 
                 // Preview
@@ -45,21 +47,38 @@ struct SubstitutionControlsSheet: View {
                             Text("In the name of")
                                 .font(.system(size: 15))
                                 .foregroundStyle(BayanColors.textSecondary)
-                            Text("ٱللَّهِ")
-                                .font(.system(size: 20))
-                                .foregroundStyle(BayanColors.primary)
-                                .padding(.horizontal, 3)
-                                .background(RoundedRectangle(cornerRadius: 4).fill(BayanColors.primary.opacity(0.07)))
-                            Text("ٱلرَّحْمَـٰنِ")
-                                .font(.system(size: 20))
-                                .foregroundStyle(BayanColors.primary)
-                                .padding(.horizontal, 3)
-                                .background(RoundedRectangle(cornerRadius: 4).fill(BayanColors.primary.opacity(0.07)))
+
+                            if vocabularyStore.useTransliteration {
+                                Text("l-lahi")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(BayanColors.primary)
+                                    .padding(.horizontal, 3)
+                                    .background(RoundedRectangle(cornerRadius: 4).fill(BayanColors.primary.opacity(0.07)))
+                                Text("l-rahmani")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(BayanColors.primary)
+                                    .padding(.horizontal, 3)
+                                    .background(RoundedRectangle(cornerRadius: 4).fill(BayanColors.primary.opacity(0.07)))
+                            } else {
+                                Text("ٱللَّهِ")
+                                    .font(.system(size: 20))
+                                    .foregroundStyle(BayanColors.primary)
+                                    .padding(.horizontal, 3)
+                                    .background(RoundedRectangle(cornerRadius: 4).fill(BayanColors.primary.opacity(0.07)))
+                                Text("ٱلرَّحْمَـٰنِ")
+                                    .font(.system(size: 20))
+                                    .foregroundStyle(BayanColors.primary)
+                                    .padding(.horizontal, 3)
+                                    .background(RoundedRectangle(cornerRadius: 4).fill(BayanColors.primary.opacity(0.07)))
+                            }
+
                             Text("the Merciful")
                                 .font(.system(size: 15))
                                 .foregroundStyle(BayanColors.textSecondary)
                         }
-                        Text("Green = words you've learned, shown in Arabic script")
+                        Text(vocabularyStore.useTransliteration
+                             ? "Green = words you've learned, shown as pronunciation"
+                             : "Green = words you've learned, shown in Arabic script")
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                     }
