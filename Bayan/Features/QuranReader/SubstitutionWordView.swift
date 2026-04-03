@@ -58,11 +58,6 @@ struct SubstitutionWordView: View {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(isHighlighted ? BayanColors.primary.opacity(0.1) : .clear)
                 )
-                .overlay(alignment: .bottom) {
-                    if isHighlighted {
-                        Capsule().fill(BayanColors.gold).frame(height: 2.5)
-                    }
-                }
 
         case .arabic(let text):
             Text(text)
@@ -72,11 +67,6 @@ struct SubstitutionWordView: View {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
                 )
-                .overlay(alignment: .bottom) {
-                    if isHighlighted {
-                        Capsule().fill(BayanColors.gold).frame(height: 2.5)
-                    }
-                }
 
         case .transitioning(let arabic, let english):
             VStack(spacing: 0) {
@@ -91,11 +81,6 @@ struct SubstitutionWordView: View {
                 RoundedRectangle(cornerRadius: 5)
                     .fill(isHighlighted ? BayanColors.learning.opacity(0.15) : BayanColors.learning.opacity(0.05))
             )
-            .overlay(alignment: .bottom) {
-                if isHighlighted {
-                    Capsule().fill(BayanColors.gold).frame(height: 2.5)
-                }
-            }
         }
     }
 }
