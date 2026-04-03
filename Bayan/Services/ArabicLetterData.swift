@@ -55,8 +55,7 @@ enum ArabicLetterData {
         "ﻻ": LetterInfo(name: "Lam-Alif", isolated: "لا"),
         "ﻵ": LetterInfo(name: "Lam-Alif Madda", isolated: "لآ"),
 
-        // Alif Wasla (common in Uthmani)
-        "ٱ": LetterInfo(name: "Alif Wasla", isolated: "ا"),
+        // Note: Alif Wasla "ٱ" already mapped above as "Alif"
     ]
 
     /// Diacritic marks (tashkeel) - these modify letter sounds
