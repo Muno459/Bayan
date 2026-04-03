@@ -174,6 +174,9 @@ struct WordLearningCard: View {
                         .foregroundStyle(.red.opacity(0.8))
                 }
 
+                // Try Pronouncing
+                PronunciationButton(expectedArabic: word.textUthmani ?? "")
+
                 Divider()
 
                 // Letter breakdown

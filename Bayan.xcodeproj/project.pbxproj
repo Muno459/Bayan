@@ -14,6 +14,7 @@
 		0D7A74A6AA41B4AF3FEAED91 /* LetterBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */; };
 		0ED2BB2A3B0D82407CECF6E5 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9129D60E125ABD73E2850380 /* SettingsManager.swift */; };
 		1511B52CBFCE08A9F626FE79 /* VocabularyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */; };
+		16D273F6F31D099CA527B778 /* PronunciationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1581A36C14976FB9A0B296D /* PronunciationButton.swift */; };
 		2CB484D0A1FCDCEDD4A6B30B /* WordAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */; };
 		3564266BA666EBF705758BF5 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB670B091D43E8B7133206D /* TokenManager.swift */; };
 		38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B871515C5CE216F4E8F381B /* Haptics.swift */; };
@@ -22,6 +23,7 @@
 		4AEAADE8F7E471FE1D42EE59 /* WrappingHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */; };
 		4B5AB0ACF4DB904327DA14DA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447B75B102513CD4AD8B4415 /* ContentView.swift */; };
 		51C8AD83D0A27CF0888495DC /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07211B76D703781FA8C56786 /* UserModels.swift */; };
+		5822700DE8160879CD524D42 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DCDD078B61807EFF87EA4DA /* WhisperKit */; };
 		5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2B225323C0E98272174DA2 /* QuranStore.swift */; };
 		637F2E0A5ACBFF320CFE028E /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569342C6252C64C5DCCF3179 /* UserStore.swift */; };
 		643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */; };
@@ -35,12 +37,14 @@
 		95485533C43F5A0C8ACD2753 /* VocabularyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */; };
 		C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */; };
 		CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */; };
+		D710AB490B86A961D93F78FA /* PronunciationChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */; };
 		D90A5BC3E27D68AE494047D6 /* SubstitutionWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */; };
 		D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69786BA6DF671EFC6B4EA717 /* OnboardingView.swift */; };
 		DBA78A8116990B09AF5E2EC7 /* ChapterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */; };
 		DEBE8820339AF70CFCAF8859 /* QuranicWordData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E41583B9A523FB07D83CC53 /* QuranicWordData.swift */; };
 		E3A40877B08348F00AAC9D89 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6447627CECC3016C7A61FF71 /* Theme.swift */; };
 		E4D64CAC6899A265B1B0CF4B /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31A05CB80635C8CE7D48599 /* APIConfig.swift */; };
+		EEFCA537E3E77438C9062C8E /* tarteel-tiny.bin in Resources */ = {isa = PBXBuildFile; fileRef = 5F8529B4C578178C17232B08 /* tarteel-tiny.bin */; };
 		FD7B36E5AC5B44366892120F /* BayanApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3845CFD129FCA4B72585A67 /* BayanApp.swift */; };
 /* End PBXBuildFile section */
 
@@ -63,9 +67,11 @@
 		447B75B102513CD4AD8B4415 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		469C1EE7E724AE4133A1B8BB /* ChapterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListView.swift; sourceTree = "<group>"; };
 		4F42879BFF4970DA7ADFC56A /* Bayan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Bayan.entitlements; sourceTree = "<group>"; };
+		4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationChecker.swift; sourceTree = "<group>"; };
 		569342C6252C64C5DCCF3179 /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
 		5B871515C5CE216F4E8F381B /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		5D2B225323C0E98272174DA2 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
+		5F8529B4C578178C17232B08 /* tarteel-tiny.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "tarteel-tiny.bin"; sourceTree = "<group>"; };
 		6447627CECC3016C7A61FF71 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioPlayer.swift; sourceTree = "<group>"; };
 		69786BA6DF671EFC6B4EA717 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -82,6 +88,7 @@
 		A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTabView.swift; sourceTree = "<group>"; };
 		A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterBreakdownView.swift; sourceTree = "<group>"; };
 		AB21DCB37C5971814AD510A7 /* VocabularyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStore.swift; sourceTree = "<group>"; };
+		B1581A36C14976FB9A0B296D /* PronunciationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationButton.swift; sourceTree = "<group>"; };
 		B6B9F41428421B9178DED4BD /* DailyWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWordView.swift; sourceTree = "<group>"; };
 		C093DA1BBAD42A930B4FBA7F /* Verse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verse.swift; sourceTree = "<group>"; };
 		C31A05CB80635C8CE7D48599 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
@@ -101,6 +108,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08F3199271330C9DB2CD6871 /* GRDB in Frameworks */,
+				5822700DE8160879CD524D42 /* WhisperKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +203,7 @@
 		63058A0003A6C093BD870247 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				5F8529B4C578178C17232B08 /* tarteel-tiny.bin */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -253,6 +262,7 @@
 			isa = PBXGroup;
 			children = (
 				7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */,
+				4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */,
 				6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */,
 			);
 			path = Audio;
@@ -306,6 +316,7 @@
 			children = (
 				5B871515C5CE216F4E8F381B /* Haptics.swift */,
 				A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */,
+				B1581A36C14976FB9A0B296D /* PronunciationButton.swift */,
 				F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */,
 			);
 			path = Components;
@@ -345,6 +356,7 @@
 			name = Bayan;
 			packageProductDependencies = (
 				7E8EC6F05F88E13BBDB04421 /* GRDB */,
+				4DCDD078B61807EFF87EA4DA /* WhisperKit */,
 			);
 			productName = Bayan;
 			productReference = 38C860FA5FE8046DEE0FD1EB /* Bayan.app */;
@@ -398,6 +410,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2767A1BA29C088DF289E3237 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				03E4FA982328BAE5CC570B97 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 58AD83EA1D6B69C2932B8E7B /* Products */;
@@ -416,6 +429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				842920337DC5387D7F47135A /* Assets.xcassets in Resources */,
+				EEFCA537E3E77438C9062C8E /* tarteel-tiny.bin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +463,8 @@
 				0D7A74A6AA41B4AF3FEAED91 /* LetterBreakdownView.swift in Sources */,
 				D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */,
 				643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */,
+				16D273F6F31D099CA527B778 /* PronunciationButton.swift in Sources */,
+				D710AB490B86A961D93F78FA /* PronunciationChecker.swift in Sources */,
 				00B659A3FA1E4BB891951183 /* QuizView.swift in Sources */,
 				5BD84A14F2B741FC0F521098 /* QuranStore.swift in Sources */,
 				DEBE8820339AF70CFCAF8859 /* QuranicWordData.swift in Sources */,
@@ -716,6 +732,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		03E4FA982328BAE5CC570B97 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/argmaxinc/WhisperKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.12.0;
+			};
+		};
 		2767A1BA29C088DF289E3237 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/groue/GRDB.swift";
@@ -727,6 +751,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4DCDD078B61807EFF87EA4DA /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 03E4FA982328BAE5CC570B97 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
+		};
 		7E8EC6F05F88E13BBDB04421 /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2767A1BA29C088DF289E3237 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
