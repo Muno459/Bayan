@@ -40,7 +40,7 @@ struct ChapterListView: View {
                     Section {
                         VStack(spacing: 8) {
                             Text("بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ")
-                                .font(.system(size: 26, design: .serif))
+                                .font(.system(size: 26))
                                 .foregroundStyle(BayanColors.primary)
                                 .frame(maxWidth: .infinity)
                                 .multilineTextAlignment(.center)
@@ -160,7 +160,7 @@ struct ChapterListView: View {
             // Read indicator + Arabic name
             VStack(alignment: .trailing, spacing: 2) {
                 Text(chapter.nameArabic)
-                    .font(.system(size: 20, design: .serif))
+                    .font(.system(size: 20))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
 

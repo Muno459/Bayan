@@ -242,10 +242,12 @@ struct SettingsTab: View {
 
                     Toggle("Auto-play Pronunciation", isOn: $s.autoPlayWordPronunciation)
                         .tint(BayanColors.primary)
+                    Toggle("Auto Pronunciation Check", isOn: $s.autoPronunciationCheck)
+                        .tint(BayanColors.primary)
                 } header: {
                     Text("Audio")
                 } footer: {
-                    Text("Choose the reciter for chapter audio playback. Word pronunciation uses the standard Quran audio.")
+                    Text("Choose the reciter for chapter audio. Auto pronunciation check opens the mic when viewing a word to verify your pronunciation.")
                 }
 
                 // Downloads

@@ -38,8 +38,10 @@ enum BayanColors {
 // MARK: - Typography
 
 enum BayanFonts {
+    /// Arabic font — uses system default which has proper Arabic ligature support.
+    /// Do NOT use .serif design — it breaks Uthmani ligatures like لَا
     static func arabic(_ size: CGFloat) -> Font {
-        .system(size: size, weight: .regular, design: .serif)
+        .system(size: size, weight: .regular)
     }
 
     static let body = Font.system(size: 16, weight: .regular, design: .default)

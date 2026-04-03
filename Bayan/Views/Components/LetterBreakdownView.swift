@@ -33,7 +33,7 @@ struct LetterBreakdownView: View {
                             VStack(spacing: 4) {
                                 // Arabic letter with diacritics
                                 Text(letter.display)
-                                    .font(.system(size: 28, design: .serif))
+                                    .font(.system(size: 28))
                                     .foregroundStyle(
                                         highlightedIndex == index
                                             ? BayanColors.primary

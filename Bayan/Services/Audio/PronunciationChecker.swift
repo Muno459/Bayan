@@ -166,14 +166,35 @@ final class PronunciationChecker {
 
         do {
             let audio = try loadAudio(url: url)
+
+            // Check if audio has meaningful content (not just silence)
+            let maxAmplitude = audio.map { abs($0) }.max() ?? 0
+            if maxAmplitude < 0.01 {
+                // Silence — don't trigger a result
+                state = .idle
+                try? FileManager.default.removeItem(at: url)
+                return
+            }
+
             let mel = MelSpectrogram.compute(audio: audio)
             let encoderOutput = try runEncoder(mel: mel)
             let transcription = try runDecoder(encoderOutput: encoderOutput)
+
+            // Only show result if transcription contains Arabic characters
+            // This filters out noise/random English that the model might hallucinate
+            let hasArabic = transcription.unicodeScalars.contains { $0.value >= 0x0600 && $0.value <= 0x06FF }
+            if !hasArabic && !transcription.isEmpty {
+                // Model didn't detect Arabic — likely not a faithful attempt
+                state = .idle
+                try? FileManager.default.removeItem(at: url)
+                return
+            }
+
             let isCorrect = compareArabic(transcription: transcription, expected: expectedArabic)
             state = .result(correct: isCorrect, transcription: transcription)
             try? FileManager.default.removeItem(at: url)
         } catch {
-            state = .error("Processing failed")
+            state = .error("Processing failed: \(error.localizedDescription)")
         }
     }
 

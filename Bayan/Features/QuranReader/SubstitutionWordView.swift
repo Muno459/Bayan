@@ -61,7 +61,8 @@ struct SubstitutionWordView: View {
 
         case .arabic(let text):
             Text(text)
-                .font(.system(size: 28, design: .serif))
+                .font(.system(size: 28))
+                .environment(\.locale, Locale(identifier: "ar"))
                 .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
                 .background(
                     RoundedRectangle(cornerRadius: 6)
@@ -71,7 +72,8 @@ struct SubstitutionWordView: View {
         case .transitioning(let arabic, let english):
             VStack(spacing: 0) {
                 Text(arabic)
-                    .font(.system(size: 26, design: .serif))
+                    .font(.system(size: 26))
+                    .environment(\.locale, Locale(identifier: "ar"))
                     .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
                 Text(english)
                     .font(.system(size: 10))
@@ -119,7 +121,7 @@ struct WordLearningCard: View {
                     Spacer()
 
                     Text(word.textUthmani ?? "")
-                        .font(.system(size: 38, design: .serif))
+                        .font(.system(size: 38))
                         .foregroundStyle(BayanColors.textPrimary)
                 }
                 .padding(.top, 16)

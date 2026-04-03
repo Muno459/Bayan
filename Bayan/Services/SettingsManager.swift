@@ -31,6 +31,11 @@ final class SettingsManager {
         didSet { UserDefaults.standard.set(autoPlayWordPronunciation, forKey: "autoPlayWordPronunciation") }
     }
 
+    /// Auto-open mic when viewing a word card to check pronunciation
+    var autoPronunciationCheck: Bool {
+        didSet { UserDefaults.standard.set(autoPronunciationCheck, forKey: "autoPronunciationCheck") }
+    }
+
     init() {
         let defaults = UserDefaults.standard
 
@@ -40,5 +45,6 @@ final class SettingsManager {
         self.selectedTranslationId = defaults.object(forKey: "selectedTranslationId") as? Int ?? 131
         self.showFullTranslation = defaults.object(forKey: "showFullTranslation") as? Bool ?? true
         self.autoPlayWordPronunciation = defaults.object(forKey: "autoPlayWordPronunciation") as? Bool ?? true
+        self.autoPronunciationCheck = defaults.object(forKey: "autoPronunciationCheck") as? Bool ?? false
     }
 }

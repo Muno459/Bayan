@@ -22,7 +22,7 @@ struct DailyWordCard: View {
 
                 HStack(alignment: .center, spacing: 16) {
                     Text(word.arabicText)
-                        .font(.system(size: 32, design: .serif))
+                        .font(.system(size: 32))
                         .foregroundStyle(BayanColors.primary)
 
                     Spacer()
