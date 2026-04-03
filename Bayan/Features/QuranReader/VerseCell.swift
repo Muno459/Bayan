@@ -69,16 +69,25 @@ struct VerseCell: View {
                 }
             }
 
-            // ===========================================
             // PRIMARY: Progressive substitution
-            // English words become Arabic script as user learns.
-            // Audio word highlighting is HERE.
-            // ===========================================
             substitutionView
 
-            // ===========================================
-            // SECONDARY: Full English translation
-            // ===========================================
+            // SECONDARY: Full transliteration guide (transliteration mode only)
+            if vocabularyStore.useTransliteration {
+                let translitText = verse.words?
+                    .filter { $0.isWord }
+                    .compactMap { $0.transliteration?.text }
+                    .joined(separator: " ") ?? ""
+                if !translitText.isEmpty {
+                    Text(translitText)
+                        .font(.system(size: 13))
+                        .italic()
+                        .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
+                        .lineSpacing(3)
+                }
+            }
+
+            // Full English translation
             if settings.showFullTranslation, let translation = verse.translations?.first {
                 Text(translation.text.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression))
                     .font(.system(size: 13))
