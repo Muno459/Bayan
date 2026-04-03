@@ -165,6 +165,7 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     private let decoder: MLModel
     private let vocab: [String: Int]
     private let reverseVocab: [Int: String]
+    private let byteDecoder: [Character: UInt8] // GPT-2 byte-level BPE decoder
 
     private let nMels = 80
     private let nFrames = 3000
@@ -206,6 +207,23 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         } else {
             vocab = [:]
             reverseVocab = [:]
+        }
+
+        // Load GPT-2 byte-level BPE decoder (unicode char -> byte value)
+        if let bpeURL = Bundle.main.url(forResource: "bpe_byte_decoder", withExtension: "json"),
+           let data = try? Data(contentsOf: bpeURL),
+           let mapping = try? JSONDecoder().decode([String: Int].self, from: data) {
+            var decoder: [Character: UInt8] = [:]
+            for (key, value) in mapping {
+                if let char = key.first, value >= 0 && value <= 255 {
+                    decoder[char] = UInt8(value)
+                }
+            }
+            byteDecoder = decoder
+            print("[Bayan] Byte decoder loaded: \(decoder.count) entries")
+        } else {
+            byteDecoder = [:]
+            print("[Bayan] Warning: byte decoder not found")
         }
     }
 
@@ -366,13 +384,29 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
             tokens.append(maxIdx)
 
             if let word = reverseVocab[maxIdx] {
-                outputText += word
-                    .replacingOccurrences(of: "Ġ", with: " ")
-                    .replacingOccurrences(of: "▁", with: " ")
+                outputText += decodeBPEToken(word)
             }
         }
 
         return outputText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// Decode a GPT-2 byte-level BPE token to actual Unicode text.
+    /// Each character in the token maps to a byte value via the GPT-2 mapping.
+    /// The resulting bytes form UTF-8 text.
+    private func decodeBPEToken(_ token: String) -> String {
+        // Skip special tokens
+        if token.hasPrefix("<|") && token.hasSuffix("|>") { return "" }
+        // Handle space prefix
+        let cleaned = token.replacingOccurrences(of: "Ġ", with: " ")
+        // Decode each character through the byte mapping
+        var bytes: [UInt8] = []
+        for char in cleaned {
+            if let byte = byteDecoder[char] {
+                bytes.append(byte)
+            }
+        }
+        return String(bytes: bytes, encoding: .utf8) ?? ""
     }
 
     // MARK: - Comparison
