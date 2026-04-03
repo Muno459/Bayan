@@ -66,7 +66,7 @@ struct AudioPlayerBar: View {
 
                 // Play/Pause
                 Button {
-                    if audioManager.isPlaying || audioManager.currentVerseKey != nil {
+                    if audioManager.isReady {
                         audioManager.togglePlayback()
                     } else {
                         Task {

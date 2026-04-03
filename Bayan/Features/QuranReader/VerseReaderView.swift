@@ -147,8 +147,8 @@ struct VerseReaderView: View {
                             ? audioManager.currentWordIndex : nil,
                         onPlayVerse: {
                             Task {
-                                if audioManager.currentVerseKey == nil {
-                                    // Load audio first if not loaded
+                                if !audioManager.isReady {
+                                    // Load audio first
                                     do {
                                         let audioFile = try await quranStore.fetchAudio(for: chapter.id, reciterId: settings.selectedReciterId)
                                         await audioManager.loadAudio(audioFile: audioFile)

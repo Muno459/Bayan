@@ -9,6 +9,8 @@ final class AudioPlaybackManager {
     // MARK: - Observable State
 
     var isPlaying = false
+    /// Whether audio is loaded and ready to play/seek
+    var isReady: Bool { player != nil }
     var currentVerseKey: String?
     var currentWordIndex: Int?
     var playbackProgress: Double = 0.0
