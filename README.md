@@ -2,7 +2,9 @@
 
 **Learn to read the Quran in its original Arabic, one word at a time.**
 
-Bayan is an iOS app that helps non-Arabic speakers gradually learn Quranic Arabic through progressive substitution. You start reading in English, and as you encounter words repeatedly, they are replaced with their original Arabic script. Tap any Arabic word to hear its pronunciation, see its meaning, and learn its individual letters.
+Bayan is an iOS app that helps non-Arabic speakers gradually learn Quranic Arabic through progressive substitution. You start reading in English, and as you encounter words repeatedly, they are replaced with Arabic. Tap any word to hear its pronunciation, see its meaning, and learn its individual letters.
+
+Bayan offers two learning paths: **Arabic Script** mode (recommended) where English words become original Arabic script, and **Transliteration** mode for users who cannot yet read Arabic letters. Both paths are grounded in cognitive science research on vocabulary acquisition, spaced repetition, and the involvement load hypothesis.
 
 Built for the [Quran Foundation Ramadan 2026 Hackathon](https://provisionlaunch.com).
 
