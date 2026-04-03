@@ -51,38 +51,50 @@ struct SubstitutionWordView: View {
     private var wordContent: some View {
         switch display {
         case .english(let text):
-            StableHighlight(isHighlighted: isHighlighted) {
-                Text(text)
-                    .font(.system(size: isHighlighted ? 23 : 20, weight: isHighlighted ? .semibold : .regular))
-                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
-            } background: {
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(isHighlighted ? BayanColors.primary.opacity(0.1) : .clear)
-            }
+            Text(text)
+                .font(.system(size: 22))
+                .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.textPrimary)
+                .background(
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(isHighlighted ? BayanColors.primary.opacity(0.1) : .clear)
+                )
+                .overlay(alignment: .bottom) {
+                    if isHighlighted {
+                        Capsule().fill(BayanColors.gold).frame(height: 2.5)
+                    }
+                }
 
         case .arabic(let text):
-            StableHighlight(isHighlighted: isHighlighted) {
-                Text(text)
-                    .font(.system(size: isHighlighted ? 30 : 26, design: .serif))
-                    .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
-            } background: {
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
-            }
+            Text(text)
+                .font(.system(size: 28, design: .serif))
+                .foregroundStyle(isHighlighted ? .white : BayanColors.primary)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.08))
+                )
+                .overlay(alignment: .bottom) {
+                    if isHighlighted {
+                        Capsule().fill(BayanColors.gold).frame(height: 2.5)
+                    }
+                }
 
         case .transitioning(let arabic, let english):
-            StableHighlight(isHighlighted: isHighlighted) {
-                VStack(spacing: 0) {
-                    Text(arabic)
-                        .font(.system(size: isHighlighted ? 27 : 24, design: .serif))
-                        .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
-                    Text(english)
-                        .font(.system(size: 10))
-                        .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
-                }
-            } background: {
+            VStack(spacing: 0) {
+                Text(arabic)
+                    .font(.system(size: 26, design: .serif))
+                    .foregroundStyle(isHighlighted ? BayanColors.primary : BayanColors.primary.opacity(0.85))
+                Text(english)
+                    .font(.system(size: 10))
+                    .foregroundStyle(BayanColors.textSecondary.opacity(0.6))
+            }
+            .background(
                 RoundedRectangle(cornerRadius: 5)
                     .fill(isHighlighted ? BayanColors.learning.opacity(0.15) : BayanColors.learning.opacity(0.05))
+            )
+            .overlay(alignment: .bottom) {
+                if isHighlighted {
+                    Capsule().fill(BayanColors.gold).frame(height: 2.5)
+                }
             }
         }
     }

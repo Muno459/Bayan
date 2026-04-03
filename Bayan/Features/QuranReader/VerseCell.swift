@@ -99,6 +99,7 @@ struct VerseCell: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: isCurrentVerse)
+        .animation(.easeInOut(duration: 0.15), value: currentWordIndex)
 
         Divider().padding(.leading, 16)
     }
