@@ -16,8 +16,7 @@ struct PronunciationButton: View {
         SharedPronunciationChecker.shared.checker
     }
 
-    private let silenceThreshold: Float = 0.008
-    private let silenceFramesNeeded = 20
+    private let silenceFramesNeeded = 20 // ~0.8s of silence after speech
     private let barCount = 20
 
     var body: some View {
@@ -138,20 +137,20 @@ struct PronunciationButton: View {
     // MARK: - Audio Metering + VAD
 
     private func startMetering() {
-        checker.audioRecorder?.isMeteringEnabled = true
-
-        meterTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+        meterTimer = Timer.scheduledTimer(withTimeInterval: 0.04, repeats: true) { _ in
             guard let recorder = checker.audioRecorder, recorder.isRecording else { return }
             recorder.updateMeters()
-            let power = recorder.averagePower(forChannel: 0)
-            let linear = pow(10, power / 20)
+            let power = recorder.averagePower(forChannel: 0) // dB: -160 to 0
+            // Aggressive scaling: map -50..0 dB to 0..1
+            let normalized = max(0, (power + 50) / 50)
+            let level = pow(normalized, 0.6) // Compress dynamics so quiet sounds still show
 
             Task { @MainActor in
                 var levels = Array(audioLevels.dropFirst())
-                levels.append(CGFloat(max(linear * 2.5, 0.03)))
+                levels.append(CGFloat(max(level, 0.04)))
                 audioLevels = levels
 
-                if linear > silenceThreshold {
+                if level > 0.15 { // Speech detected
                     hasDetectedSpeech = true
                     silenceFrames = 0
                 } else if hasDetectedSpeech {

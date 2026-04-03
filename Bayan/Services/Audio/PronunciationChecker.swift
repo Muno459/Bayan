@@ -23,11 +23,13 @@ final class PronunciationChecker {
     private var recordingURL: URL?
     private var inferenceEngine: PronunciationInferenceEngine?
     private(set) var isModelLoaded = false
+    private var isModelLoading = false
 
-    // MARK: - Model Loading (background)
+    // MARK: - Model Loading
 
     func loadModel() async {
-        guard !isModelLoaded else { return }
+        guard !isModelLoaded, !isModelLoading else { return }
+        isModelLoading = true
         state = .loading
 
         do {
@@ -39,19 +41,28 @@ final class PronunciationChecker {
         } catch {
             state = .error("Model loading — try again")
         }
+        isModelLoading = false
     }
 
-    /// Pre-warm the model in the background (call on app launch)
+    /// Pre-warm the model in the background (call on app launch).
+    /// Safe to call multiple times — only loads once.
     func preloadModel() {
-        guard !isModelLoaded else { return }
+        guard !isModelLoaded, !isModelLoading else { return }
+        isModelLoading = true
         Task.detached(priority: .background) { [weak self] in
             let engine = try? PronunciationInferenceEngine()
             await MainActor.run {
-                self?.inferenceEngine = engine
-                self?.isModelLoaded = engine != nil
+                guard let self else { return }
+                if !self.isModelLoaded {
+                    self.inferenceEngine = engine
+                    self.isModelLoaded = engine != nil
+                }
+                self.isModelLoading = false
             }
         }
     }
+
+
 
     // MARK: - Recording
 
@@ -101,6 +112,7 @@ final class PronunciationChecker {
 
         do {
             audioRecorder = try AVAudioRecorder(url: url, settings: settings)
+            audioRecorder?.isMeteringEnabled = true
             audioRecorder?.record()
         } catch {
             // Restore audio session on failure
