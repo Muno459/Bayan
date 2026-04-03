@@ -9,6 +9,7 @@ final class WordAudioPlayer {
     var isPlaying = false
     var isDrilling = false
     var drillStep = 0 // 0 = normal, 1 = slow, 2 = normal again
+    var error: String?
 
     private var player: AVPlayer?
     private var drillTask: Task<Void, Never>?
@@ -16,12 +17,28 @@ final class WordAudioPlayer {
     /// Play a single word once at normal speed.
     func play(verseKey: String, wordPosition: Int) {
         stop()
-        guard let url = wordURL(verseKey: verseKey, wordPosition: wordPosition) else { return }
+        error = nil
+        guard let url = wordURL(verseKey: verseKey, wordPosition: wordPosition) else {
+            error = "Invalid audio URL"
+            return
+        }
 
         let item = AVPlayerItem(url: url)
         player = AVPlayer(playerItem: item)
         player?.play()
         isPlaying = true
+
+        // Watch for playback errors
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemFailedToPlayToEndTime,
+            object: item,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.isPlaying = false
+                self?.error = "Could not load audio"
+            }
+        }
 
         NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,

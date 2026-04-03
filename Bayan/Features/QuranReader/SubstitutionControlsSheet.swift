@@ -66,13 +66,6 @@ struct SubstitutionControlsSheet: View {
                     .padding(.vertical, 4)
                 }
 
-                Section("Vocabulary Progress") {
-                    StatRow(label: "Words Encountered", value: "\(vocabularyStore.totalWordsEncountered)")
-                    StatRow(label: "Mastered", value: "\(vocabularyStore.masteredCount)", color: BayanColors.mastered)
-                    StatRow(label: "Familiar", value: "\(vocabularyStore.familiarCount)", color: BayanColors.introduced)
-                    StatRow(label: "Learning", value: "\(vocabularyStore.learningCount)", color: BayanColors.learning)
-                }
-
                 Section("How It Works") {
                     VStack(alignment: .leading, spacing: 6) {
                         Label("Read verses in English with Arabic words", systemImage: "1.circle.fill")
@@ -95,16 +88,4 @@ struct SubstitutionControlsSheet: View {
     }
 }
 
-private struct StatRow: View {
-    let label: String
-    let value: String
-    var color: Color = .primary
-
-    var body: some View {
-        HStack {
-            Text(label)
-            Spacer()
-            Text(value).fontWeight(.semibold).foregroundStyle(color)
-        }
-    }
-}
+// StatRow removed — vocabulary progress is in the Progress tab

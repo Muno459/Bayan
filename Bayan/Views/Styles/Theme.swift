@@ -1,5 +1,9 @@
 import SwiftUI
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 // MARK: - Color Palette
 
 enum BayanColors {
@@ -13,15 +17,15 @@ enum BayanColors {
     static let goldLight = Color(hex: 0xE8D48B)
     static let goldSubtle = Color(hex: 0xC8A951).opacity(0.15)
 
-    // Backgrounds
-    static let background = Color(hex: 0xFAF7F2) // warm cream
-    static let cardBackground = Color.white
-    static let readerBackground = Color(hex: 0xFDF8F0) // warm parchment
+    // Backgrounds — adaptive for dark mode
+    static let background = Color(UIColor.systemGroupedBackground)
+    static let cardBackground = Color(UIColor.secondarySystemGroupedBackground)
+    static let readerBackground = Color(UIColor.systemBackground)
 
-    // Text
-    static let textPrimary = Color(hex: 0x1A1A2E)
-    static let textSecondary = Color(hex: 0x6B7280)
-    static let textArabic = Color(hex: 0x1A1A2E)
+    // Text — adaptive for dark mode
+    static let textPrimary = Color(UIColor.label)
+    static let textSecondary = Color(UIColor.secondaryLabel)
+    static let textArabic = Color(UIColor.label)
 
     // Semantic
     static let mastered = Color(hex: 0x059669)
@@ -29,10 +33,10 @@ enum BayanColors {
     static let introduced = Color(hex: 0x3B82F6)
     static let unseen = Color(hex: 0x9CA3AF)
 
-    // Dark mode variants
-    static let backgroundDark = Color(hex: 0x111827)
-    static let cardBackgroundDark = Color(hex: 0x1F2937)
-    static let readerBackgroundDark = Color(hex: 0x0F172A)
+    // Legacy aliases — now same as adaptive versions
+    static let backgroundDark = background
+    static let cardBackgroundDark = cardBackground
+    static let readerBackgroundDark = readerBackground
 }
 
 // MARK: - Typography

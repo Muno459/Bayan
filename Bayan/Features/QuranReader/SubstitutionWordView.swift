@@ -161,12 +161,17 @@ struct WordLearningCard: View {
                 }
                 .padding(.vertical, 6)
 
-                // Drill status
+                // Drill status / error
                 if wordPlayer.isDrilling {
                     Text(drillStatusText)
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(BayanColors.gold)
                         .transition(.opacity)
+                }
+                if let error = wordPlayer.error {
+                    Label(error, systemImage: "wifi.exclamationmark")
+                        .font(.system(size: 12))
+                        .foregroundStyle(.red.opacity(0.8))
                 }
 
                 Divider()
