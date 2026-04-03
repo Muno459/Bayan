@@ -87,6 +87,13 @@ struct VerseReaderView: View {
         }
         .task {
             await quranStore.loadVerses(for: chapter)
+            // Scroll to last read position if returning to same surah
+            if userStore.lastReadChapterId == chapter.id,
+               let lastVerse = userStore.lastReadVerseKey {
+                // Small delay to let the list render first
+                try? await Task.sleep(for: .milliseconds(300))
+                scrollPosition = lastVerse
+            }
         }
         .onAppear {
             userStore.startSession(chapterId: chapter.id, verseKey: "\(chapter.id):1")

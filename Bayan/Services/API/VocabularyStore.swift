@@ -12,8 +12,10 @@ import SwiftUI
 @Observable
 final class VocabularyStore {
     private(set) var wordStates: [Int: WordLearningState] = [:] {
-        didSet { saveWordStates() }
+        didSet { scheduleSave() }
     }
+
+    private var saveTask: Task<Void, Never>?
 
     /// 0.0 = all English, 1.0 = all Arabic script.
     var substitutionLevel: Double = 0.3 {
@@ -170,6 +172,16 @@ final class VocabularyStore {
         loadWordStates()
         if let saved = UserDefaults.standard.object(forKey: "bayan_substitutionLevel") as? Double {
             substitutionLevel = saved
+        }
+    }
+
+    /// Debounce saves — coalesce rapid word state changes into one write
+    private func scheduleSave() {
+        saveTask?.cancel()
+        saveTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled else { return }
+            saveWordStates()
         }
     }
 

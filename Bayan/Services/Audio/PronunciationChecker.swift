@@ -95,12 +95,34 @@ final class PronunciationChecker {
     func startRecording() {
         state = .recording
 
+        // Check mic permission first
+        switch AVAudioApplication.shared.recordPermission {
+        case .denied:
+            state = .error("Microphone access denied. Enable in Settings.")
+            return
+        case .undetermined:
+            AVAudioApplication.requestRecordPermission { [weak self] granted in
+                Task { @MainActor in
+                    if granted {
+                        self?.startRecording()
+                    } else {
+                        self?.state = .error("Microphone access required")
+                    }
+                }
+            }
+            return
+        case .granted:
+            break
+        @unknown default:
+            break
+        }
+
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(.record, mode: .measurement)
             try session.setActive(true)
         } catch {
-            state = .error("Microphone access required")
+            state = .error("Could not access microphone")
             return
         }
 
