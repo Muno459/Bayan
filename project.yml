@@ -19,9 +19,7 @@ packages:
   GRDB:
     url: https://github.com/groue/GRDB.swift
     from: "7.4.1"
-  whisperkit:
-    url: https://github.com/argmaxinc/WhisperKit
-    from: "0.12.0"
+
 
 targets:
   Bayan:
@@ -44,8 +42,6 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
     dependencies:
       - package: GRDB
-      - package: whisperkit
-        product: WhisperKit
     entitlements:
       path: Bayan/App/Bayan.entitlements
       properties:

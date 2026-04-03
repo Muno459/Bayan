@@ -9,7 +9,7 @@ struct PronunciationButton: View {
     var body: some View {
         VStack(spacing: 8) {
             switch checker.state {
-            case .idle:
+            case .idle, .loading:
                 Button {
                     Haptics.medium()
                     Task {
