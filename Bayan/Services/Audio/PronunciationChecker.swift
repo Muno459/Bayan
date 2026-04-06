@@ -194,7 +194,7 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     private let eotToken = 50257
     private let langToken = 50272
     private let transcribeToken = 50359
-    private let maxTokens = 5 // Single Quranic word = 1-3 tokens max
+    private let maxTokens = 10 // Allow more tokens, smart matching finds the expected word
 
     init() throws {
         guard let melURL = Self.findModel(named: "WhisperMelExtractor"),
@@ -336,27 +336,36 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
 
     private func runMelExtractor(audio: [Float]) throws -> MLMultiArray {
         let nSamples = 480000
-        let input = try MLMultiArray(shape: [1, NSNumber(value: nSamples)], dataType: .float32)
+
+        // Pad audio to 30s in a contiguous buffer
+        var padded = [Float](repeating: 0, count: nSamples)
         let count = min(audio.count, nSamples)
-        let ptr = input.dataPointer.bindMemory(to: Float.self, capacity: nSamples)
-        audio.withUnsafeBufferPointer { buf in
-            ptr.update(from: buf.baseAddress!, count: count)
+        padded.replaceSubrange(0..<count, with: audio[0..<count])
+
+        // Zero-copy MLMultiArray — wraps the buffer directly, no allocation
+        let input = try padded.withUnsafeMutableBufferPointer { buf -> MLMultiArray in
+            let strides = [NSNumber(value: nSamples), NSNumber(value: 1)]
+            return try MLMultiArray(
+                dataPointer: buf.baseAddress!,
+                shape: [1, NSNumber(value: nSamples)],
+                dataType: .float32,
+                strides: strides
+            )
         }
+
         let features = try MLDictionaryFeatureProvider(dictionary: ["audio": input])
         let result = try melExtractor.prediction(from: features)
         guard let mel = result.featureValue(for: "mel_spectrogram")?.multiArrayValue else {
             throw NSError(domain: "Bayan", code: 4, userInfo: [NSLocalizedDescriptionKey: "Mel extraction failed"])
         }
-        // Trim from 3001 to 3000 frames
+        // Trim from 3001 to 3000 frames if needed
         let melFrames = mel.shape[2].intValue
         if melFrames > 3000 {
             let trimmed = try MLMultiArray(shape: [1, 80, 3000], dataType: .float16)
             let src = mel.dataPointer.bindMemory(to: Float16.self, capacity: 80 * melFrames)
             let dst = trimmed.dataPointer.bindMemory(to: Float16.self, capacity: 80 * 3000)
             for m in 0..<80 {
-                for f in 0..<3000 {
-                    dst[m * 3000 + f] = src[m * melFrames + f]
-                }
+                memcpy(dst.advanced(by: m * 3000), src.advanced(by: m * melFrames), 3000 * MemoryLayout<Float16>.size)
             }
             return trimmed
         }
@@ -463,16 +472,56 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         return Array(audio[start..<end])
     }
 
-    // MARK: - Comparison
+    // MARK: - Intelligent Matching
 
+    /// Instead of comparing the full transcription, find the best matching
+    /// substring within the decoder output. The model may output extra tokens
+    /// (e.g., "بسم الله" when we expected "الله"), so we find the expected
+    /// word within the output and score that substring.
     private func compareArabic(transcription: String, expected: String) -> Bool {
-        let clean1 = stripDiacritics(transcription)
-        let clean2 = stripDiacritics(expected)
-        if clean1 == clean2 { return true }
-        if !clean1.isEmpty && (clean1.contains(clean2) || clean2.contains(clean1)) { return true }
-        let dist = levenshteinDistance(clean1, clean2)
-        let maxLen = max(clean1.count, clean2.count, 1)
-        return (1.0 - Double(dist) / Double(maxLen)) >= 0.6
+        let cleanTranscription = stripDiacritics(transcription)
+        let cleanExpected = stripDiacritics(expected)
+
+        guard !cleanTranscription.isEmpty, !cleanExpected.isEmpty else { return false }
+
+        // 1. Exact match
+        if cleanTranscription == cleanExpected { return true }
+
+        // 2. Expected word found within transcription (model said more but includes the word)
+        if cleanTranscription.contains(cleanExpected) { return true }
+
+        // 3. Transcription is a substring of expected (model said part of it correctly)
+        if cleanExpected.contains(cleanTranscription) && cleanTranscription.count >= cleanExpected.count / 2 {
+            return true
+        }
+
+        // 4. Split transcription into words, find best match against expected
+        let words = cleanTranscription.split(separator: " ").map(String.init)
+        for word in words {
+            if word == cleanExpected { return true }
+            let dist = levenshteinDistance(word, cleanExpected)
+            let maxLen = max(word.count, cleanExpected.count, 1)
+            if (1.0 - Double(dist) / Double(maxLen)) >= 0.65 { return true }
+        }
+
+        // 5. Sliding window — find the best substring match within transcription
+        let expectedChars = Array(cleanExpected)
+        let transChars = Array(cleanTranscription)
+        if transChars.count >= expectedChars.count {
+            var bestSimilarity: Double = 0
+            for start in 0...(transChars.count - expectedChars.count) {
+                let window = String(transChars[start..<start + expectedChars.count])
+                let dist = levenshteinDistance(window, cleanExpected)
+                let similarity = 1.0 - Double(dist) / Double(expectedChars.count)
+                bestSimilarity = max(bestSimilarity, similarity)
+            }
+            if bestSimilarity >= 0.6 { return true }
+        }
+
+        // 6. Overall similarity as fallback
+        let dist = levenshteinDistance(cleanTranscription, cleanExpected)
+        let maxLen = max(cleanTranscription.count, cleanExpected.count, 1)
+        return (1.0 - Double(dist) / Double(maxLen)) >= 0.55
     }
 
     private func stripDiacritics(_ text: String) -> String {
