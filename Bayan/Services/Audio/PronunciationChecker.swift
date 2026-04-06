@@ -179,6 +179,7 @@ final class PronunciationChecker {
 /// Handles all heavy computation off the main thread.
 /// Thread-safe: all state is internal, no shared mutable state.
 final class PronunciationInferenceEngine: @unchecked Sendable {
+    private let melExtractor: MLModel
     private let encoder: MLModel
     private let promptDecoder: MLModel
     private let stepDecoder: MLModel
@@ -195,6 +196,9 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     private let maxTokens = 5 // Single Quranic word = 1-3 tokens max
 
     init() throws {
+        guard let melURL = Self.findModel(named: "WhisperMelExtractor") else {
+            throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Mel extractor not found"])
+        }
         guard let encURL = Self.findModel(named: "TarteelEncoder") else {
             throw NSError(domain: "Bayan", code: 1, userInfo: [NSLocalizedDescriptionKey: "Encoder not found"])
         }
@@ -208,6 +212,8 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
         let config = MLModelConfiguration()
         config.computeUnits = .all // All models use ANE — fixed shapes
 
+        print("[Bayan] Loading mel extractor...")
+        melExtractor = try MLModel(contentsOf: melURL, configuration: config)
         print("[Bayan] Loading encoder...")
         encoder = try MLModel(contentsOf: encURL, configuration: config)
         print("[Bayan] Loading prompt decoder...")
@@ -283,15 +289,10 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
             return nil
         }
 
-        // No trimming — maxTokens=5 prevents hallucination
-        // Full audio gives better accuracy for slow speakers
         print("[Bayan] Processing \(String(format: "%.1f", Float(audio.count) / 16000))s of audio")
 
-        guard let mel = MelSpectrogram.compute(audio: audio) else {
-            print("[Bayan] Mel computation failed")
-            return nil
-        }
-        print("[Bayan] Mel computed: \(mel.shape) (processed \(min(audio.count, 16000 * 30)) samples)")
+        let mel = try runMelExtractor(audio: audio)
+        print("[Bayan] Mel computed: \(mel.shape)")
 
         let encoderOutput = try runEncoder(melArray: mel)
         print("[Bayan] Encoder done, output shape: \(encoderOutput.shape)")
@@ -335,6 +336,39 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
     }
 
     // MARK: - Mel Extractor (CoreML — replaces broken Swift FFT)
+
+    // MARK: - Encoder
+
+    // MARK: - Mel Extractor (CoreML — proven accurate)
+
+    private func runMelExtractor(audio: [Float]) throws -> MLMultiArray {
+        let nSamples = 480000
+        let input = try MLMultiArray(shape: [1, NSNumber(value: nSamples)], dataType: .float32)
+        let count = min(audio.count, nSamples)
+        let ptr = input.dataPointer.bindMemory(to: Float.self, capacity: nSamples)
+        audio.withUnsafeBufferPointer { buf in
+            ptr.update(from: buf.baseAddress!, count: count)
+        }
+        let features = try MLDictionaryFeatureProvider(dictionary: ["audio": input])
+        let result = try melExtractor.prediction(from: features)
+        guard let mel = result.featureValue(for: "mel_spectrogram")?.multiArrayValue else {
+            throw NSError(domain: "Bayan", code: 4, userInfo: [NSLocalizedDescriptionKey: "Mel extraction failed"])
+        }
+        // Trim from 3001 to 3000 frames
+        let melFrames = mel.shape[2].intValue
+        if melFrames > 3000 {
+            let trimmed = try MLMultiArray(shape: [1, 80, 3000], dataType: .float16)
+            let src = mel.dataPointer.bindMemory(to: Float16.self, capacity: 80 * melFrames)
+            let dst = trimmed.dataPointer.bindMemory(to: Float16.self, capacity: 80 * 3000)
+            for m in 0..<80 {
+                for f in 0..<3000 {
+                    dst[m * 3000 + f] = src[m * melFrames + f]
+                }
+            }
+            return trimmed
+        }
+        return mel
+    }
 
     // MARK: - Encoder
 

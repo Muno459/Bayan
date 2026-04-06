@@ -19,7 +19,6 @@
 		2CB484D0A1FCDCEDD4A6B30B /* WordAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */; };
 		2F6D569836980868C1540714 /* TarteelPromptDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 20FFA543B83A0C0F16440417 /* TarteelPromptDecoder.mlmodelc */; };
 		3564266BA666EBF705758BF5 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB670B091D43E8B7133206D /* TokenManager.swift */; };
-		3741FCBE4C5BF365C29DEFDC /* MelSpectrogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC771BA420C2D07B46F5559A /* MelSpectrogram.swift */; };
 		38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B871515C5CE216F4E8F381B /* Haptics.swift */; };
 		3C707AD598F27F80551E6E83 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D538DE5486419F8657E04B7C /* APIClient.swift */; };
 		481D819BAA99970119BBD79B /* VerseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D15F1999A179436E8E4BE6C /* VerseCell.swift */; };
@@ -41,8 +40,8 @@
 		90FAF3988D417255E1A24973 /* AudioPlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */; };
 		9366217F4E924B20C893B818 /* ArabicLetterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */; };
 		C2945E79C57EABFE929ADEF6 /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C439367E88D9799AF36F3 /* UserStore.swift */; };
+		C398F86C5DA85CC439EE6257 /* WhisperMelExtractor.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 944132092F094EC2C912A7E1 /* WhisperMelExtractor.mlmodelc */; };
 		C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */; };
-		C86E98AF737C2B39C048C5E0 /* mel_filters.json in Resources */ = {isa = PBXBuildFile; fileRef = 5E9229F9A7B6D47EFAE681B3 /* mel_filters.json */; };
 		CC62864B7C5877218ADDA0D1 /* TarteelStepDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = E6A87A94C062064EDE05FC06 /* TarteelStepDecoder.mlmodelc */; };
 		CE66E3189A5206B467CDCC57 /* DownloadsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE3E28A70FACBAEDC31904 /* DownloadsView.swift */; };
 		CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */; };
@@ -83,7 +82,6 @@
 		5165315F0793F7528B202942 /* WordAudioCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioCache.swift; sourceTree = "<group>"; };
 		5B871515C5CE216F4E8F381B /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		5D2B225323C0E98272174DA2 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
-		5E9229F9A7B6D47EFAE681B3 /* mel_filters.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = mel_filters.json; sourceTree = "<group>"; };
 		6447627CECC3016C7A61FF71 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioPlayer.swift; sourceTree = "<group>"; };
 		69786BA6DF671EFC6B4EA717 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -97,6 +95,7 @@
 		90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseReaderView.swift; sourceTree = "<group>"; };
 		9129D60E125ABD73E2850380 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		92DC26419D0924EBF714B5B7 /* BayanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanTests.swift; sourceTree = "<group>"; };
+		944132092F094EC2C912A7E1 /* WhisperMelExtractor.mlmodelc */ = {isa = PBXFileReference; path = WhisperMelExtractor.mlmodelc; sourceTree = "<group>"; };
 		A036410CD9C7523D71ECA5F8 /* SubstitutionWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionWordView.swift; sourceTree = "<group>"; };
 		A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTabView.swift; sourceTree = "<group>"; };
 		A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterBreakdownView.swift; sourceTree = "<group>"; };
@@ -112,7 +111,6 @@
 		D2CE3E28A70FACBAEDC31904 /* DownloadsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsView.swift; sourceTree = "<group>"; };
 		D538DE5486419F8657E04B7C /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		D5872948DB21F22C6D0C740F /* tarteel_vocab.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tarteel_vocab.json; sourceTree = "<group>"; };
-		DC771BA420C2D07B46F5559A /* MelSpectrogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MelSpectrogram.swift; sourceTree = "<group>"; };
 		E0BC2530171B11C2F95ACD1A /* TarteelEncoder.mlmodelc */ = {isa = PBXFileReference; path = TarteelEncoder.mlmodelc; sourceTree = "<group>"; };
 		E3845CFD129FCA4B72585A67 /* BayanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanApp.swift; sourceTree = "<group>"; };
 		E6A87A94C062064EDE05FC06 /* TarteelStepDecoder.mlmodelc */ = {isa = PBXFileReference; path = TarteelStepDecoder.mlmodelc; sourceTree = "<group>"; };
@@ -214,11 +212,11 @@
 			isa = PBXGroup;
 			children = (
 				87D8EDB41DB61B6EA12B8753 /* bpe_byte_decoder.json */,
-				5E9229F9A7B6D47EFAE681B3 /* mel_filters.json */,
 				D5872948DB21F22C6D0C740F /* tarteel_vocab.json */,
 				E0BC2530171B11C2F95ACD1A /* TarteelEncoder.mlmodelc */,
 				20FFA543B83A0C0F16440417 /* TarteelPromptDecoder.mlmodelc */,
 				E6A87A94C062064EDE05FC06 /* TarteelStepDecoder.mlmodelc */,
+				944132092F094EC2C912A7E1 /* WhisperMelExtractor.mlmodelc */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -278,7 +276,6 @@
 			isa = PBXGroup;
 			children = (
 				7B2BB082DE5B43D18A9F7078 /* AudioPlaybackManager.swift */,
-				DC771BA420C2D07B46F5559A /* MelSpectrogram.swift */,
 				4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */,
 				5165315F0793F7528B202942 /* WordAudioCache.swift */,
 				6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */,
@@ -461,8 +458,8 @@
 				FF36629684F5EF7EF8B7CB41 /* TarteelEncoder.mlmodelc in Resources */,
 				2F6D569836980868C1540714 /* TarteelPromptDecoder.mlmodelc in Resources */,
 				CC62864B7C5877218ADDA0D1 /* TarteelStepDecoder.mlmodelc in Resources */,
+				C398F86C5DA85CC439EE6257 /* WhisperMelExtractor.mlmodelc in Resources */,
 				5AAE0C8519C8DB0690653D61 /* bpe_byte_decoder.json in Resources */,
-				C86E98AF737C2B39C048C5E0 /* mel_filters.json in Resources */,
 				831D8D0245F46BFB17291C0F /* tarteel_vocab.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -497,7 +494,6 @@
 				CE66E3189A5206B467CDCC57 /* DownloadsView.swift in Sources */,
 				38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */,
 				0D7A74A6AA41B4AF3FEAED91 /* LetterBreakdownView.swift in Sources */,
-				3741FCBE4C5BF365C29DEFDC /* MelSpectrogram.swift in Sources */,
 				1F44B0605784A137A3DB441A /* MilestoneView.swift in Sources */,
 				D9F85A60BF64259A9A362D55 /* OnboardingView.swift in Sources */,
 				643C24C58957817F52DAE554 /* ProgressTabView.swift in Sources */,
