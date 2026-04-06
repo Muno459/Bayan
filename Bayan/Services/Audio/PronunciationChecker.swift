@@ -336,21 +336,11 @@ final class PronunciationInferenceEngine: @unchecked Sendable {
 
     private func runMelExtractor(audio: [Float]) throws -> MLMultiArray {
         let nSamples = 480000
-
-        // Pad audio to 30s in a contiguous buffer
-        var padded = [Float](repeating: 0, count: nSamples)
+        let input = try MLMultiArray(shape: [1, NSNumber(value: nSamples)], dataType: .float32)
         let count = min(audio.count, nSamples)
-        padded.replaceSubrange(0..<count, with: audio[0..<count])
-
-        // Zero-copy MLMultiArray — wraps the buffer directly, no allocation
-        let input = try padded.withUnsafeMutableBufferPointer { buf -> MLMultiArray in
-            let strides = [NSNumber(value: nSamples), NSNumber(value: 1)]
-            return try MLMultiArray(
-                dataPointer: buf.baseAddress!,
-                shape: [1, NSNumber(value: nSamples)],
-                dataType: .float32,
-                strides: strides
-            )
+        let ptr = input.dataPointer.bindMemory(to: Float.self, capacity: nSamples)
+        audio.withUnsafeBufferPointer { buf in
+            ptr.update(from: buf.baseAddress!, count: count)
         }
 
         let features = try MLDictionaryFeatureProvider(dictionary: ["audio": input])
