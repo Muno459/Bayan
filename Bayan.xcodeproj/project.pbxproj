@@ -17,7 +17,6 @@
 		16D273F6F31D099CA527B778 /* PronunciationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1581A36C14976FB9A0B296D /* PronunciationButton.swift */; };
 		1F44B0605784A137A3DB441A /* MilestoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1200987D8D2D2A3205D13691 /* MilestoneView.swift */; };
 		2CB484D0A1FCDCEDD4A6B30B /* WordAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6662255BD9C1234D036C8158 /* WordAudioPlayer.swift */; };
-		2F6D569836980868C1540714 /* TarteelPromptDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 20FFA543B83A0C0F16440417 /* TarteelPromptDecoder.mlmodelc */; };
 		3564266BA666EBF705758BF5 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB670B091D43E8B7133206D /* TokenManager.swift */; };
 		38CD452EB1FA27D85C7876D0 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B871515C5CE216F4E8F381B /* Haptics.swift */; };
 		3C707AD598F27F80551E6E83 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D538DE5486419F8657E04B7C /* APIClient.swift */; };
@@ -39,10 +38,10 @@
 		8D96F80B437B29791D0A28CD /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D131D3C3DBD81D86B7714DBA /* Chapter.swift */; };
 		90FAF3988D417255E1A24973 /* AudioPlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */; };
 		9366217F4E924B20C893B818 /* ArabicLetterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */; };
+		BE92DFED0A149FDB139AC473 /* TarteelDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = B070DC30A9448521D9492B47 /* TarteelDecoder.mlmodelc */; };
 		C2945E79C57EABFE929ADEF6 /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2C439367E88D9799AF36F3 /* UserStore.swift */; };
 		C398F86C5DA85CC439EE6257 /* WhisperMelExtractor.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 944132092F094EC2C912A7E1 /* WhisperMelExtractor.mlmodelc */; };
 		C734A5BCE6CA933D5BF4370C /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90EA90D0E1EE3B3359BA37B1 /* VerseReaderView.swift */; };
-		CC62864B7C5877218ADDA0D1 /* TarteelStepDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = E6A87A94C062064EDE05FC06 /* TarteelStepDecoder.mlmodelc */; };
 		CE66E3189A5206B467CDCC57 /* DownloadsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE3E28A70FACBAEDC31904 /* DownloadsView.swift */; };
 		CEC31A84B7587FF9F23A0BF4 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */; };
 		D710AB490B86A961D93F78FA /* PronunciationChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F74ED0558F781452B6F5B68 /* PronunciationChecker.swift */; };
@@ -72,7 +71,6 @@
 		1200987D8D2D2A3205D13691 /* MilestoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneView.swift; sourceTree = "<group>"; };
 		132CFDCB5235FEC4F1DCD0D9 /* AudioPlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerBar.swift; sourceTree = "<group>"; };
 		2009A8E23F6A0A4DA628A74D /* SubstitutionControlsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionControlsSheet.swift; sourceTree = "<group>"; };
-		20FFA543B83A0C0F16440417 /* TarteelPromptDecoder.mlmodelc */ = {isa = PBXFileReference; path = TarteelPromptDecoder.mlmodelc; sourceTree = "<group>"; };
 		2811C5D140CB5F8C99084B82 /* ArabicLetterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArabicLetterData.swift; sourceTree = "<group>"; };
 		38C860FA5FE8046DEE0FD1EB /* Bayan.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Bayan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		447B75B102513CD4AD8B4415 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -100,6 +98,7 @@
 		A3889EC8672D9ED4DD4AECD6 /* ProgressTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTabView.swift; sourceTree = "<group>"; };
 		A488D3B83C8F0149B32CA057 /* LetterBreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterBreakdownView.swift; sourceTree = "<group>"; };
 		AF2C439367E88D9799AF36F3 /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
+		B070DC30A9448521D9492B47 /* TarteelDecoder.mlmodelc */ = {isa = PBXFileReference; path = TarteelDecoder.mlmodelc; sourceTree = "<group>"; };
 		B1581A36C14976FB9A0B296D /* PronunciationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationButton.swift; sourceTree = "<group>"; };
 		B6B9F41428421B9178DED4BD /* DailyWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWordView.swift; sourceTree = "<group>"; };
 		BB43C370A12A90D6B8496D6B /* VocabularyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStore.swift; sourceTree = "<group>"; };
@@ -113,7 +112,6 @@
 		D5872948DB21F22C6D0C740F /* tarteel_vocab.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tarteel_vocab.json; sourceTree = "<group>"; };
 		E0BC2530171B11C2F95ACD1A /* TarteelEncoder.mlmodelc */ = {isa = PBXFileReference; path = TarteelEncoder.mlmodelc; sourceTree = "<group>"; };
 		E3845CFD129FCA4B72585A67 /* BayanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BayanApp.swift; sourceTree = "<group>"; };
-		E6A87A94C062064EDE05FC06 /* TarteelStepDecoder.mlmodelc */ = {isa = PBXFileReference; path = TarteelStepDecoder.mlmodelc; sourceTree = "<group>"; };
 		EFB670B091D43E8B7133206D /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		F50B542BCEFFF057124F4B0C /* WrappingHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappingHStack.swift; sourceTree = "<group>"; };
 		F85B2AA10C64188FA1337BB2 /* VocabularyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyModels.swift; sourceTree = "<group>"; };
@@ -213,9 +211,8 @@
 			children = (
 				87D8EDB41DB61B6EA12B8753 /* bpe_byte_decoder.json */,
 				D5872948DB21F22C6D0C740F /* tarteel_vocab.json */,
+				B070DC30A9448521D9492B47 /* TarteelDecoder.mlmodelc */,
 				E0BC2530171B11C2F95ACD1A /* TarteelEncoder.mlmodelc */,
-				20FFA543B83A0C0F16440417 /* TarteelPromptDecoder.mlmodelc */,
-				E6A87A94C062064EDE05FC06 /* TarteelStepDecoder.mlmodelc */,
 				944132092F094EC2C912A7E1 /* WhisperMelExtractor.mlmodelc */,
 			);
 			path = Data;
@@ -455,9 +452,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				842920337DC5387D7F47135A /* Assets.xcassets in Resources */,
+				BE92DFED0A149FDB139AC473 /* TarteelDecoder.mlmodelc in Resources */,
 				FF36629684F5EF7EF8B7CB41 /* TarteelEncoder.mlmodelc in Resources */,
-				2F6D569836980868C1540714 /* TarteelPromptDecoder.mlmodelc in Resources */,
-				CC62864B7C5877218ADDA0D1 /* TarteelStepDecoder.mlmodelc in Resources */,
 				C398F86C5DA85CC439EE6257 /* WhisperMelExtractor.mlmodelc in Resources */,
 				5AAE0C8519C8DB0690653D61 /* bpe_byte_decoder.json in Resources */,
 				831D8D0245F46BFB17291C0F /* tarteel_vocab.json in Resources */,
