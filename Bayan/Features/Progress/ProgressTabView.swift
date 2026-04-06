@@ -61,7 +61,7 @@ struct ProgressTabView: View {
 
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 7), spacing: 4) {
                 // Day labels
-                ForEach(["S", "M", "T", "W", "T", "F", "S"], id: \.self) { day in
+                ForEach(Array(["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].enumerated()), id: \.offset) { _, day in
                     Text(day)
                         .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(BayanColors.textSecondary)
