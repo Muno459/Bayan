@@ -1,0 +1,1158 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01872ED9860E2E256604EB84 /* SubstitutionControlsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4235EF4A45B697DED320C284 /* SubstitutionControlsSheet.swift */; };
+		0572EF2A7246814E57D04B05 /* PronunciationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA97FDAA65DB174B8DBB36BC /* PronunciationButton.swift */; };
+		06D26AC5E2D8DB24F24F4D3C /* OIDCAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921BD177C9A7AA0820A7D827 /* OIDCAuthService.swift */; };
+		0B92A1C476AD1163675EB25C /* Badges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841FDD2003C3EAEFE4C46F00 /* Badges.swift */; };
+		105A0AE3D7BD45CDAE10BF19 /* FastConformerQuran.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = B0DCDDBAF41A90A7F82F6AF4 /* FastConformerQuran.mlpackage */; };
+		12CDA4BA1BB2DB04EB93445F /* DailyWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBB007AF45076A3921544DA /* DailyWordView.swift */; };
+		17C0E5895CB5B5F4D634A08E /* fastconformer-tokenizer.model in Resources */ = {isa = PBXBuildFile; fileRef = 0DF1657F6783A7DC71C5581E /* fastconformer-tokenizer.model */; };
+		1A80B9905AE5237A6C458171 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C943D365666F7B33DFC52141 /* Theme.swift */; };
+		1C6AA36651124DE81ECF311E /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 031489194D2DE74B0AB333C1 /* GRDB */; };
+		1F020057DF665F87BEA81FBA /* AyyatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81C7F4483ADFDBAD6F1A511 /* AyyatApp.swift */; };
+		1F0BAA2AD6B27318BFF7CEBE /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5214807AE422E97C00C05224 /* Logging.swift */; };
+		1FA5DC7841BF27AE98AD11E1 /* WordAudioCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE32299A63A4913BA052C8 /* WordAudioCache.swift */; };
+		25EB99B99151E9E85C820252 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B9CBD4F0765130D601B6E8 /* Haptics.swift */; };
+		276B2EA41FF067311AA0CD2F /* ayyatWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CCBBECDAB1D1CE8820287669 /* ayyatWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2B9F195544B271B569E666A1 /* WrappingHStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433695F267C89A89E5E64EA0 /* WrappingHStack.swift */; };
+		2D2B187C35A8C69780A39914 /* VerseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73658D88DFCAFF12CE52CF3 /* VerseCell.swift */; };
+		2F07F4728962D69C4EE1A799 /* bpe_byte_decoder.json in Resources */ = {isa = PBXBuildFile; fileRef = 225D932ADB1FA77B79CA197D /* bpe_byte_decoder.json */; };
+		377887F3D8EBD0E3FD52E5FF /* TarteelEncoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 6D4C273B1C546FBDEA190CE3 /* TarteelEncoder.mlmodelc */; };
+		395231FE583322865924AEB3 /* SharedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC721466AF886D3DE3EF1F8 /* SharedStorage.swift */; };
+		402F71E5E8309D06A585CB2E /* CollectionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE2376C6892CAFEF39D1710 /* CollectionsListView.swift */; };
+		40F3227BFA79D66F353B2F8E /* HifzModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D5BD7C13772AC328B8355E /* HifzModels.swift */; };
+		44366A7F9B5806CC04FAA4D7 /* TarteelDecoder.onnx in Resources */ = {isa = PBXBuildFile; fileRef = DCC9354DACC0EFA4C5574099 /* TarteelDecoder.onnx */; };
+		4524F9A88F7B3BD9CB333209 /* TarteelDecoder.onnx.data in Resources */ = {isa = PBXBuildFile; fileRef = D30086317C17C2403340BB14 /* TarteelDecoder.onnx.data */; };
+		45CF27A58BEC3A0715D41690 /* ReflectionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5339D709712CE9C16B801A89 /* ReflectionSheet.swift */; };
+		46A6032D4766C1A1F6F42538 /* test_encoder.bin in Resources */ = {isa = PBXBuildFile; fileRef = 95A9D5888A039B46C34357AE /* test_encoder.bin */; };
+		4C2F13130D5AD296824F7E97 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F3EC46C60E2E6E0596F416 /* APIClient.swift */; };
+		4CF9F96CD30B46EA59EFB6D8 /* TarteelEncoder.onnx in Resources */ = {isa = PBXBuildFile; fileRef = 9924AA5D485ADF6815BB7136 /* TarteelEncoder.onnx */; };
+		532FFE94F9590547928ED9DF /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259F6CBC172AEB0FBA423B69 /* OnboardingView.swift */; };
+		55C70C8A9CF362283DE4650A /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144B9B6C5FD4F50C23D97F7A /* UserStore.swift */; };
+		592951F3E8816DA0FDE314DC /* HifzStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAAB806611247BEDFED5A04 /* HifzStore.swift */; };
+		5BBC126F55D289B5C986CE65 /* TranslationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88636942B5BE99E390BAC938 /* TranslationPickerView.swift */; };
+		5D99684801D9D7816884909C /* SearchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E389D756969314E1B44847 /* SearchModels.swift */; };
+		5E03491854809A02808E7E8E /* AudioPlayerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53442E67137E775CA0F5C37C /* AudioPlayerBar.swift */; };
+		5E4CE5C9A298DECB1A4CF0CA /* SharedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC721466AF886D3DE3EF1F8 /* SharedStorage.swift */; };
+		5EA9E445BE8A300FDDEC7E22 /* fastconformer-tokens.txt in Resources */ = {isa = PBXBuildFile; fileRef = 28EC6AF1465BE7A04432901C /* fastconformer-tokens.txt */; };
+		60295341CF45CB78EF30AED1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08DE0B87257286DBCA36B3FE /* Assets.xcassets */; };
+		607A988EFDA2C424B8E92F84 /* ChapterInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5F5E1AC96B9CDE76210696 /* ChapterInfoSheet.swift */; };
+		62F8170355FCCD2826384736 /* VocabularyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D61A8B90F20283058D7FFF /* VocabularyStore.swift */; };
+		634BB1A6A16878328975EDF6 /* QuranicWordData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C854A1C76526DF1247D4FD /* QuranicWordData.swift */; };
+		65F907CE8B22F2860F2E0DA5 /* TarteelDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = F9352C145CC8575F3B1A0A51 /* TarteelDecoder.mlmodelc */; };
+		72C26366F357D117798D8CA6 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B4AD8AA18CF3354A2FADDB /* QuizView.swift */; };
+		72F1A1ED91F047E380161E6A /* mel_filters.bin in Resources */ = {isa = PBXBuildFile; fileRef = C64E49A0C623021F0922A996 /* mel_filters.bin */; };
+		7AD8B655D73529EE1E8E968C /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25909A00C0EC63DC5DAFBDDE /* APIConfig.swift */; };
+		7B6DA0413A2296795F4C27A4 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = F939A485435A587E4C803F18 /* WhisperKit */; };
+		7EA8C6CADC4F85446A13C206 /* test_mel.bin in Resources */ = {isa = PBXBuildFile; fileRef = F37FAAE95A1B563ABF87A7A5 /* test_mel.bin */; };
+		7F93E876A5EE62D3352EA177 /* ProgressTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BBCCCEC562860538D6F29A /* ProgressTabView.swift */; };
+		81A6496E340CD3C288DF1983 /* tarteel_vocab.json in Resources */ = {isa = PBXBuildFile; fileRef = 6989DCDA90F7B9D2512DB5C5 /* tarteel_vocab.json */; };
+		830A4A0ECCC7B0F50445770E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1362D1E541CC5C49CD98A8 /* ContentView.swift */; };
+		849E27A20243451DFC65B02B /* ReflectionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2A127F5C64011898BF8857 /* ReflectionsListView.swift */; };
+		88EFBA1B4DF454BBC4B5DD92 /* AudioPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EDD2791FD04F7F8EB80254F /* AudioPlaybackManager.swift */; };
+		890CD3CE55C31688D5EFC532 /* TarteelEncoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = EBCB194ED961C06EF7EB773C /* TarteelEncoder.mlpackage */; };
+		8AE6D034C0F140B596601661 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB43201762BC7DE59B4281CF /* Secrets.swift */; };
+		8B7499B4C3432B358821EAF8 /* Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 555817DD23A8F254AE29DAE7 /* Shimmer.swift */; };
+		91A3190CF8A681858930B65C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60C2F385208C61FD4ACC0B1 /* KeychainHelper.swift */; };
+		92001660252F19632E2D550C /* VerseStudySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6F04ED9E9A78115BFCC684 /* VerseStudySheet.swift */; };
+		938580591D7B19520B39BB8C /* AyyatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A2B5BF826A15C0801828EDC /* AyyatTests.swift */; };
+		968FF1703563F05FD1EFE228 /* ChapterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94845953266F7489AE4B14CB /* ChapterListView.swift */; };
+		9811BB63A3388C505D7463A7 /* LetterBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD04A0CABCC386E12E46CEEC /* LetterBreakdownView.swift */; };
+		98A865F6A3F5C9B1D5801DF8 /* PostModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434E1FDB181709721BAA1F7C /* PostModels.swift */; };
+		9B94A8B76FE4A2BC78D1312F /* QuranStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73437EAC92AB70BC1D0780A8 /* QuranStore.swift */; };
+		9E99799753C3C732C563EE30 /* PronunciationChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D170F7BD7343E0875EA55F /* PronunciationChecker.swift */; };
+		A2A401086136CA72F1F66AA1 /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 285E60340F451985D24E376C /* UserModels.swift */; };
+		A667D167E7B40B55FA6FDB53 /* HifzSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D8A57873168FC0BB04A013 /* HifzSessionView.swift */; };
+		ABF273A79574A18DAC79AB30 /* TafsirModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBCB936328EDE2C360A5502 /* TafsirModels.swift */; };
+		AE46271D8D3D16888033B9E8 /* VerseReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8474BFD32DFD5C5C06125171 /* VerseReaderView.swift */; };
+		AEA5C2B867546CABE70451DD /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62DD2807D4FD524BDCA434D /* TokenManager.swift */; };
+		B0FD01DE324995EB618FE2D0 /* QuranDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC19C2CEA0958437F749271 /* QuranDatabase.swift */; };
+		B253B60B4FE1E67A9F5DE008 /* TarteelModels.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DF16C8FEE42BBB5B17AC1C23 /* TarteelModels.bundle */; };
+		B37B3BD1DDE30D8FBE22CB4B /* DownloadsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56605AE1D51AB2EFED1A2511 /* DownloadsView.swift */; };
+		B3DBBA44947142F29C05641F /* Secrets.example.swift in Sources */ = {isa = PBXBuildFile; fileRef = A522AADEBF89BDAFD2A23E22 /* Secrets.example.swift */; };
+		B43869534036EB9DDCC1CA20 /* Verse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C46A529E58E134286CC614 /* Verse.swift */; };
+		B582BAE18D0DDDE515CA889C /* TarteelDecoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 3AA628028A1FFC69558E66E8 /* TarteelDecoder.mlpackage */; };
+		B7B13B600EBD42A85FA93FA9 /* TranslationResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FF82C4FA1AE0C830E5B76C /* TranslationResource.swift */; };
+		B89AC1062F9BEBE0DC238E55 /* ArabicLetterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2AAD7E9B4886D115039A5A8 /* ArabicLetterData.swift */; };
+		BF399D282DE98538CDE9379D /* FastConformerQuranASR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F3C460FD58D8D3EE287DC /* FastConformerQuranASR.swift */; };
+		C060F5459A1A32833394CCB2 /* DailyAyahCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5D12C19070E2942685013C /* DailyAyahCard.swift */; };
+		C17394DF57FE78810EB0E414 /* HifzTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BC02E4CB09EB8C656C7F7B3 /* HifzTab.swift */; };
+		C5766E4F73757502A6C39637 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515588C3EA4CB2EA09F4D96 /* SettingsManager.swift */; };
+		C8C26DBEC742CF8D93012DC9 /* WordAudioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089F13EAE5CFAF5834BE8ECD /* WordAudioTests.swift */; };
+		C9ADF5740CEEA9DDAA7D79D1 /* AppleSpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE02922932E09E34C834AB4 /* AppleSpeechRecognizer.swift */; };
+		CC542E32E55A755A086BBD83 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B3852E728C8A17028EF636 /* Chapter.swift */; };
+		CDFD64FEAE47A16FC5CC8883 /* test_audio.bin in Resources */ = {isa = PBXBuildFile; fileRef = A07458A40368A2EF9949645F /* test_audio.bin */; };
+		CFDB7AC9994AD4AC7842AF22 /* AudioModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C8C20CA4E720B710CB4E5C /* AudioModels.swift */; };
+		D158A15978A07635BE8F3392 /* TarteelEncoder.onnx.data in Resources */ = {isa = PBXBuildFile; fileRef = 0424006E70E3E88F8AFB2235 /* TarteelEncoder.onnx.data */; };
+		D359EE4B7A4D392F124A49F6 /* ChapterInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB5C0E4B53446C89C513AEF /* ChapterInfo.swift */; };
+		D55A9DE41AE3DB52CA1A694F /* WordAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0626937A181555633DC7C24C /* WordAudioPlayer.swift */; };
+		D835401A3767F81CDD0667AB /* GoalProgressWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C99FD1833DD8EF869CD5716 /* GoalProgressWidget.swift */; };
+		DD9579312A5A0312007F2B23 /* UserAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C74759732A9CC8758D7A4EE /* UserAPIClient.swift */; };
+		DFDB37EA7D3F01C4A1331280 /* Reciter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9C3DDB49CA14E4260CF0B3 /* Reciter.swift */; };
+		E016E613AF6A582C6341B98D /* SubstitutionWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8289FC135DB8225EA4C8B401 /* SubstitutionWordView.swift */; };
+		E184561B27020356B708DE75 /* FormattedHTMLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28DEB625C59CADA91C3BF2EF /* FormattedHTMLView.swift */; };
+		E3AB825E80BA7105D997BE10 /* StreakWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009F1F963B4B758A9A43EA53 /* StreakWidget.swift */; };
+		E82597E6DF9420215CD33A92 /* GoalSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFBF49086529285442C7451 /* GoalSheet.swift */; };
+		E862970676D3191810785E1E /* LogMelFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97AACF82CAF52F2EC06BFC9A /* LogMelFeatures.swift */; };
+		E9554A3E16FDF2236DB1C3FB /* BookmarksListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C05261043F5665B45FAE52 /* BookmarksListView.swift */; };
+		EA5C8CC4794C5B3A637C2D7C /* DailyAyahWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6CA950919FE2D60968519D /* DailyAyahWidget.swift */; };
+		EC8028BAF834932AF22E279A /* AyyatWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8A5E44A145C87CBB4510B8 /* AyyatWidgetsBundle.swift */; };
+		EE22BEA560FA06423B9278C3 /* MilestoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC143091D2D094BF639D874 /* MilestoneView.swift */; };
+		EFD8EF70520CAEA2F8D8F8EF /* InteractiveSubstitutionPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED985ACAC3183F44BDE0471 /* InteractiveSubstitutionPreview.swift */; };
+		F01DED2E5CD8809AC1F0457B /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37961558233A82DB10E893E5 /* SearchView.swift */; };
+		F190ADBDC6FB1877B1D55D2C /* VocabularyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F05FAF62D5C114BC34BFA2B /* VocabularyModels.swift */; };
+		F2C258765F5758D86B30DEFD /* quran.db in Resources */ = {isa = PBXBuildFile; fileRef = 2C6E62FA56FDA581209590D3 /* quran.db */; };
+		F72D54F03C87FEF79B7A707E /* TarteelWhisperKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A864BB171B5E14B7DC97AE38 /* TarteelWhisperKit.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		502D38688D0B1E46739D47A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37551D81A3942D313E68625B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3058AE36667CEE90A2CD7931;
+			remoteInfo = ayyatWidgets;
+		};
+		A80BEBB2ACB35734EB8067AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37551D81A3942D313E68625B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 31A6D29340D6DCCB6CDBCFE1;
+			remoteInfo = ayyat;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		183B26A3CB01F80CD959DB1D /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				276B2EA41FF067311AA0CD2F /* ayyatWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		009F1F963B4B758A9A43EA53 /* StreakWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakWidget.swift; sourceTree = "<group>"; };
+		02212BD51B0D46DEB61C6E56 /* ayyatWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ayyatWidgets.entitlements; sourceTree = "<group>"; };
+		0424006E70E3E88F8AFB2235 /* TarteelEncoder.onnx.data */ = {isa = PBXFileReference; path = TarteelEncoder.onnx.data; sourceTree = "<group>"; };
+		0626937A181555633DC7C24C /* WordAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioPlayer.swift; sourceTree = "<group>"; };
+		07D170F7BD7343E0875EA55F /* PronunciationChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationChecker.swift; sourceTree = "<group>"; };
+		089F13EAE5CFAF5834BE8ECD /* WordAudioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioTests.swift; sourceTree = "<group>"; };
+		08DE0B87257286DBCA36B3FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0DF1657F6783A7DC71C5581E /* fastconformer-tokenizer.model */ = {isa = PBXFileReference; path = "fastconformer-tokenizer.model"; sourceTree = "<group>"; };
+		0EBB007AF45076A3921544DA /* DailyWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWordView.swift; sourceTree = "<group>"; };
+		0F6CA950919FE2D60968519D /* DailyAyahWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyAyahWidget.swift; sourceTree = "<group>"; };
+		144B9B6C5FD4F50C23D97F7A /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
+		1BBCB936328EDE2C360A5502 /* TafsirModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TafsirModels.swift; sourceTree = "<group>"; };
+		1EE02922932E09E34C834AB4 /* AppleSpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSpeechRecognizer.swift; sourceTree = "<group>"; };
+		225D932ADB1FA77B79CA197D /* bpe_byte_decoder.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bpe_byte_decoder.json; sourceTree = "<group>"; };
+		25909A00C0EC63DC5DAFBDDE /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
+		259F6CBC172AEB0FBA423B69 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		285E60340F451985D24E376C /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
+		28DEB625C59CADA91C3BF2EF /* FormattedHTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattedHTMLView.swift; sourceTree = "<group>"; };
+		28EC6AF1465BE7A04432901C /* fastconformer-tokens.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "fastconformer-tokens.txt"; sourceTree = "<group>"; };
+		2C6E62FA56FDA581209590D3 /* quran.db */ = {isa = PBXFileReference; path = quran.db; sourceTree = "<group>"; };
+		31F3EC46C60E2E6E0596F416 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		37961558233A82DB10E893E5 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		38B9CBD4F0765130D601B6E8 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		39C05261043F5665B45FAE52 /* BookmarksListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksListView.swift; sourceTree = "<group>"; };
+		3AA628028A1FFC69558E66E8 /* TarteelDecoder.mlpackage */ = {isa = PBXFileReference; path = TarteelDecoder.mlpackage; sourceTree = "<group>"; };
+		3C99FD1833DD8EF869CD5716 /* GoalProgressWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalProgressWidget.swift; sourceTree = "<group>"; };
+		3DC19C2CEA0958437F749271 /* QuranDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranDatabase.swift; sourceTree = "<group>"; };
+		40FF82C4FA1AE0C830E5B76C /* TranslationResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationResource.swift; sourceTree = "<group>"; };
+		41B4AD8AA18CF3354A2FADDB /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
+		4235EF4A45B697DED320C284 /* SubstitutionControlsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionControlsSheet.swift; sourceTree = "<group>"; };
+		4316EC554958CDF43FF892B8 /* ayyat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ayyat.entitlements; sourceTree = "<group>"; };
+		433695F267C89A89E5E64EA0 /* WrappingHStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappingHStack.swift; sourceTree = "<group>"; };
+		434E1FDB181709721BAA1F7C /* PostModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModels.swift; sourceTree = "<group>"; };
+		44C854A1C76526DF1247D4FD /* QuranicWordData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranicWordData.swift; sourceTree = "<group>"; };
+		44FE32299A63A4913BA052C8 /* WordAudioCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordAudioCache.swift; sourceTree = "<group>"; };
+		4515588C3EA4CB2EA09F4D96 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		4A2B5BF826A15C0801828EDC /* AyyatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyyatTests.swift; sourceTree = "<group>"; };
+		5214807AE422E97C00C05224 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		5339D709712CE9C16B801A89 /* ReflectionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionSheet.swift; sourceTree = "<group>"; };
+		53442E67137E775CA0F5C37C /* AudioPlayerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerBar.swift; sourceTree = "<group>"; };
+		555817DD23A8F254AE29DAE7 /* Shimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shimmer.swift; sourceTree = "<group>"; };
+		56605AE1D51AB2EFED1A2511 /* DownloadsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsView.swift; sourceTree = "<group>"; };
+		56B3852E728C8A17028EF636 /* Chapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
+		5E1362D1E541CC5C49CD98A8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		5E8A5E44A145C87CBB4510B8 /* AyyatWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyyatWidgetsBundle.swift; sourceTree = "<group>"; };
+		6989DCDA90F7B9D2512DB5C5 /* tarteel_vocab.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tarteel_vocab.json; sourceTree = "<group>"; };
+		6D4C273B1C546FBDEA190CE3 /* TarteelEncoder.mlmodelc */ = {isa = PBXFileReference; path = TarteelEncoder.mlmodelc; sourceTree = "<group>"; };
+		70C8C20CA4E720B710CB4E5C /* AudioModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioModels.swift; sourceTree = "<group>"; };
+		718F3C460FD58D8D3EE287DC /* FastConformerQuranASR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastConformerQuranASR.swift; sourceTree = "<group>"; };
+		73437EAC92AB70BC1D0780A8 /* QuranStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuranStore.swift; sourceTree = "<group>"; };
+		74D61A8B90F20283058D7FFF /* VocabularyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyStore.swift; sourceTree = "<group>"; };
+		7BC02E4CB09EB8C656C7F7B3 /* HifzTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzTab.swift; sourceTree = "<group>"; };
+		7C2A127F5C64011898BF8857 /* ReflectionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionsListView.swift; sourceTree = "<group>"; };
+		7CFB5E1157119751F15AB39B /* ayyatTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ayyatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EDD2791FD04F7F8EB80254F /* AudioPlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackManager.swift; sourceTree = "<group>"; };
+		81C46A529E58E134286CC614 /* Verse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verse.swift; sourceTree = "<group>"; };
+		8289FC135DB8225EA4C8B401 /* SubstitutionWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstitutionWordView.swift; sourceTree = "<group>"; };
+		841FDD2003C3EAEFE4C46F00 /* Badges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Badges.swift; sourceTree = "<group>"; };
+		8474BFD32DFD5C5C06125171 /* VerseReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseReaderView.swift; sourceTree = "<group>"; };
+		88636942B5BE99E390BAC938 /* TranslationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationPickerView.swift; sourceTree = "<group>"; };
+		8BC143091D2D094BF639D874 /* MilestoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneView.swift; sourceTree = "<group>"; };
+		8CAAB806611247BEDFED5A04 /* HifzStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzStore.swift; sourceTree = "<group>"; };
+		921BD177C9A7AA0820A7D827 /* OIDCAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OIDCAuthService.swift; sourceTree = "<group>"; };
+		94845953266F7489AE4B14CB /* ChapterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListView.swift; sourceTree = "<group>"; };
+		95A9D5888A039B46C34357AE /* test_encoder.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = test_encoder.bin; sourceTree = "<group>"; };
+		97AACF82CAF52F2EC06BFC9A /* LogMelFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogMelFeatures.swift; sourceTree = "<group>"; };
+		9924AA5D485ADF6815BB7136 /* TarteelEncoder.onnx */ = {isa = PBXFileReference; path = TarteelEncoder.onnx; sourceTree = "<group>"; };
+		9B5D12C19070E2942685013C /* DailyAyahCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyAyahCard.swift; sourceTree = "<group>"; };
+		9C74759732A9CC8758D7A4EE /* UserAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPIClient.swift; sourceTree = "<group>"; };
+		9F05FAF62D5C114BC34BFA2B /* VocabularyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabularyModels.swift; sourceTree = "<group>"; };
+		A07458A40368A2EF9949645F /* test_audio.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = test_audio.bin; sourceTree = "<group>"; };
+		A522AADEBF89BDAFD2A23E22 /* Secrets.example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.example.swift; sourceTree = "<group>"; };
+		A864BB171B5E14B7DC97AE38 /* TarteelWhisperKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TarteelWhisperKit.swift; sourceTree = "<group>"; };
+		A915FC593C03FAFB2F5C39A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		ABFBF49086529285442C7451 /* GoalSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSheet.swift; sourceTree = "<group>"; };
+		AC5F5E1AC96B9CDE76210696 /* ChapterInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterInfoSheet.swift; sourceTree = "<group>"; };
+		B0DCDDBAF41A90A7F82F6AF4 /* FastConformerQuran.mlpackage */ = {isa = PBXFileReference; path = FastConformerQuran.mlpackage; sourceTree = "<group>"; };
+		B5D5BD7C13772AC328B8355E /* HifzModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzModels.swift; sourceTree = "<group>"; };
+		BB6F04ED9E9A78115BFCC684 /* VerseStudySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseStudySheet.swift; sourceTree = "<group>"; };
+		BCF9463FE4F977408A12EE2B /* ayyat.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ayyat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDE2376C6892CAFEF39D1710 /* CollectionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionsListView.swift; sourceTree = "<group>"; };
+		C64E49A0C623021F0922A996 /* mel_filters.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = mel_filters.bin; sourceTree = "<group>"; };
+		C81C7F4483ADFDBAD6F1A511 /* AyyatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyyatApp.swift; sourceTree = "<group>"; };
+		C943D365666F7B33DFC52141 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		CB43201762BC7DE59B4281CF /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		CBB5C0E4B53446C89C513AEF /* ChapterInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterInfo.swift; sourceTree = "<group>"; };
+		CCBBECDAB1D1CE8820287669 /* ayyatWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ayyatWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D30086317C17C2403340BB14 /* TarteelDecoder.onnx.data */ = {isa = PBXFileReference; path = TarteelDecoder.onnx.data; sourceTree = "<group>"; };
+		D3B5388D12DED177CE834928 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D62DD2807D4FD524BDCA434D /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		D6BBCCCEC562860538D6F29A /* ProgressTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTabView.swift; sourceTree = "<group>"; };
+		DA97FDAA65DB174B8DBB36BC /* PronunciationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationButton.swift; sourceTree = "<group>"; };
+		DCC9354DACC0EFA4C5574099 /* TarteelDecoder.onnx */ = {isa = PBXFileReference; path = TarteelDecoder.onnx; sourceTree = "<group>"; };
+		DD9C3DDB49CA14E4260CF0B3 /* Reciter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reciter.swift; sourceTree = "<group>"; };
+		DED985ACAC3183F44BDE0471 /* InteractiveSubstitutionPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveSubstitutionPreview.swift; sourceTree = "<group>"; };
+		DF16C8FEE42BBB5B17AC1C23 /* TarteelModels.bundle */ = {isa = PBXFileReference; lastKnownFileType = wrapper.cfbundle; path = TarteelModels.bundle; sourceTree = "<group>"; };
+		E4E389D756969314E1B44847 /* SearchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModels.swift; sourceTree = "<group>"; };
+		E60C2F385208C61FD4ACC0B1 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		E73658D88DFCAFF12CE52CF3 /* VerseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseCell.swift; sourceTree = "<group>"; };
+		EBCB194ED961C06EF7EB773C /* TarteelEncoder.mlpackage */ = {isa = PBXFileReference; path = TarteelEncoder.mlpackage; sourceTree = "<group>"; };
+		EEC721466AF886D3DE3EF1F8 /* SharedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStorage.swift; sourceTree = "<group>"; };
+		F2AAD7E9B4886D115039A5A8 /* ArabicLetterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArabicLetterData.swift; sourceTree = "<group>"; };
+		F37FAAE95A1B563ABF87A7A5 /* test_mel.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = test_mel.bin; sourceTree = "<group>"; };
+		F8D8A57873168FC0BB04A013 /* HifzSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HifzSessionView.swift; sourceTree = "<group>"; };
+		F9352C145CC8575F3B1A0A51 /* TarteelDecoder.mlmodelc */ = {isa = PBXFileReference; path = TarteelDecoder.mlmodelc; sourceTree = "<group>"; };
+		FD04A0CABCC386E12E46CEEC /* LetterBreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterBreakdownView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E2C9C73A05E0E43FA0FD4A4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C6AA36651124DE81ECF311E /* GRDB in Frameworks */,
+				7B6DA0413A2296795F4C27A4 /* WhisperKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00E4A42F721E5D60C5E16447 /* ayyat */ = {
+			isa = PBXGroup;
+			children = (
+				1CAB35EF915B37164E4F593F /* App */,
+				5B362E42E23CF7EDA42AF601 /* Features */,
+				50949D49E5EBAD2A9B700936 /* Models */,
+				C33103CDAC104F0BDE616BE8 /* Resources */,
+				45952998AB236898B700D753 /* Services */,
+				6440F25985B2DEE5B564B0DA /* Views */,
+			);
+			path = ayyat;
+			sourceTree = "<group>";
+		};
+		0C9290D2F93710CA6B7F428A /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				28DEB625C59CADA91C3BF2EF /* FormattedHTMLView.swift */,
+				38B9CBD4F0765130D601B6E8 /* Haptics.swift */,
+				FD04A0CABCC386E12E46CEEC /* LetterBreakdownView.swift */,
+				8BC143091D2D094BF639D874 /* MilestoneView.swift */,
+				DA97FDAA65DB174B8DBB36BC /* PronunciationButton.swift */,
+				555817DD23A8F254AE29DAE7 /* Shimmer.swift */,
+				433695F267C89A89E5E64EA0 /* WrappingHStack.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		1275AC5B8E3AF76E6B6C78F8 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				56605AE1D51AB2EFED1A2511 /* DownloadsView.swift */,
+				ABFBF49086529285442C7451 /* GoalSheet.swift */,
+				88636942B5BE99E390BAC938 /* TranslationPickerView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		1CAB35EF915B37164E4F593F /* App */ = {
+			isa = PBXGroup;
+			children = (
+				4316EC554958CDF43FF892B8 /* ayyat.entitlements */,
+				C81C7F4483ADFDBAD6F1A511 /* AyyatApp.swift */,
+				5E1362D1E541CC5C49CD98A8 /* ContentView.swift */,
+				A915FC593C03FAFB2F5C39A4 /* Info.plist */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		3FCFAC4531B19EC83C50DACD /* QuranReader */ = {
+			isa = PBXGroup;
+			children = (
+				53442E67137E775CA0F5C37C /* AudioPlayerBar.swift */,
+				39C05261043F5665B45FAE52 /* BookmarksListView.swift */,
+				AC5F5E1AC96B9CDE76210696 /* ChapterInfoSheet.swift */,
+				94845953266F7489AE4B14CB /* ChapterListView.swift */,
+				BDE2376C6892CAFEF39D1710 /* CollectionsListView.swift */,
+				9B5D12C19070E2942685013C /* DailyAyahCard.swift */,
+				5339D709712CE9C16B801A89 /* ReflectionSheet.swift */,
+				7C2A127F5C64011898BF8857 /* ReflectionsListView.swift */,
+				37961558233A82DB10E893E5 /* SearchView.swift */,
+				4235EF4A45B697DED320C284 /* SubstitutionControlsSheet.swift */,
+				8289FC135DB8225EA4C8B401 /* SubstitutionWordView.swift */,
+				E73658D88DFCAFF12CE52CF3 /* VerseCell.swift */,
+				8474BFD32DFD5C5C06125171 /* VerseReaderView.swift */,
+				BB6F04ED9E9A78115BFCC684 /* VerseStudySheet.swift */,
+			);
+			path = QuranReader;
+			sourceTree = "<group>";
+		};
+		44C49B9DCCD4320E0FE9A8F1 /* ayyatWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				02212BD51B0D46DEB61C6E56 /* ayyatWidgets.entitlements */,
+				5E8A5E44A145C87CBB4510B8 /* AyyatWidgetsBundle.swift */,
+				0F6CA950919FE2D60968519D /* DailyAyahWidget.swift */,
+				3C99FD1833DD8EF869CD5716 /* GoalProgressWidget.swift */,
+				D3B5388D12DED177CE834928 /* Info.plist */,
+				EEC721466AF886D3DE3EF1F8 /* SharedStorage.swift */,
+				009F1F963B4B758A9A43EA53 /* StreakWidget.swift */,
+			);
+			path = ayyatWidgets;
+			sourceTree = "<group>";
+		};
+		45952998AB236898B700D753 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				9135E37F901A3DBEB1F2EC89 /* API */,
+				CD74FE99F71D111663E84FD5 /* Audio */,
+				CCBFB75D10BD02F14E9679A2 /* Persistence */,
+				612CA45AE33913208614E206 /* Storage */,
+				F2AAD7E9B4886D115039A5A8 /* ArabicLetterData.swift */,
+				5214807AE422E97C00C05224 /* Logging.swift */,
+				44C854A1C76526DF1247D4FD /* QuranicWordData.swift */,
+				4515588C3EA4CB2EA09F4D96 /* SettingsManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		479D807114D3A29AA47CE59A /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		50949D49E5EBAD2A9B700936 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				70C8C20CA4E720B710CB4E5C /* AudioModels.swift */,
+				56B3852E728C8A17028EF636 /* Chapter.swift */,
+				CBB5C0E4B53446C89C513AEF /* ChapterInfo.swift */,
+				B5D5BD7C13772AC328B8355E /* HifzModels.swift */,
+				434E1FDB181709721BAA1F7C /* PostModels.swift */,
+				DD9C3DDB49CA14E4260CF0B3 /* Reciter.swift */,
+				E4E389D756969314E1B44847 /* SearchModels.swift */,
+				1BBCB936328EDE2C360A5502 /* TafsirModels.swift */,
+				40FF82C4FA1AE0C830E5B76C /* TranslationResource.swift */,
+				285E60340F451985D24E376C /* UserModels.swift */,
+				81C46A529E58E134286CC614 /* Verse.swift */,
+				9F05FAF62D5C114BC34BFA2B /* VocabularyModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		55AA2A874FDDDD82F9DA7087 /* ayyatTests */ = {
+			isa = PBXGroup;
+			children = (
+				4A2B5BF826A15C0801828EDC /* AyyatTests.swift */,
+				089F13EAE5CFAF5834BE8ECD /* WordAudioTests.swift */,
+			);
+			path = ayyatTests;
+			sourceTree = "<group>";
+		};
+		5B362E42E23CF7EDA42AF601 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				479D807114D3A29AA47CE59A /* Auth */,
+				E2D722392470DD7E8D202037 /* Hifz */,
+				B961A5ED99EACBD1E1F9CB61 /* Onboarding */,
+				6F3B35DAE4AE2B4755EC7446 /* Progress */,
+				3FCFAC4531B19EC83C50DACD /* QuranReader */,
+				1275AC5B8E3AF76E6B6C78F8 /* Settings */,
+				9EC0B2919B0A074387688443 /* Vocabulary */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		612CA45AE33913208614E206 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				8CAAB806611247BEDFED5A04 /* HifzStore.swift */,
+				3DC19C2CEA0958437F749271 /* QuranDatabase.swift */,
+				144B9B6C5FD4F50C23D97F7A /* UserStore.swift */,
+				74D61A8B90F20283058D7FFF /* VocabularyStore.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		6440F25985B2DEE5B564B0DA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0C9290D2F93710CA6B7F428A /* Components */,
+				82C036422CD125F472B593F8 /* Styles */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6F3B35DAE4AE2B4755EC7446 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				841FDD2003C3EAEFE4C46F00 /* Badges.swift */,
+				D6BBCCCEC562860538D6F29A /* ProgressTabView.swift */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		82C036422CD125F472B593F8 /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				C943D365666F7B33DFC52141 /* Theme.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
+		9135E37F901A3DBEB1F2EC89 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				31F3EC46C60E2E6E0596F416 /* APIClient.swift */,
+				25909A00C0EC63DC5DAFBDDE /* APIConfig.swift */,
+				E60C2F385208C61FD4ACC0B1 /* KeychainHelper.swift */,
+				921BD177C9A7AA0820A7D827 /* OIDCAuthService.swift */,
+				73437EAC92AB70BC1D0780A8 /* QuranStore.swift */,
+				A522AADEBF89BDAFD2A23E22 /* Secrets.example.swift */,
+				CB43201762BC7DE59B4281CF /* Secrets.swift */,
+				D62DD2807D4FD524BDCA434D /* TokenManager.swift */,
+				9C74759732A9CC8758D7A4EE /* UserAPIClient.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		9D81EBDF2A151E16A3B4EEFC = {
+			isa = PBXGroup;
+			children = (
+				00E4A42F721E5D60C5E16447 /* ayyat */,
+				55AA2A874FDDDD82F9DA7087 /* ayyatTests */,
+				44C49B9DCCD4320E0FE9A8F1 /* ayyatWidgets */,
+				F0907F6A2BBD2B20F903BA29 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9EC0B2919B0A074387688443 /* Vocabulary */ = {
+			isa = PBXGroup;
+			children = (
+				0EBB007AF45076A3921544DA /* DailyWordView.swift */,
+				41B4AD8AA18CF3354A2FADDB /* QuizView.swift */,
+			);
+			path = Vocabulary;
+			sourceTree = "<group>";
+		};
+		B961A5ED99EACBD1E1F9CB61 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				DED985ACAC3183F44BDE0471 /* InteractiveSubstitutionPreview.swift */,
+				259F6CBC172AEB0FBA423B69 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		C33103CDAC104F0BDE616BE8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E5F0B36C073828BB40D0F21C /* Data */,
+				08DE0B87257286DBCA36B3FE /* Assets.xcassets */,
+				DF16C8FEE42BBB5B17AC1C23 /* TarteelModels.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CCBFB75D10BD02F14E9679A2 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		CD74FE99F71D111663E84FD5 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				1EE02922932E09E34C834AB4 /* AppleSpeechRecognizer.swift */,
+				7EDD2791FD04F7F8EB80254F /* AudioPlaybackManager.swift */,
+				718F3C460FD58D8D3EE287DC /* FastConformerQuranASR.swift */,
+				97AACF82CAF52F2EC06BFC9A /* LogMelFeatures.swift */,
+				07D170F7BD7343E0875EA55F /* PronunciationChecker.swift */,
+				A864BB171B5E14B7DC97AE38 /* TarteelWhisperKit.swift */,
+				44FE32299A63A4913BA052C8 /* WordAudioCache.swift */,
+				0626937A181555633DC7C24C /* WordAudioPlayer.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		E2D722392470DD7E8D202037 /* Hifz */ = {
+			isa = PBXGroup;
+			children = (
+				F8D8A57873168FC0BB04A013 /* HifzSessionView.swift */,
+				7BC02E4CB09EB8C656C7F7B3 /* HifzTab.swift */,
+			);
+			path = Hifz;
+			sourceTree = "<group>";
+		};
+		E5F0B36C073828BB40D0F21C /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				225D932ADB1FA77B79CA197D /* bpe_byte_decoder.json */,
+				0DF1657F6783A7DC71C5581E /* fastconformer-tokenizer.model */,
+				28EC6AF1465BE7A04432901C /* fastconformer-tokens.txt */,
+				B0DCDDBAF41A90A7F82F6AF4 /* FastConformerQuran.mlpackage */,
+				C64E49A0C623021F0922A996 /* mel_filters.bin */,
+				2C6E62FA56FDA581209590D3 /* quran.db */,
+				6989DCDA90F7B9D2512DB5C5 /* tarteel_vocab.json */,
+				F9352C145CC8575F3B1A0A51 /* TarteelDecoder.mlmodelc */,
+				3AA628028A1FFC69558E66E8 /* TarteelDecoder.mlpackage */,
+				DCC9354DACC0EFA4C5574099 /* TarteelDecoder.onnx */,
+				D30086317C17C2403340BB14 /* TarteelDecoder.onnx.data */,
+				6D4C273B1C546FBDEA190CE3 /* TarteelEncoder.mlmodelc */,
+				EBCB194ED961C06EF7EB773C /* TarteelEncoder.mlpackage */,
+				9924AA5D485ADF6815BB7136 /* TarteelEncoder.onnx */,
+				0424006E70E3E88F8AFB2235 /* TarteelEncoder.onnx.data */,
+				A07458A40368A2EF9949645F /* test_audio.bin */,
+				95A9D5888A039B46C34357AE /* test_encoder.bin */,
+				F37FAAE95A1B563ABF87A7A5 /* test_mel.bin */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		F0907F6A2BBD2B20F903BA29 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BCF9463FE4F977408A12EE2B /* ayyat.app */,
+				7CFB5E1157119751F15AB39B /* ayyatTests.xctest */,
+				CCBBECDAB1D1CE8820287669 /* ayyatWidgets.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3058AE36667CEE90A2CD7931 /* ayyatWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2B472D6377496E7BD6925B7 /* Build configuration list for PBXNativeTarget "ayyatWidgets" */;
+			buildPhases = (
+				D551A5FE28C82B643CFA5D67 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ayyatWidgets;
+			packageProductDependencies = (
+			);
+			productName = ayyatWidgets;
+			productReference = CCBBECDAB1D1CE8820287669 /* ayyatWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		31A6D29340D6DCCB6CDBCFE1 /* ayyat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD9A28A72FA6AAADC7A258D0 /* Build configuration list for PBXNativeTarget "ayyat" */;
+			buildPhases = (
+				16840E8ED7B34122CFFF19CF /* Sources */,
+				925F7B5B0867BF287C154D63 /* Resources */,
+				E2C9C73A05E0E43FA0FD4A4C /* Frameworks */,
+				183B26A3CB01F80CD959DB1D /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				240D39B15F74C8C8756382F7 /* PBXTargetDependency */,
+			);
+			name = ayyat;
+			packageProductDependencies = (
+				031489194D2DE74B0AB333C1 /* GRDB */,
+				F939A485435A587E4C803F18 /* WhisperKit */,
+			);
+			productName = ayyat;
+			productReference = BCF9463FE4F977408A12EE2B /* ayyat.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BE5710C5DDD5681D917A33E4 /* ayyatTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9B681394F8FB2E11713DE73A /* Build configuration list for PBXNativeTarget "ayyatTests" */;
+			buildPhases = (
+				F349FAEE8DDBC686DB505090 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9096DD2A07B196B89C7A6216 /* PBXTargetDependency */,
+			);
+			name = ayyatTests;
+			packageProductDependencies = (
+			);
+			productName = ayyatTests;
+			productReference = 7CFB5E1157119751F15AB39B /* ayyatTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		37551D81A3942D313E68625B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					3058AE36667CEE90A2CD7931 = {
+						DevelopmentTeam = X6EHA8FBWH;
+						ProvisioningStyle = Automatic;
+					};
+					31A6D29340D6DCCB6CDBCFE1 = {
+						DevelopmentTeam = X6EHA8FBWH;
+						ProvisioningStyle = Automatic;
+					};
+					BE5710C5DDD5681D917A33E4 = {
+						DevelopmentTeam = X6EHA8FBWH;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 11B1633062AA06FE32C00CDC /* Build configuration list for PBXProject "ayyat" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9D81EBDF2A151E16A3B4EEFC;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A4C9F7FC964381E69C75D8B5 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				19CCC08873295CACAE53E955 /* XCRemoteSwiftPackageReference "WhisperKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F0907F6A2BBD2B20F903BA29 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				31A6D29340D6DCCB6CDBCFE1 /* ayyat */,
+				BE5710C5DDD5681D917A33E4 /* ayyatTests */,
+				3058AE36667CEE90A2CD7931 /* ayyatWidgets */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		925F7B5B0867BF287C154D63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60295341CF45CB78EF30AED1 /* Assets.xcassets in Resources */,
+				65F907CE8B22F2860F2E0DA5 /* TarteelDecoder.mlmodelc in Resources */,
+				44366A7F9B5806CC04FAA4D7 /* TarteelDecoder.onnx in Resources */,
+				4524F9A88F7B3BD9CB333209 /* TarteelDecoder.onnx.data in Resources */,
+				377887F3D8EBD0E3FD52E5FF /* TarteelEncoder.mlmodelc in Resources */,
+				4CF9F96CD30B46EA59EFB6D8 /* TarteelEncoder.onnx in Resources */,
+				D158A15978A07635BE8F3392 /* TarteelEncoder.onnx.data in Resources */,
+				B253B60B4FE1E67A9F5DE008 /* TarteelModels.bundle in Resources */,
+				2F07F4728962D69C4EE1A799 /* bpe_byte_decoder.json in Resources */,
+				17C0E5895CB5B5F4D634A08E /* fastconformer-tokenizer.model in Resources */,
+				5EA9E445BE8A300FDDEC7E22 /* fastconformer-tokens.txt in Resources */,
+				72F1A1ED91F047E380161E6A /* mel_filters.bin in Resources */,
+				F2C258765F5758D86B30DEFD /* quran.db in Resources */,
+				81A6496E340CD3C288DF1983 /* tarteel_vocab.json in Resources */,
+				CDFD64FEAE47A16FC5CC8883 /* test_audio.bin in Resources */,
+				46A6032D4766C1A1F6F42538 /* test_encoder.bin in Resources */,
+				7EA8C6CADC4F85446A13C206 /* test_mel.bin in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		16840E8ED7B34122CFFF19CF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C2F13130D5AD296824F7E97 /* APIClient.swift in Sources */,
+				7AD8B655D73529EE1E8E968C /* APIConfig.swift in Sources */,
+				C9ADF5740CEEA9DDAA7D79D1 /* AppleSpeechRecognizer.swift in Sources */,
+				B89AC1062F9BEBE0DC238E55 /* ArabicLetterData.swift in Sources */,
+				CFDB7AC9994AD4AC7842AF22 /* AudioModels.swift in Sources */,
+				88EFBA1B4DF454BBC4B5DD92 /* AudioPlaybackManager.swift in Sources */,
+				5E03491854809A02808E7E8E /* AudioPlayerBar.swift in Sources */,
+				1F020057DF665F87BEA81FBA /* AyyatApp.swift in Sources */,
+				0B92A1C476AD1163675EB25C /* Badges.swift in Sources */,
+				E9554A3E16FDF2236DB1C3FB /* BookmarksListView.swift in Sources */,
+				CC542E32E55A755A086BBD83 /* Chapter.swift in Sources */,
+				D359EE4B7A4D392F124A49F6 /* ChapterInfo.swift in Sources */,
+				607A988EFDA2C424B8E92F84 /* ChapterInfoSheet.swift in Sources */,
+				968FF1703563F05FD1EFE228 /* ChapterListView.swift in Sources */,
+				402F71E5E8309D06A585CB2E /* CollectionsListView.swift in Sources */,
+				830A4A0ECCC7B0F50445770E /* ContentView.swift in Sources */,
+				C060F5459A1A32833394CCB2 /* DailyAyahCard.swift in Sources */,
+				12CDA4BA1BB2DB04EB93445F /* DailyWordView.swift in Sources */,
+				B37B3BD1DDE30D8FBE22CB4B /* DownloadsView.swift in Sources */,
+				105A0AE3D7BD45CDAE10BF19 /* FastConformerQuran.mlpackage in Sources */,
+				BF399D282DE98538CDE9379D /* FastConformerQuranASR.swift in Sources */,
+				E184561B27020356B708DE75 /* FormattedHTMLView.swift in Sources */,
+				E82597E6DF9420215CD33A92 /* GoalSheet.swift in Sources */,
+				25EB99B99151E9E85C820252 /* Haptics.swift in Sources */,
+				40F3227BFA79D66F353B2F8E /* HifzModels.swift in Sources */,
+				A667D167E7B40B55FA6FDB53 /* HifzSessionView.swift in Sources */,
+				592951F3E8816DA0FDE314DC /* HifzStore.swift in Sources */,
+				C17394DF57FE78810EB0E414 /* HifzTab.swift in Sources */,
+				EFD8EF70520CAEA2F8D8F8EF /* InteractiveSubstitutionPreview.swift in Sources */,
+				91A3190CF8A681858930B65C /* KeychainHelper.swift in Sources */,
+				9811BB63A3388C505D7463A7 /* LetterBreakdownView.swift in Sources */,
+				E862970676D3191810785E1E /* LogMelFeatures.swift in Sources */,
+				1F0BAA2AD6B27318BFF7CEBE /* Logging.swift in Sources */,
+				EE22BEA560FA06423B9278C3 /* MilestoneView.swift in Sources */,
+				06D26AC5E2D8DB24F24F4D3C /* OIDCAuthService.swift in Sources */,
+				532FFE94F9590547928ED9DF /* OnboardingView.swift in Sources */,
+				98A865F6A3F5C9B1D5801DF8 /* PostModels.swift in Sources */,
+				7F93E876A5EE62D3352EA177 /* ProgressTabView.swift in Sources */,
+				0572EF2A7246814E57D04B05 /* PronunciationButton.swift in Sources */,
+				9E99799753C3C732C563EE30 /* PronunciationChecker.swift in Sources */,
+				72C26366F357D117798D8CA6 /* QuizView.swift in Sources */,
+				B0FD01DE324995EB618FE2D0 /* QuranDatabase.swift in Sources */,
+				9B94A8B76FE4A2BC78D1312F /* QuranStore.swift in Sources */,
+				634BB1A6A16878328975EDF6 /* QuranicWordData.swift in Sources */,
+				DFDB37EA7D3F01C4A1331280 /* Reciter.swift in Sources */,
+				45CF27A58BEC3A0715D41690 /* ReflectionSheet.swift in Sources */,
+				849E27A20243451DFC65B02B /* ReflectionsListView.swift in Sources */,
+				5D99684801D9D7816884909C /* SearchModels.swift in Sources */,
+				F01DED2E5CD8809AC1F0457B /* SearchView.swift in Sources */,
+				B3DBBA44947142F29C05641F /* Secrets.example.swift in Sources */,
+				8AE6D034C0F140B596601661 /* Secrets.swift in Sources */,
+				C5766E4F73757502A6C39637 /* SettingsManager.swift in Sources */,
+				395231FE583322865924AEB3 /* SharedStorage.swift in Sources */,
+				8B7499B4C3432B358821EAF8 /* Shimmer.swift in Sources */,
+				01872ED9860E2E256604EB84 /* SubstitutionControlsSheet.swift in Sources */,
+				E016E613AF6A582C6341B98D /* SubstitutionWordView.swift in Sources */,
+				ABF273A79574A18DAC79AB30 /* TafsirModels.swift in Sources */,
+				B582BAE18D0DDDE515CA889C /* TarteelDecoder.mlpackage in Sources */,
+				890CD3CE55C31688D5EFC532 /* TarteelEncoder.mlpackage in Sources */,
+				F72D54F03C87FEF79B7A707E /* TarteelWhisperKit.swift in Sources */,
+				1A80B9905AE5237A6C458171 /* Theme.swift in Sources */,
+				AEA5C2B867546CABE70451DD /* TokenManager.swift in Sources */,
+				5BBC126F55D289B5C986CE65 /* TranslationPickerView.swift in Sources */,
+				B7B13B600EBD42A85FA93FA9 /* TranslationResource.swift in Sources */,
+				DD9579312A5A0312007F2B23 /* UserAPIClient.swift in Sources */,
+				A2A401086136CA72F1F66AA1 /* UserModels.swift in Sources */,
+				55C70C8A9CF362283DE4650A /* UserStore.swift in Sources */,
+				B43869534036EB9DDCC1CA20 /* Verse.swift in Sources */,
+				2D2B187C35A8C69780A39914 /* VerseCell.swift in Sources */,
+				AE46271D8D3D16888033B9E8 /* VerseReaderView.swift in Sources */,
+				92001660252F19632E2D550C /* VerseStudySheet.swift in Sources */,
+				F190ADBDC6FB1877B1D55D2C /* VocabularyModels.swift in Sources */,
+				62F8170355FCCD2826384736 /* VocabularyStore.swift in Sources */,
+				1FA5DC7841BF27AE98AD11E1 /* WordAudioCache.swift in Sources */,
+				D55A9DE41AE3DB52CA1A694F /* WordAudioPlayer.swift in Sources */,
+				2B9F195544B271B569E666A1 /* WrappingHStack.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D551A5FE28C82B643CFA5D67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC8028BAF834932AF22E279A /* AyyatWidgetsBundle.swift in Sources */,
+				EA5C8CC4794C5B3A637C2D7C /* DailyAyahWidget.swift in Sources */,
+				D835401A3767F81CDD0667AB /* GoalProgressWidget.swift in Sources */,
+				5E4CE5C9A298DECB1A4CF0CA /* SharedStorage.swift in Sources */,
+				E3AB825E80BA7105D997BE10 /* StreakWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F349FAEE8DDBC686DB505090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				938580591D7B19520B39BB8C /* AyyatTests.swift in Sources */,
+				C8C26DBEC742CF8D93012DC9 /* WordAudioTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		240D39B15F74C8C8756382F7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3058AE36667CEE90A2CD7931 /* ayyatWidgets */;
+			targetProxy = 502D38688D0B1E46739D47A7 /* PBXContainerItemProxy */;
+		};
+		9096DD2A07B196B89C7A6216 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 31A6D29340D6DCCB6CDBCFE1 /* ayyat */;
+			targetProxy = A80BEBB2ACB35734EB8067AB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0A005D83FBDD120B895A6EB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ayyat/App/ayyat.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ayyat/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mostafamahdi.ayyat;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		751F0DDDF1D5925DD8F23B6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ayyatWidgets/ayyatWidgets.entitlements;
+				CURRENT_PROJECT_VERSION = 2;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ayyatWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mostafamahdi.ayyat.widgets;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A7A7CF588A4B5B51EF3720DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ayyatWidgets/ayyatWidgets.entitlements;
+				CURRENT_PROJECT_VERSION = 2;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ayyatWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mostafamahdi.ayyat.widgets;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		C324FD1F7D8C0B014C11882B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mostafamahdi.ayyatTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ayyat.app/ayyat";
+			};
+			name = Debug;
+		};
+		C9A5B8304F64D999EFDEAA39 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = X6EHA8FBWH;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		CCC7EC544876685C1AF52703 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ayyat/App/ayyat.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ayyat/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mostafamahdi.ayyat;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F742F7A213BC33AD87FDA0D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = X6EHA8FBWH;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		F88E9A77B87779D41DC9F7E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.mostafamahdi.ayyatTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ayyat.app/ayyat";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		11B1633062AA06FE32C00CDC /* Build configuration list for PBXProject "ayyat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F742F7A213BC33AD87FDA0D5 /* Debug */,
+				C9A5B8304F64D999EFDEAA39 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9B681394F8FB2E11713DE73A /* Build configuration list for PBXNativeTarget "ayyatTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C324FD1F7D8C0B014C11882B /* Debug */,
+				F88E9A77B87779D41DC9F7E4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BD9A28A72FA6AAADC7A258D0 /* Build configuration list for PBXNativeTarget "ayyat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCC7EC544876685C1AF52703 /* Debug */,
+				0A005D83FBDD120B895A6EB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D2B472D6377496E7BD6925B7 /* Build configuration list for PBXNativeTarget "ayyatWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7A7CF588A4B5B51EF3720DE /* Debug */,
+				751F0DDDF1D5925DD8F23B6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		19CCC08873295CACAE53E955 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/argmaxinc/WhisperKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
+		A4C9F7FC964381E69C75D8B5 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.4.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		031489194D2DE74B0AB333C1 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A4C9F7FC964381E69C75D8B5 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+		F939A485435A587E4C803F18 /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19CCC08873295CACAE53E955 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 37551D81A3942D313E68625B /* Project object */;
+}

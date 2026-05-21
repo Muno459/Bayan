@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 400" role="img" aria-label="ayyat">
+  <title>ayyat</title>
+  <g transform="translate(40 40)">
+    <rect width="320" height="320" rx="72" ry="72" fill="#0E5C46"/>
+    <g transform="translate(160 160) scale(0.4)">
+      <path d="M 0,-360 L 107.2,-258.7 L 254.6,-254.6 L 258.7,-107.2 L 360,0 L 258.7,107.2 L 254.6,254.6 L 107.2,258.7 L 0,360 L -107.2,258.7 L -254.6,254.6 L -258.7,107.2 L -360,0 L -258.7,-107.2 L -254.6,-254.6 L -107.2,-258.7 Z"
+            fill="#F5E9CC"/>
+      <circle r="34" fill="#D4A574"/>
+    </g>
+  </g>
+  <text x="430" y="270"
+        font-family="-apple-system, 'SF Pro Display', 'Inter', 'Helvetica Neue', system-ui, sans-serif"
+        font-size="220" font-weight="700" letter-spacing="-10" fill="#0E5C46">ayyat</text>
+</svg>
