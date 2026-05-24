@@ -18,8 +18,6 @@ final class AudioPlaybackManager {
     var isLoading = false
     var error: String?
 
-    private var lastWordIndex: Int? // Monotonic tracking — prevents backward jumps
-
     // MARK: - Private
 
     private var player: AVPlayer?
@@ -95,8 +93,15 @@ final class AudioPlaybackManager {
         }
         info[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
         if let artwork = nowPlayingArtwork {
-            let mp = MPMediaItemArtwork(boundsSize: artwork.size) { _ in artwork }
-            info[MPMediaItemPropertyArtwork] = mp
+            // Build the MPMediaItemArtwork in a nonisolated factory so
+            // the request handler closure doesn't inherit @MainActor
+            // isolation from `updateNowPlayingInfo`. The handler runs
+            // on a MediaPlayer dispatch queue; if it inherits main-actor
+            // isolation, Swift 6's runtime `swift_task_isCurrentExecutor`
+            // check trips when the system calls it from the background
+            // thread and the app crashes with EXC_BREAKPOINT. This was
+            // the build 13 audio-play crash.
+            info[MPMediaItemPropertyArtwork] = Self.makeArtworkItem(artwork)
         }
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
     }
@@ -343,7 +348,6 @@ final class AudioPlaybackManager {
     func playSingleVerse(_ verseKey: String) {
         guard let idx = verseTimestamps.firstIndex(where: { $0.verseKey == verseKey }),
               let player else { return }
-        lastWordIndex = nil
         lastVerseScanIndex = idx
         let ts = verseTimestamps[idx]
         let startCM = CMTime(value: Int64(ts.timestampFrom), timescale: 1000)
@@ -395,7 +399,6 @@ final class AudioPlaybackManager {
     }
 
     func seekToVerse(_ verseKey: String) {
-        lastWordIndex = nil // Reset monotonic tracking on seek
         guard let idx = verseTimestamps.firstIndex(where: { $0.verseKey == verseKey }) else {
             return
         }
@@ -450,7 +453,6 @@ final class AudioPlaybackManager {
         isPlaying = false
         currentVerseKey = nil
         currentWordIndex = nil
-        lastWordIndex = nil
         playbackProgress = 0.0
     }
 
@@ -542,22 +544,20 @@ final class AudioPlaybackManager {
         if newVerseKey != currentVerseKey {
             currentWordIndex = nil
             currentVerseKey = newVerseKey
-            lastWordIndex = nil
         }
 
-        // Only advance forward within a verse — never jump backward
-        // This prevents jitter from AVPlayer timing fluctuations
+        // Trust the timing data. Reciters like Mishary often repeat a
+        // portion of an ayah (read forward, then read it again from a
+        // few words back). The QF audio timing source captures the
+        // repeat by emitting a LATER start_ms that points to an EARLIER
+        // word_index, which is the audio actually moving forward while
+        // the highlighted word "rewinds". The previous monotonic guard
+        // rejected those legitimate backward word-index jumps as jitter,
+        // so the highlight froze on the most-recent word through the
+        // repeat. AVPlayer's own time always moves forward, so the
+        // timing-range lookup IS the source of truth.
         if let newIdx = newWordIndex {
-            if let lastIdx = lastWordIndex {
-                if newIdx >= lastIdx {
-                    currentWordIndex = newIdx
-                    lastWordIndex = newIdx
-                }
-                // If newIdx < lastIdx, ignore it (jitter)
-            } else {
-                currentWordIndex = newIdx
-                lastWordIndex = newIdx
-            }
+            currentWordIndex = newIdx
         }
     }
 
@@ -590,5 +590,17 @@ final class AudioPlaybackManager {
     deinit {
         // Note: removeObservers() can't be called here since it's @MainActor
         // The player will clean up its own observers when deallocated
+    }
+
+    /// Build an `MPMediaItemArtwork` from a UIImage in a nonisolated
+    /// context. MediaPlayer calls the request handler closure on a
+    /// background dispatch queue; if the closure inherits @MainActor
+    /// isolation from its enclosing scope, the Swift 6 runtime tripped
+    /// `swift_task_isCurrentExecutor` and crashed the app the moment
+    /// playback started (Thread 4, EXC_BREAKPOINT, build 13 regression).
+    /// Declaring this function nonisolated lets the closure inherit a
+    /// neutral isolation context — safe to call from any thread.
+    nonisolated static func makeArtworkItem(_ image: UIImage) -> MPMediaItemArtwork {
+        MPMediaItemArtwork(boundsSize: image.size) { _ in image }
     }
 }

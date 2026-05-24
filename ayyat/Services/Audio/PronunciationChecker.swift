@@ -621,6 +621,26 @@ final class PronunciationChecker {
     }
 
     private func compareArabic(transcription: String, expected: String) -> Bool {
+        // Diacritic-strict pre-check. When BOTH the transcription and
+        // the expected text carry harakat (i.e. FastConformer produced
+        // a diacritised transcription, not Apple Speech which strips
+        // them), the harakat must match. Otherwise the matcher accepts
+        // kasra-for-fatha mispronunciations, which change the meaning
+        // of an Arabic word completely (بِٱلْمَوَدَّةِ vs بَٱلْمَوَدَّةَ).
+        if hasDiacritics(transcription) && hasDiacritics(expected) {
+            let lhs = stripStructuralOnly(transcription)
+            let rhs = stripStructuralOnly(expected)
+            if lhs != rhs {
+                let dist = levenshtein(lhs, rhs)
+                // Allow exactly one diacritic difference (transcription
+                // jitter on long words), reject everything else.
+                if dist > 1 {
+                    dlog("[Compare] ✗ diacritic-strict reject — trans='\(lhs)' exp='\(rhs)' dist=\(dist)")
+                    return false
+                }
+            }
+        }
+
         let clean1 = normalizeArabic(transcription)
         let clean2 = normalizeArabic(expected)
 
@@ -757,6 +777,38 @@ final class PronunciationChecker {
         }
 
         return similarity >= threshold
+    }
+
+    /// True when the text contains any Arabic harakat (tashkeel) marks.
+    /// Used by the diacritic-strict pre-check: Apple Speech outputs are
+    /// always diacritic-free, FastConformer outputs are diacritised, so
+    /// this is also a reliable signal of which engine produced the
+    /// transcription.
+    private func hasDiacritics(_ text: String) -> Bool {
+        text.unicodeScalars.contains { (0x064B...0x065F).contains($0.value) }
+    }
+
+    /// Strips ONLY non-phonetic noise (whitespace, RTL/LTR marks,
+    /// kashida, Quranic annotations), keeping harakat intact for the
+    /// diacritic-strict comparison path.
+    private func stripStructuralOnly(_ text: String) -> String {
+        var result = String(text.unicodeScalars.filter { s in
+            if s.value == 0x0640 { return false }  // tatweel
+            if s.value >= 0x0610 && s.value <= 0x061A { return false }
+            if s.value >= 0x06D6 && s.value <= 0x06ED { return false }
+            if s.value == 0x200F || s.value == 0x200E { return false }
+            if s.value >= 0x200B && s.value <= 0x200D { return false }
+            if s.value == 0x00AD || s.value == 0xFEFF { return false }
+            return true
+        })
+        // Same alef + teh-marbuta normalisation as the lenient path —
+        // these are SCRIPT variants, not phonemic ones.
+        result = result.replacingOccurrences(of: "أ", with: "ا")
+        result = result.replacingOccurrences(of: "إ", with: "ا")
+        result = result.replacingOccurrences(of: "آ", with: "ا")
+        result = result.replacingOccurrences(of: "ٱ", with: "ا")
+        result = result.replacingOccurrences(of: "ى", with: "ي")
+        return result.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     private func normalizeArabic(_ text: String) -> String {

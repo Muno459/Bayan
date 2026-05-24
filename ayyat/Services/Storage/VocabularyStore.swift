@@ -15,7 +15,27 @@ final class VocabularyStore {
         didSet { scheduleSave() }
     }
 
+    /// Lemma-level learning, parallel to the per-instance `wordStates`.
+    ///
+    /// Keyed by the **diacritized lemma text** (e.g. `"اللَّه"`) — NOT the
+    /// integer `lemma_id` from QUL. The integer IDs can renumber across QUL
+    /// data refreshes, but the lemma text is stable; persisting by text
+    /// means a future morphology update can't silently erase user progress.
+    ///
+    /// `silentEncounters` rises from 0 → 3 each time the user reads a verse
+    /// containing the lemma WITHOUT tapping it for help. At 3 it graduates
+    /// to "bare Arabic" rendering. Tapping a graduated word resets to 0 —
+    /// that's the demotion contract.
+    ///
+    /// This whole machinery is invisible to the user: no count, no badge,
+    /// no "lemma" terminology in any UI string. The compound effect is
+    /// discovered through reading.
+    private(set) var learnedLemmas: [String: LemmaProgress] = [:] {
+        didSet { scheduleLemmasSave() }
+    }
+
     private var saveTask: Task<Void, Never>?
+    private var lemmasSaveTask: Task<Void, Never>?
 
     /// 0.0 = all English, 1.0 = all Arabic script.
     /// HARD CAP: in Transliteration mode the maximum level is
@@ -107,18 +127,34 @@ final class VocabularyStore {
     /// Words are ranked by familiarity (score). Easiest first.
     /// A word substitutes when its score is below the slider value — strictly.
     /// No "transition zone" added on top, because the slider already controls reach.
-    func displayMode(for word: Word) -> SubstitutionDisplay {
+    ///
+    /// **Lemma override:** lemma-level learning (set via the existing
+    /// "I Know This Word" button) takes precedence over the slider. A
+    /// graduated lemma renders as bare Arabic regardless of slider; a
+    /// still-graduating lemma renders with a faded transliteration hint
+    /// beneath. This is invisible to the user — no UI string mentions
+    /// "lemma" anywhere.
+    func displayMode(
+        for word: Word,
+        saheeh: String? = nil,
+        isFirstWord: Bool = false
+    ) -> SubstitutionDisplay {
         guard word.isWord else {
-            return .english(Self.capitalizeEnglish(word.translation?.text ?? ""))
+            return .english(Self.englishSlice(
+                for: word, saheeh: saheeh, isFirstWord: isFirstWord
+            ))
         }
 
-        // Quran Foundation's word-by-word translations come in lowercase
-        // ("in", "the", "name", "of", "allah"). When rendered as one word
-        // per cell in the substitution grid, lowercase looks unfinished
-        // and reads oddly. Title-case each word so "in the name of allah"
-        // renders as "In The Name Of Allah" — matches how proper Quran
-        // translations are typeset.
-        let englishText = Self.capitalizeEnglish(word.translation?.text ?? "")
+        // English source prefers the LLM-aligned Saheeh slice over the
+        // QF word-by-word literal. The aligned slice is verbatim Saheeh
+        // (brackets, macrons like "Muḥammad", proper-noun capitalisation
+        // like "the Book" / "the Torah" — all preserved). The WBW
+        // fallback fires only for verses whose alignment hasn't shipped
+        // yet, and it's lowercase by default so we case-normalise it
+        // against the Saheeh sentence.
+        let englishText = Self.englishSlice(
+            for: word, saheeh: saheeh, isFirstWord: isFirstWord
+        )
         let arabicText = word.textUthmani ?? word.textImlaei ?? ""
         let transliterationText = word.transliteration?.text ?? arabicText
 
@@ -130,6 +166,35 @@ final class VocabularyStore {
         // they got good at a word.
         let substitutedTarget = useTransliteration ? transliterationText : arabicText
 
+        // 1. Lemma override (highest priority, abstracted from user).
+        //    Drives BOTH learning tracks — Arabic-script users get the
+        //    Arabic glyph, transliteration users get the Latin spelling
+        //    of the same word. The lemma engine and the user's chosen
+        //    target script are independent: lemma decides WHEN to
+        //    substitute, substitutedTarget decides WHAT to substitute to.
+        switch lemmaRenderState(lemmaText: word.lemmaText) {
+        case .graduated:
+            return .learned(substitutedTarget)
+        case .trainingWheels:
+            // Reuse the existing .transitioning case to render the target
+            // script on top with a faded hint beneath — perfect fit for
+            // the 3-encounter ramp-up.
+            //
+            //   In Arabic-script mode: hint is the transliteration (so
+            //     the user can still vocalise unfamiliar glyphs).
+            //   In transliteration mode: hint is the English meaning
+            //     (the user can already read Latin, what they need is
+            //     the gloss for the few rounds before bare-target kicks
+            //     in).
+            let hint: String = useTransliteration
+                ? englishText
+                : (word.transliteration?.text ?? englishText)
+            return .transitioning(target: substitutedTarget, english: hint)
+        case .unlearned:
+            break // fall through to slider logic
+        }
+
+        // 2. Slider logic (unchanged below)
         if substitutionLevel < 0.02 {
             return .english(englishText)
         }
@@ -150,15 +215,113 @@ final class VocabularyStore {
         return .english(englishText)
     }
 
+    /// English text used as the per-word slice. **Rendered raw — no
+    /// transformations.** The LLM-aligned Saheeh chunk is verbatim
+    /// Saheeh (capitalisation, brackets, macrons all preserved). The
+    /// WBW fallback is QF's lowercase literal gloss, also rendered
+    /// as-is. We deliberately do NOT case-normalise, title-case the
+    /// first word, manipulate punctuation, or apply any heuristic
+    /// cleanup — the user reads exactly what the data layer provides.
+    private static func englishSlice(
+        for word: Word, saheeh: String?, isFirstWord: Bool
+    ) -> String {
+        if let aligned = word.alignedEnglish, !aligned.isEmpty {
+            return aligned + Self.formatTrailingPunctuation(word.alignedTrailingPunctuation)
+        }
+        return word.translation?.text ?? ""
+    }
+
+    /// Render trailing punctuation in the way Saheeh actually writes it.
+    /// Dashes are spaced ("disbelieve - never"), while commas, periods,
+    /// semicolons, and the like cling tightly to the preceding word
+    /// ("Allāh,"). The LLM stores just the punctuation character without
+    /// its surrounding whitespace, so we reapply the leading space here.
+    private static func formatTrailingPunctuation(_ punct: String?) -> String {
+        guard let punct, !punct.isEmpty else { return "" }
+        let spacedDashes: Set<String> = ["-", "—", "–", "‑"]
+        return spacedDashes.contains(punct) ? " " + punct : punct
+    }
+
     /// Title-case a word from QF's lowercase word-by-word translations.
     /// Preserves any all-caps abbreviations (e.g. "TM"), proper-noun
-    /// capitals from the API, and parenthetical insertions like "(Adam)".
+    /// Capitalisation reference for per-word English. Earlier versions
+    /// of this function force-Title-Cased every word ("In The Name Of
+    /// Allah The Most Gracious The Most Merciful"), which reads like
+    /// title-case noise. The fix takes the Saheeh International full-verse
+    /// translation as the ground-truth case reference: each per-word
+    /// English token is looked up case-insensitively inside the Saheeh
+    /// sentence and its casing copied back. Falls back to lowercase
+    /// (with first-word-of-verse capitalised) when no match exists or
+    /// when no Saheeh sentence is available.
+    static func englishWithCase(
+        _ raw: String,
+        saheeh: String?,
+        isFirstWord: Bool
+    ) -> String {
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return raw }
+
+        // Pure-symbol tokens like "(2)" or punctuation come through
+        // unchanged — they have no letters to case.
+        let hasLetters = trimmed.contains(where: { $0.isLetter })
+        if !hasLetters { return trimmed }
+
+        // Strip parenthetical hints like "(is)" or "(The)" when probing
+        // Saheeh — the public translation never includes them.
+        let probe = trimmed
+            .replacingOccurrences(of: "([^)]*\\)", with: "", options: .regularExpression)
+            .replacingOccurrences(of: "  ", with: " ")
+            .trimmingCharacters(in: .whitespaces)
+
+        // Start from a clean lowercase baseline so accidental Source
+        // capitals (Most, Gracious, Master, Day, Alone) get tamed.
+        var out = trimmed.lowercased()
+
+        if let saheeh, !saheeh.isEmpty, !probe.isEmpty {
+            // Try to find the exact phrase first; on miss, fall back to
+            // the leading word.
+            if let r = saheeh.range(of: probe, options: [.caseInsensitive]) {
+                let matched = String(saheeh[r])
+                out = caseClone(target: out, reference: matched, originalProbe: probe)
+            } else {
+                let head = probe.split(separator: " ").first.map(String.init) ?? probe
+                if !head.isEmpty,
+                   let r = saheeh.range(of: head, options: [.caseInsensitive])
+                {
+                    let matchedHead = String(saheeh[r])
+                    if let first = matchedHead.first, first.isUppercase {
+                        out = first.uppercased() + out.dropFirst()
+                    }
+                }
+            }
+        }
+
+        // First word of the verse always starts a sentence.
+        if isFirstWord, let first = out.first, first.isLowercase {
+            out = first.uppercased() + out.dropFirst()
+        }
+        return out
+    }
+
+    /// Copy case from a Saheeh-matched phrase back onto our cleaned
+    /// lowercase token, position-by-position. Parentheticals in the
+    /// source token (e.g. "(is) the book") are preserved.
+    private static func caseClone(target: String, reference: String, originalProbe: String) -> String {
+        // Best-effort: only override the first letter from reference.
+        // Full per-character cloning is risky given the parenthetical
+        // hints; first-letter case is the user-visible fix anyway.
+        guard let refFirst = reference.first, refFirst.isUppercase,
+              let tgtFirst = target.first, tgtFirst.isLowercase else {
+            return target
+        }
+        return refFirst.uppercased() + target.dropFirst()
+    }
+
+    /// Back-compat wrapper for the previous call sites that didn't
+    /// pass Saheeh context. Behaves like the old function: minimal
+    /// touching, sentence-style first-letter for first word only.
     static func capitalizeEnglish(_ s: String) -> String {
-        let trimmed = s.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return s }
-        // `localizedCapitalized` handles unicode + locale-aware first
-        // letter casing per word, matches Apple convention.
-        return trimmed.localizedCapitalized
+        englishWithCase(s, saheeh: nil, isFirstWord: false)
     }
 
     /// Score from 0.0 (easiest to substitute) to 1.0 (hardest).
@@ -292,6 +455,99 @@ final class VocabularyStore {
         }
     }
 
+    // MARK: - Lemma Learning
+
+    /// Render-time decision for a word based on its lemma's learning state.
+    /// Wholly internal — the UI never names these cases.
+    enum LemmaRenderState: Equatable {
+        case unlearned
+        /// Learned, but still in the 3-encounter graduation window.
+        /// Renderer should show the Arabic with a faded transliteration
+        /// hint beneath, easing the user into bare-Arabic recognition.
+        case trainingWheels
+        /// Fully graduated — render as bare Arabic.
+        case graduated
+    }
+
+    func lemmaRenderState(lemmaText: String?) -> LemmaRenderState {
+        guard let lemmaText, !lemmaText.isEmpty,
+              let progress = learnedLemmas[lemmaText] else {
+            return .unlearned
+        }
+        return progress.silentEncounters >= LemmaProgress.graduationThreshold
+            ? .graduated
+            : .trainingWheels
+    }
+
+    /// Mark a lemma as learned. Called from the existing "I Know This Word"
+    /// button path — no separate user-visible button exists for this.
+    /// Idempotent: if already learned, resets the lastSeenAt but keeps the
+    /// silent-encounter count (don't lose graduation progress).
+    func markLemmaLearned(_ lemmaText: String?) {
+        guard let lemmaText, !lemmaText.isEmpty else { return }
+        if var existing = learnedLemmas[lemmaText] {
+            existing.lastSeenAt = Date()
+            learnedLemmas[lemmaText] = existing
+        } else {
+            learnedLemmas[lemmaText] = LemmaProgress(
+                learnedAt: Date(),
+                silentEncounters: 0,
+                lastSeenAt: Date()
+            )
+        }
+    }
+
+    /// User read a verse containing this lemma without tapping for help.
+    /// Bumps the silent-encounter counter toward graduation. Caps at 3 so
+    /// the value stays semantically meaningful as a graduation gate.
+    func recordSilentEncounter(lemmaText: String?) {
+        guard let lemmaText, !lemmaText.isEmpty,
+              var progress = learnedLemmas[lemmaText] else { return }
+        if progress.silentEncounters < LemmaProgress.graduationThreshold {
+            progress.silentEncounters += 1
+        }
+        progress.lastSeenAt = Date()
+        learnedLemmas[lemmaText] = progress
+    }
+
+    /// Batched variant — single mutation on `learnedLemmas`, so we don't
+    /// fire `didSet` (and a debounced disk write) once per word in a 290-
+    /// word verse like 2:282. Caller passes the SET of lemma texts seen
+    /// silently in this verse exposure event.
+    func recordSilentEncounters(lemmaTexts: Set<String>) {
+        guard !lemmaTexts.isEmpty else { return }
+        var working = learnedLemmas
+        let now = Date()
+        var changed = false
+        for text in lemmaTexts where !text.isEmpty {
+            guard var p = working[text] else { continue }
+            if p.silentEncounters < LemmaProgress.graduationThreshold {
+                p.silentEncounters += 1
+                changed = true
+            }
+            p.lastSeenAt = now
+            working[text] = p
+        }
+        if changed {
+            learnedLemmas = working
+        }
+    }
+
+    /// User tapped on a word whose lemma had already graduated to bare
+    /// Arabic. Honest reading: they needed the meaning, so we demote
+    /// the lemma back to training-wheels rendering (silentEncounters → 0).
+    /// Tapping a still-training-wheels word does NOT demote — the user
+    /// is allowed to consult during the graduation window.
+    func recordDemotionTap(lemmaText: String?) {
+        guard let lemmaText, !lemmaText.isEmpty,
+              var progress = learnedLemmas[lemmaText] else { return }
+        if progress.silentEncounters >= LemmaProgress.graduationThreshold {
+            progress.silentEncounters = 0
+        }
+        progress.lastSeenAt = Date()
+        learnedLemmas[lemmaText] = progress
+    }
+
     // MARK: - Common Words
 
     private func isCommonQuranicWord(_ arabic: String) -> Bool {
@@ -318,9 +574,11 @@ final class VocabularyStore {
     // MARK: - Persistence
 
     private let statesKey = "bayan_wordStates"
+    private let lemmasKey = "bayan_learnedLemmas"
 
     init() {
         loadWordStates()
+        loadLearnedLemmas()
         if let saved = UserDefaults.standard.object(forKey: "bayan_substitutionLevel") as? Double {
             substitutionLevel = saved
         }
@@ -349,6 +607,30 @@ final class VocabularyStore {
         if let data = UserDefaults.standard.data(forKey: statesKey),
            let saved = try? JSONDecoder().decode([Int: WordLearningState].self, from: data) {
             wordStates = saved
+        }
+    }
+
+    /// Sibling of `scheduleSave` for the lemma store. Kept separate so a
+    /// scroll-pass that bumps silent-encounter counters does not also force
+    /// re-serialisation of the (much larger) per-instance `wordStates` blob.
+    private func scheduleLemmasSave() {
+        lemmasSaveTask?.cancel()
+        lemmasSaveTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled else { return }
+            let snapshot = learnedLemmas
+            let key = lemmasKey
+            Task.detached(priority: .utility) {
+                guard let data = try? JSONEncoder().encode(snapshot) else { return }
+                UserDefaults.standard.set(data, forKey: key)
+            }
+        }
+    }
+
+    private func loadLearnedLemmas() {
+        if let data = UserDefaults.standard.data(forKey: lemmasKey),
+           let saved = try? JSONDecoder().decode([String: LemmaProgress].self, from: data) {
+            learnedLemmas = saved
         }
     }
 }

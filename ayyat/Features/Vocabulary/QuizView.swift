@@ -207,8 +207,8 @@ struct QuizView: View {
                     HStack(spacing: 16) {
                         Button { swipeAway(correct: false, word: word) } label: {
                             HStack(spacing: 6) {
-                                Image(systemName: "xmark")
-                                Text("Learning")
+                                Image(systemName: "arrow.counterclockwise")
+                                Text("Still learning")
                             }
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(.white)
@@ -219,7 +219,7 @@ struct QuizView: View {
                         Button { swipeAway(correct: true, word: word) } label: {
                             HStack(spacing: 6) {
                                 Image(systemName: "checkmark")
-                                Text("Got It")
+                                Text("You got this")
                                 if comboMultiplier > 1 {
                                     Text("+\(10 * comboMultiplier)")
                                         .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -400,6 +400,15 @@ struct QuizView: View {
                 withAnimation(.easeOut(duration: 0.3)) {
                     showXPPopup = false
                     showEncouragement = false
+                }
+            }
+            // Keep confetti on screen long enough that each particle
+            // actually finishes its fall+fade. The encouragement /
+            // XP popup at the top dismisses earlier (0.5s) because
+            // they sit above the incoming card; the confetti fades
+            // through the new card so it can outlast them.
+            scheduleAfter(3.6) {
+                withAnimation(.easeOut(duration: 0.4)) {
                     showConfetti = false
                 }
             }
@@ -642,45 +651,68 @@ struct SwipeableQuizCard<Content: View>: View {
     @State private var committed = false   // guards against double-trigger
 
     var body: some View {
-        content()
-            .scaleEffect(cardScale)
-            .offset(offset)
-            .rotationEffect(.degrees(offset.width / 20))
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        guard !committed else { return }
-                        offset = value.translation
-                    }
-                    .onEnded { value in
-                        guard !committed else { return }
-                        if value.translation.width > 100 {
-                            commit(correct: true)
-                        } else if value.translation.width < -100 {
-                            commit(correct: false)
-                        } else {
-                            // Snap back to center on a non-committal flick.
-                            withAnimation(.spring(response: 0.3)) {
-                                offset = .zero
+        ZStack {
+            // Directional intent hints — fade in as the user pulls the
+            // card past a threshold so they know which direction commits
+            // to which mastery decision. Live alongside the card so they
+            // respect the card's private offset state (the parent has
+            // no way to observe the live drag with SwipeableQuizCard's
+            // self-contained design).
+            if offset.width > 30 {
+                Label("You got this", systemImage: "checkmark")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(AyyatColors.mastered)
+                    .padding(.bottom, 360)
+                    .transition(.opacity)
+            }
+            if offset.width < -30 {
+                Label("Still learning", systemImage: "arrow.counterclockwise")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(AyyatColors.learning)
+                    .padding(.bottom, 360)
+                    .transition(.opacity)
+            }
+
+            content()
+                .scaleEffect(cardScale)
+                .offset(offset)
+                .rotationEffect(.degrees(offset.width / 20))
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            guard !committed else { return }
+                            offset = value.translation
+                        }
+                        .onEnded { value in
+                            guard !committed else { return }
+                            if value.translation.width > 100 {
+                                commit(correct: true)
+                            } else if value.translation.width < -100 {
+                                commit(correct: false)
+                            } else {
+                                // Snap back to center on a non-committal flick.
+                                withAnimation(.spring(response: 0.3)) {
+                                    offset = .zero
+                                }
                             }
                         }
-                    }
-            )
+                )
+        }
     }
 
     private func commit(correct: Bool) {
         committed = true
-        // Fly the card fully off-screen in the swipe direction. 900 pt
-        // is wider than any current iPhone, so the card is genuinely
-        // gone before the parent swaps in the next one.
+        // Fly the card fully off-screen in the swipe direction, then
+        // signal the parent in the animation's completion handler.
+        // The previous `Task { sleep }` approach occasionally got the
+        // task starved or cancelled mid-flight, which left the card
+        // off-screen without ever advancing the deck — the "swiped
+        // away and nothing happened" bug. The completion handler is
+        // SwiftUI-managed and guaranteed to fire even if the view
+        // re-renders during the animation.
         withAnimation(.easeOut(duration: 0.28)) {
             offset = CGSize(width: correct ? 900 : -900, height: 0)
-        }
-        // Signal the parent slightly *after* the fly-off so the
-        // outgoing card is visually off-screen before the next card's
-        // mount animation begins — no overlap, no flash.
-        Task { @MainActor in
-            try? await Task.sleep(for: .seconds(0.30))
+        } completion: {
             onCommit(correct)
         }
     }

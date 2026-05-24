@@ -23,6 +23,16 @@ struct SubstitutionWordView: View {
                 if !isEnglishDisplay {
                     Haptics.light()
                     vocabularyStore.recordTap(for: word)
+                    // If this word's lemma had graduated to bare Arabic
+                    // and the user needed to tap for help, that's an
+                    // honest "I forgot" signal — demote to training wheels
+                    // (Arabic + faded transliteration) for the next few
+                    // reads. Tapping a still-training-wheels word does
+                    // NOT demote; users are allowed to consult during the
+                    // graduation window.
+                    if case .learned = display {
+                        vocabularyStore.recordDemotionTap(lemmaText: word.lemmaText)
+                    }
                     showDetail = true
                 }
             }
@@ -142,6 +152,7 @@ struct WordLearningCard: View {
     @Binding var wordPlayer: WordAudioPlayer
     let vocabularyStore: VocabularyStore
     @Environment(SettingsManager.self) private var settings
+    @Environment(\.dismiss) private var dismiss
 
     private var frequency: Int? {
         QuranicWordData.frequency(for: word.textUthmani ?? "")
@@ -244,11 +255,31 @@ struct WordLearningCard: View {
                 // Letter breakdown
                 LetterBreakdownView(arabicText: word.textUthmani ?? "")
 
-                // "I Know This" button
+                // "I Know This" button. Tapping it promotes the word and
+                // dismisses the sheet immediately — the verse cell behind
+                // re-renders with the word now substituted in Arabic. No
+                // need to keep the explainer card around once the user has
+                // already self-declared mastery.
                 if let state = vocabularyStore.wordStates[word.id], state.masteryLevel < .familiar {
                     Button {
                         Haptics.success()
                         vocabularyStore.markAsFamiliar(wordId: word.id)
+                        // Same tap also marks the LEMMA learned, which silently
+                        // unlocks every inflection of this word across the
+                        // Quran for substitution. The user never sees the word
+                        // "lemma" — they just notice, on next read, that other
+                        // verses now show this word in Arabic instead of
+                        // English. The dignity of compound discovery, not the
+                        // dopamine of an announcement.
+                        vocabularyStore.markLemmaLearned(word.lemmaText)
+                        // Stop any in-flight drill audio, then close the
+                        // sheet on the next runloop tick to let the haptic
+                        // and animation start before the view tears down.
+                        wordPlayer.stop()
+                        Task { @MainActor in
+                            try? await Task.sleep(for: .milliseconds(120))
+                            dismiss()
+                        }
                     } label: {
                         Label("I Know This Word", systemImage: "checkmark.circle.fill")
                             .font(.system(size: 14, weight: .semibold))

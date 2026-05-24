@@ -158,47 +158,94 @@ struct VerseCell: View {
         }
     }
 
-    // MARK: - Arabic text (progressive substitution)
+    // MARK: - Per-word substitution line
 
+    /// The progressive-substitution surface: each Arabic word gets a
+    /// slot, rendered in Arabic recitation order. `displayMode` decides
+    /// per word whether the slot is English (Saheeh slice), transitioning
+    /// (Arabic/transliteration on top with a hint beneath), or learned
+    /// (bare Arabic or transliteration depending on the user's track).
+    ///
+    /// The natural-flow Saheeh sentence is rendered verbatim BELOW this
+    /// line (see `translationLine`), so the user always has the canonical
+    /// translation to read regardless of what's happening in these slots.
     private var substitutionView: some View {
         let words = verse.words?.filter { $0.isWord } ?? []
-        return WrappingHStack(alignment: .leading, spacing: 4) {
-            ForEach(words) { word in
-                let isHighlighted = currentWordIndex != nil && word.position == currentWordIndex
-                let display = vocabularyStore.displayMode(for: word)
-                let isHidden = hifzHiddenWordIds.contains(word.id) &&
-                               !hifzTemporarilyRevealed.contains(word.id)
+        let saheeh = verse.translations?.first?.text
+        let raw: [(Word, SubstitutionDisplay)] = words.enumerated().map { idx, word in
+            (word, vocabularyStore.displayMode(
+                for: word,
+                saheeh: saheeh,
+                isFirstWord: idx == 0
+            ))
+        }
 
-                if isHidden {
-                    HifzBlankWord(word: word, fontSize: settings.arabicFontSize) {
-                        Haptics.light()
-                        onPeekWord(word.id)
+        // Per-word breakdown is always active so word-by-word audio
+        // highlighting + per-word tap-to-drill works at every slider
+        // position. Direction handling now lives in `WrappingHStack`'s
+        // bidi-aware mode: each row is laid out LTR, then consecutive
+        // runs of Arabic words within that row are reversed in place.
+        // This preserves animations, gestures, decorations, audio
+        // highlight, and HifzBlankWord — and crucially fixes the
+        // multi-line reading order (the previous global data-reorder
+        // broke when an Arabic run spanned a wrap boundary).
+        //
+        // Transliteration mode disables the bidi pass because Latin
+        // characters flow LTR.
+        let bidiOn = settings.arabicMixedDirection == .rtl &&
+                     !vocabularyStore.useTransliteration
+
+        return AnyView(
+            WrappingHStack(alignment: .leading, spacing: 4, bidiAware: bidiOn) {
+                ForEach(raw, id: \.0.id) { word, display in
+                    let isHighlighted = currentWordIndex != nil && word.position == currentWordIndex
+                    let isHidden = hifzHiddenWordIds.contains(word.id) &&
+                                   !hifzTemporarilyRevealed.contains(word.id)
+                    let isArabic = bidiOn && isArabicDisplay(display)
+
+                    if isHidden {
+                        HifzBlankWord(word: word, fontSize: settings.arabicFontSize) {
+                            Haptics.light()
+                            onPeekWord(word.id)
+                        }
+                        .layoutValue(key: WrappingHStack.IsArabic.self, value: isArabic)
+                    } else {
+                        SubstitutionWordView(
+                            word: word,
+                            display: display,
+                            isHighlighted: isHighlighted,
+                            verseKey: verse.verseKey
+                        )
+                        .layoutValue(key: WrappingHStack.IsArabic.self, value: isArabic)
                     }
-                } else {
-                    SubstitutionWordView(
-                        word: word,
-                        display: display,
-                        isHighlighted: isHighlighted,
-                        verseKey: verse.verseKey
-                    )
                 }
             }
-        }
-        .lineSpacing(10)
-        .animation(.easeInOut(duration: 0.2), value: hifzHiddenWordIds)
-        .animation(.easeInOut(duration: 0.18), value: hifzTemporarilyRevealed)
+            .lineSpacing(10)
+            .animation(.easeInOut(duration: 0.2), value: hifzHiddenWordIds)
+            .animation(.easeInOut(duration: 0.18), value: hifzTemporarilyRevealed)
+        )
+    }
+
+    /// True when the SubstitutionDisplay's primary script is Arabic
+    /// (`learned` or `transitioning` both render Arabic glyphs). Used
+    /// to tell `WrappingHStack`'s bidi-aware mode which children to
+    /// treat as Arabic for per-row run reversal.
+    private func isArabicDisplay(_ d: SubstitutionDisplay) -> Bool {
+        if case .english = d { return false }
+        return true
     }
 
     // MARK: - Optional transliteration line
 
     @ViewBuilder
     private var transliterationLine: some View {
-        // When the user's learning track is Transliteration, the
-        // substitution view above already renders the verse in Latin
-        // letters — a second transliteration paragraph underneath
-        // would just be the same text twice. Only show this line in
-        // Arabic-Script mode where it's a genuine pronunciation aid.
-        if !vocabularyStore.useTransliteration {
+        // One-of-three secondary-line system. `settings.verseExtraLine`
+        // chooses between translation, transliteration, or none — the
+        // two are mutually exclusive so we don't double-stack under the
+        // Arabic. Render the transliteration only when the user picked
+        // it AND they're not already in transliteration substitution
+        // mode (where the substitution view itself is in Latin letters).
+        if settings.verseExtraLine == .transliteration && !vocabularyStore.useTransliteration {
             let text = verse.words?
                 .filter { $0.isWord }
                 .compactMap { $0.transliteration?.text }
@@ -216,14 +263,24 @@ struct VerseCell: View {
 
     // MARK: - Translation
 
+    /// Saheeh full-verse English, rendered verbatim — exactly as
+    /// published, no reconstruction, no per-word slicing. Now the
+    /// primary English surface of each verse since the line above is
+    /// canonical Arabic only.
+    ///
+    /// Unconditional render: the per-word Arabic line above carries no
+    /// English at all, so the user always needs the Saheeh sentence
+    /// to read meaning. Old `verseExtraLine == .translation` gate
+    /// removed — the setting now only controls the optional
+    /// transliteration row, not whether the translation appears.
     @ViewBuilder
     private var translationLine: some View {
-        if settings.showFullTranslation, let translation = verse.translations?.first {
+        if let translation = verse.translations?.first {
             Text(translation.text.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression))
-                .font(.system(size: 15))
-                .foregroundStyle(AyyatColors.textPrimary.opacity(0.85))
-                .lineSpacing(4)
-                .padding(.top, 4)
+                .font(.system(size: settings.translationFontSize))
+                .foregroundStyle(AyyatColors.textPrimary)
+                .lineSpacing(5)
+                .padding(.top, 6)
         }
     }
 

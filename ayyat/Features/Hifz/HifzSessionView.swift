@@ -224,9 +224,14 @@ struct HifzSessionView: View {
     private var verseDisplay: some View {
         if let verse {
             let words = verse.words?.filter { $0.isWord } ?? []
-            WrappingHStack(alignment: .leading, spacing: 6) {
+            // Hifz mode always renders Arabic, so enable bidi-aware
+            // layout so multi-line verses wrap right-to-left within
+            // each row instead of left-to-right (which would make the
+            // recitation order look scrambled to a memorising user).
+            WrappingHStack(alignment: .leading, spacing: 6, bidiAware: true) {
                 ForEach(words) { w in
                     wordTile(for: w)
+                        .layoutValue(key: WrappingHStack.IsArabic.self, value: true)
                 }
             }
             .lineSpacing(12)

@@ -12,6 +12,7 @@ struct DailyAyahCard: View {
     @Environment(QuranStore.self) private var quranStore
     @Environment(VocabularyStore.self) private var vocabularyStore
     @Environment(SettingsManager.self) private var settings
+    @Environment(AppNavigation.self) private var nav
 
     @State private var verse: Verse?
 
@@ -26,8 +27,20 @@ struct DailyAyahCard: View {
     }
 
     var body: some View {
-        content
-            .task { await refreshIfNewDay() }
+        Button {
+            // Open the verse's chapter in the Read tab. Cross-tab nav via
+            // AppNavigation: flip selectedTab to .read and push the
+            // chapter so the back gesture lands cleanly on the chapter list.
+            guard let v = verse else { return }
+            let chapterId = Int(v.verseKey.split(separator: ":").first ?? "1") ?? 1
+            Haptics.light()
+            nav.openInRead(chapterId: chapterId)
+        } label: {
+            content
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .task { await refreshIfNewDay() }
     }
 
     private var content: some View {
@@ -74,14 +87,25 @@ struct DailyAyahCard: View {
     @ViewBuilder
     private var substitutionLine: some View {
         if let verse, let words = verse.words?.filter(\.isWord), !words.isEmpty {
-            WrappingHStack(alignment: .leading, spacing: 5) {
+            // Same bidi-aware layout as VerseCell so multi-line Arabic
+            // runs read in natural recitation order instead of getting
+            // visually scrambled across wrap boundaries.
+            let bidiOn = settings.arabicMixedDirection == .rtl &&
+                         !vocabularyStore.useTransliteration
+            WrappingHStack(alignment: .leading, spacing: 5, bidiAware: bidiOn) {
                 ForEach(words) { word in
+                    let display = vocabularyStore.displayMode(for: word)
+                    let isArabic: Bool = {
+                        if case .english = display { return false }
+                        return bidiOn
+                    }()
                     SubstitutionWordView(
                         word: word,
-                        display: vocabularyStore.displayMode(for: word),
+                        display: display,
                         isHighlighted: false,
                         verseKey: verse.verseKey
                     )
+                    .layoutValue(key: WrappingHStack.IsArabic.self, value: isArabic)
                 }
             }
             .lineSpacing(8)
@@ -100,7 +124,7 @@ struct DailyAyahCard: View {
 
     @ViewBuilder
     private var translationLine: some View {
-        if settings.showFullTranslation, let t = verse?.translations?.first?.text {
+        if settings.verseExtraLine == .translation, let t = verse?.translations?.first?.text {
             Text(stripped(t))
                 .font(.system(size: 13))
                 .foregroundStyle(AyyatColors.textSecondary)

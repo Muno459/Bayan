@@ -4,6 +4,8 @@ import SwiftUI
 struct ContentView: View {
     @Environment(QuranStore.self) private var quranStore
     @State private var nav = AppNavigation()
+    @AppStorage("hasSeenBetaWelcome_v21") private var hasSeenBetaWelcome = false
+    @State private var showBetaWelcome = false
 
     var body: some View {
         // `@Bindable` here is the canonical way to derive bindings from
@@ -45,6 +47,21 @@ struct ContentView: View {
         // in context instead of a separate isolated screen.
         .task {
             await quranStore.loadChapters()
+        }
+        .task {
+            // One-time beta welcome. Delayed a beat so the TabView
+            // settles and the sheet doesn't compete with the very
+            // first-render animation. Persists `hasSeenBetaWelcome`
+            // via the dismiss button so it never appears twice.
+            if !hasSeenBetaWelcome {
+                try? await Task.sleep(for: .milliseconds(600))
+                showBetaWelcome = true
+            }
+        }
+        .sheet(isPresented: $showBetaWelcome) {
+            BetaWelcomeSheet()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.hidden)
         }
     }
 }
@@ -431,16 +448,23 @@ struct SettingsTab: View {
     }
 
     private var currentTranslationName: String {
-        // Cheap label without round-tripping fetchTranslations on settings open.
+        // Cheap label without round-tripping fetchTranslations on
+        // settings open. Saheeh International is id 20 on api.quran.com
+        // v4 (we previously had it hardcoded as 131 which was actually
+        // empty, hence the "wrong picked translation" bug in Settings).
         switch settings.selectedTranslationId {
-        case 131: "Saheeh International"
+        case 20:  "Saheeh International"
         case 19:  "Pickthall"
         case 22:  "Yusuf Ali"
-        case 20:  "Muhsin Khan"
+        case 85:  "M.A.S. Abdel Haleem"
+        case 84:  "T. Usmani"
+        case 95:  "A. Maududi (Tafhim commentary)"
+        case 149: "Fadel Soliman, Bridges' translation"
         case 33:  "Indonesian (Lampung)"
         case 77:  "Diyanet (Turkish)"
         case 136: "Montada (French)"
         case 27:  "Bubenheim (German)"
+        case 57:  "Transliteration"
         default:  "Translation \(settings.selectedTranslationId)"
         }
     }
@@ -541,6 +565,10 @@ struct SettingsTab: View {
                                         .foregroundStyle(AyyatColors.textSecondary.opacity(0.5))
                                 }
                             }
+                            // Without contentShape the Spacer gap and
+                            // empty padding don't register taps, so the
+                            // user has to hit the label exactly.
+                            .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
                         .disabled(isSigningIn || auth.isSigningIn)
@@ -582,6 +610,29 @@ struct SettingsTab: View {
                     }
                 }
 
+                // Appearance — app-wide theme. Pulled out of the
+                // crowded Display section where it sat label-less between
+                // two Quran-reading toggles and felt confusing.
+                Section {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Theme")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(AyyatColors.textPrimary)
+                        Picker("Theme", selection: $s.darkModeOverride) {
+                            Text("System").tag(SettingsManager.DarkModeOverride.system)
+                            Text("Light").tag(SettingsManager.DarkModeOverride.light)
+                            Text("Dark").tag(SettingsManager.DarkModeOverride.dark)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                    }
+                    .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
+                } header: {
+                    Text("Appearance")
+                } footer: {
+                    Text("System follows your iOS setting.")
+                }
+
                 Section("Reading") {
                     HStack {
                         Text("Text Size")
@@ -611,18 +662,47 @@ struct SettingsTab: View {
                 }
 
                 Section {
-                    Toggle("Show Full English Translation", isOn: $s.showFullTranslation)
-                        .tint(AyyatColors.primary)
-
-                    // Appearance: lifted out of the surah-reader toolbar
-                    // into Settings where it's globally discoverable.
-                    Picker("Appearance", selection: $s.darkModeOverride) {
-                        Text("System").tag(SettingsManager.DarkModeOverride.system)
-                        Text("Light").tag(SettingsManager.DarkModeOverride.light)
-                        Text("Dark").tag(SettingsManager.DarkModeOverride.dark)
+                    // One-of-three secondary line under each ayah. Replaces
+                    // the old "Show Full English Translation" toggle —
+                    // translation and transliteration used to stack, now
+                    // they're mutually exclusive.
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Show under each ayah")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(AyyatColors.textPrimary)
+                        Picker("Show under each ayah", selection: $s.verseExtraLine) {
+                            ForEach(SettingsManager.VerseExtraLine.allCases, id: \.self) { v in
+                                Text(v.displayName).tag(v)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
                     }
-                    .pickerStyle(.segmented)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
+
+                    // Mixed-line direction. RTL is the default — within a
+                    // line that has both English and Arabic, the Arabic
+                    // words read right-to-left within themselves (natural
+                    // Arabic flow). English words stay in their natural
+                    // left-to-right order; only Arabic runs reorder.
+                    // Fully-Arabic verses always read RTL regardless.
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Mixed line flow")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(AyyatColors.textPrimary)
+                        Picker("Mixed line flow", selection: $s.arabicMixedDirection) {
+                            Text("RTL").tag(SettingsManager.ArabicMixedDirection.rtl)
+                            Text("LTR").tag(SettingsManager.ArabicMixedDirection.ltr)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                        Text(s.arabicMixedDirection == .rtl
+                             ? "Arabic words read right-to-left within the line. English stays in its natural order."
+                             : "Everything reads left-to-right in recitation order.")
+                            .font(.system(size: 11))
+                            .foregroundStyle(AyyatColors.textSecondary)
+                    }
+                    .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
                 } header: {
                     Text("Display")
                 }
@@ -673,7 +753,10 @@ struct SettingsTab: View {
                 // Reciter Picker
                 Section {
                     Picker("Reciter", selection: $s.selectedReciterId) {
-                        ForEach(quranStore.reciters) { reciter in
+                        // Only reciters whose API response includes
+                        // per-verse timings, so the highlight bar
+                        // actually moves during chapter playback.
+                        ForEach(quranStore.recitersWithTimings) { reciter in
                             Text(reciter.displayName)
                                 .tag(reciter.id)
                         }

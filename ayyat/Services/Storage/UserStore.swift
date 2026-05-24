@@ -168,15 +168,29 @@ final class UserStore {
             let rangeString = "\(snapshot.startVerseKey)-\(lastKey)"
             let seconds = max(1, snapshot.durationSeconds)
 
+            dlog("[UserStore] syncing session to QF — \(rangeString), \(seconds)s")
             Task { @MainActor in
-                _ = try? await api.postReadingSession(
-                    chapterNumber: chapterNumber,
-                    verseNumber: verseNumber
-                )
-                _ = try? await api.postActivityDayReading(
-                    seconds: seconds,
-                    ranges: [rangeString]
-                )
+                do {
+                    _ = try await api.postReadingSession(
+                        chapterNumber: chapterNumber,
+                        verseNumber: verseNumber
+                    )
+                    dlog("[UserStore] ✓ /reading-sessions accepted (\(chapterNumber):\(verseNumber))")
+                } catch {
+                    dlog("[UserStore] ✗ /reading-sessions failed: \(error)")
+                }
+                do {
+                    _ = try await api.postActivityDayReading(
+                        seconds: seconds,
+                        ranges: [rangeString]
+                    )
+                    dlog("[UserStore] ✓ /activity-days accepted (\(rangeString), \(seconds)s)")
+                    // Re-pull streak + today's plan so the UI reflects
+                    // the credit we just posted.
+                    await refreshServerProgress()
+                } catch {
+                    dlog("[UserStore] ✗ /activity-days failed: \(error)")
+                }
             }
         }
 

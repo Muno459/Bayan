@@ -52,3 +52,9 @@ test_encoder_output.bin
 # Secrets — Quran Foundation client credentials live in Secrets.swift
 # (template in Secrets.example.swift is committed).
 ayyat/Services/API/Secrets.swift
+
+# Build artefacts produced by our scripts
+ayyat/Resources/Data/quran.db.pre-morphology-backup
+scripts/morphology_ingest/*.db
+scripts/morphology_ingest/*.db.zip
+scripts/align_translation_to_words/logs/

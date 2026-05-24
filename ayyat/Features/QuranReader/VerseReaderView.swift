@@ -8,11 +8,23 @@ struct VerseReaderView: View {
     @Environment(AudioPlaybackManager.self) private var audioManager
     @Environment(SettingsManager.self) private var settings
     @Environment(UserStore.self) private var userStore
+    @Environment(AppNavigation.self) private var nav
     @Environment(\.colorScheme) private var colorScheme
 
     @State private var showSubstitutionControls = false
     @State private var showChapterInfo = false
     @State private var scrollPosition: String?
+    /// Last verse the USER actually scrolled to / opened. Distinguished
+    /// from `scrollPosition` because that one is also written by the
+    /// audio player's onChange to keep the recited verse on-screen. We
+    /// don't want audio playback to silently advance the user's saved
+    /// "Continue Reading" position or mark the whole chapter as read.
+    @State private var manualScrollPosition: String?
+    /// Set to true immediately before we programmatically write
+    /// `scrollPosition` from the audio's onChange. The scroll-position
+    /// onChange that follows sees the flag, clears it, and skips the
+    /// "user-driven" persistence path.
+    @State private var audioDrivenChange = false
     @State private var currentMilestone: VocabularyMilestone?
     @State private var isWarmedUp = false
     @State private var trackedVerses: Set<Int> = [] // Prevent duplicate exposure tracking
@@ -141,11 +153,16 @@ struct VerseReaderView: View {
                         }
                     }
 
-                    Toggle(isOn: Binding(
-                        get: { settings.showFullTranslation },
-                        set: { settings.showFullTranslation = $0 }
-                    )) {
-                        Label("Show translation", systemImage: "text.alignleft")
+                    // Reader quick-toggle: tap to cycle through the three
+                    // verse-extra-line states (translation → transliteration
+                    // → none). Settings has the full segmented picker.
+                    Button {
+                        let all = SettingsManager.VerseExtraLine.allCases
+                        let i = all.firstIndex(of: settings.verseExtraLine) ?? 0
+                        settings.verseExtraLine = all[(i + 1) % all.count]
+                    } label: {
+                        Label("Show: \(settings.verseExtraLine.displayName)",
+                              systemImage: "text.alignleft")
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -203,6 +220,16 @@ struct VerseReaderView: View {
             audioManager.nowPlayingTitle = chapter.nameSimple
             audioManager.nowPlayingReciter = quranStore.reciters
                 .first(where: { $0.id == settings.selectedReciterId })?.name
+            // Render a chapter-specific cover (Arabic name + chapter
+            // number on the brand gradient) so the Lock Screen / Control
+            // Center / AirPods now-playing card shows a proper image
+            // instead of the empty default tile.
+            // Re-enabled in build 14. Crash root cause was the
+            // MPMediaItemArtwork request closure inheriting @MainActor
+            // isolation, which Swift 6's runtime trapped when MediaPlayer
+            // called it on a background queue. Fixed by routing through
+            // a nonisolated factory (see AudioPlaybackManager.makeArtworkItem).
+            audioManager.nowPlayingArtwork = NowPlayingArtworkRenderer.render(chapter: chapter)
 
             await quranStore.loadVerses(for: chapter)
 
@@ -241,10 +268,31 @@ struct VerseReaderView: View {
             try? await Task.sleep(for: .seconds(5))
             isWarmedUp = true
         }
+        // Keep the screen awake while recitation is playing AND the
+        // reader is on screen. Users reading along with the audio need
+        // the words visible — otherwise the auto-lock kicks in mid-ayah
+        // and they have to wake the phone every 30 seconds. We only
+        // touch the idle timer (not the audio session), so backgrounded
+        // audio continues to play with the screen off as normal.
+        //
+        // Scoped to .onAppear / .onDisappear so leaving the reader
+        // always restores the idle timer, even if audio is still going.
+        .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = audioManager.isPlaying
+        }
+        .onChange(of: audioManager.isPlaying) { _, playing in
+            UIApplication.shared.isIdleTimerDisabled = playing
+        }
         .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
             audioManager.stop() // Stop audio before view deallocates
-            userStore.endCurrentSession(lastVerseKey: scrollPosition)
-            if let pos = scrollPosition {
+            // Use the USER's last position, not whichever verse audio
+            // advanced to. Falls back to scrollPosition only if we
+            // never observed a manual scroll (cold open + immediate
+            // close).
+            let savePos = manualScrollPosition ?? scrollPosition
+            userStore.endCurrentSession(lastVerseKey: savePos)
+            if let pos = savePos {
                 userStore.lastReadVerseKey = pos
             }
             // Cancel every still-pending task that captured @State so they
@@ -257,9 +305,24 @@ struct VerseReaderView: View {
         }
         .onChange(of: audioManager.currentVerseKey) { _, newValue in
             if let key = newValue {
+                // Mark this scrollPosition write as audio-driven so the
+                // scrollPosition's onChange below doesn't promote it to
+                // the user's "Continue Reading" position.
+                audioDrivenChange = true
                 withAnimation(.easeInOut(duration: 0.3)) {
                     scrollPosition = key
                 }
+            }
+        }
+        .onChange(of: scrollPosition) { _, newValue in
+            if audioDrivenChange {
+                audioDrivenChange = false
+                return
+            }
+            // Treat any non-audio scrollPosition change as user-initiated
+            // (manual scroll, jump-to-bookmark, initial open).
+            if let v = newValue {
+                manualScrollPosition = v
             }
         }
         .onChange(of: vocabularyStore.familiarCount) { oldVal, newVal in
@@ -329,6 +392,19 @@ struct VerseReaderView: View {
                             trackedVerses.insert(verseId)
                             if let words {
                                 vocabularyStore.recordExposures(for: words)
+                                // Bump the silent-encounter counter for every
+                                // learned lemma in this verse. Set-deduped so
+                                // a lemma that appears twice in one verse
+                                // counts as one silent read (the user didn't
+                                // tap, the lemma got reinforced).
+                                let lemmas = Set(words.compactMap { word -> String? in
+                                    guard word.isWord, let text = word.lemmaText,
+                                          !text.isEmpty else { return nil }
+                                    return text
+                                })
+                                if !lemmas.isEmpty {
+                                    vocabularyStore.recordSilentEncounters(lemmaTexts: lemmas)
+                                }
                             }
                             exposureTasks[verseId] = nil
                         }
@@ -342,11 +418,61 @@ struct VerseReaderView: View {
                     }
                 }
 
+                // Next-surah CTA so the reader doesn't dead-end at the
+                // last ayah. Tap goes straight to the next chapter via
+                // the cross-tab nav coordinator (replaces the path so
+                // back-gesture lands on chapter list, no stale loop).
+                nextSurahButton
+
                 // Bottom spacer for audio player
                 Color.clear.frame(height: 100)
             }
         }
         .scrollPosition(id: $scrollPosition, anchor: .center)
+    }
+
+    @ViewBuilder
+    private var nextSurahButton: some View {
+        if chapter.id < 114,
+           let next = quranStore.chapters.first(where: { $0.id == chapter.id + 1 })
+        {
+            Button {
+                Haptics.medium()
+                nav.openInRead(chapterId: next.id)
+            } label: {
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Next surah")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(AyyatColors.textSecondary)
+                            .textCase(.uppercase)
+                        Text("\(next.id). \(next.nameSimple)")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(AyyatColors.textPrimary)
+                    }
+                    Spacer()
+                    Text(next.nameArabic)
+                        .font(.custom("Amiri", size: 24))
+                        .foregroundStyle(AyyatColors.primary)
+                    Image(systemName: "arrow.right.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundStyle(AyyatColors.primary)
+                }
+                .padding(18)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(AyyatColors.primary.opacity(0.08))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .strokeBorder(AyyatColors.primary.opacity(0.18), lineWidth: 1)
+                        )
+                )
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 20)
+            .padding(.top, 24)
+        }
     }
 
     // MARK: - Bismillah Header
